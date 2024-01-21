@@ -47,6 +47,8 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
 //Custom libary
+    //Compose ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     //Load image
     implementation("io.coil-kt:coil:2.5.0")
@@ -73,4 +75,10 @@ dependencies {
 
     //System UI Controller
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+}
+
+kapt {
+    javacOptions {
+        option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
+    }
 }

@@ -1,13 +1,10 @@
-package com.example.cineflix.Utils.movieList.local.movie
+package com.example.cineflix.Model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity
-data class MovieEntity(
+data class Movie(
     val adult: Boolean,
     val backdrop_path: String,
-    val genre_ids: String,
+    val genre_ids: List<Int>,
+    val id: Int,
     val original_language: String,
     val original_title: String,
     val overview: String,
@@ -17,10 +14,7 @@ data class MovieEntity(
     val title: String,
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int,
-
-    @PrimaryKey
-    val id: Int,
-
-    val category: String,
+    val vote_count: Int
 )
+
+data class MovieResponse(val results: List<Movie>)

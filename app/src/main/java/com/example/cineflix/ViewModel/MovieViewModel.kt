@@ -29,6 +29,9 @@ class MovieViewModelFactory(private val repository: MovieRepository) : ViewModel
 class MovieViewModel(private val repository: MovieRepository): ViewModel() {
     private val _popularMovies = MutableLiveData<List<Movie>>()
     val popularMovies: LiveData<List<Movie>> get() = _popularMovies
+
+    private val _topratedMovies = MutableLiveData<List<Movie>>()
+    val topRatedMovies: LiveData<List<Movie>> get() = _topratedMovies
     
 
     fun getPopularMovies(page: Int) {
@@ -52,7 +55,7 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val response = repository.getTopRatedMovies(page)
                 val movieResponse = response.body()
                 movieResponse?.let {
-                    _popularMovies.value = it.results
+                    _topratedMovies.value = it.results
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

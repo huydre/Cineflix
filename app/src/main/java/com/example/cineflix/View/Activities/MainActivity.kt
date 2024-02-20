@@ -29,30 +29,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        // Khởi tạo ViewModelFactory
-//        val repository = MovieRepository() // Thay thế bằng đối tượng MovieRepository thực tế của bạn
-//        val movieViewModelFactory = MovieViewModelFactory(repository)
-//
-//        // Khởi tạo ViewModel thông qua ViewModelProvider sử dụng ViewModelFactory
-//        movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
-//
-//        // Khởi tạo RecyclerView
-//        val recyclerView: RecyclerView = findViewById(R.id.view1)
-//        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        movieListAdapter = PopularListAdapter(emptyList())
-//        recyclerView.adapter = movieListAdapter
-//
-//        movieViewModel.getPopularMovies(1)
-//
-//        // Quan sát dữ liệu từ ViewModel và cập nhật danh sách phim
-//        movieViewModel.popularMovies.observe(this, Observer { movies ->
-//            movies?.let {
-//                movieListAdapter.setMovies(it)
-////                Log.d(TAG, "onCreate: ${movieListAdapter.lst}")
-//            }
-//        })
-
-        val framelayout: FrameLayout = findViewById(R.id.frameLayout)
         val bottomNav : BottomNavigationView = findViewById(R.id.bottom_nav)
         replaceFragment(HomeFragment())
 

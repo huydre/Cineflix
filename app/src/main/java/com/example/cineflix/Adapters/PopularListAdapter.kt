@@ -1,7 +1,4 @@
 package com.example.cineflix.Adapters
-import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +9,7 @@ import com.example.cineflix.R
 import coil.load
 import com.example.cineflix.Model.Movie
 
-class MovieListAdapter(var lst:List<Movie>): RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
+class PopularListAdapter(var lst:List<Movie>): RecyclerView.Adapter<PopularListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imagePoster)
         val tileTextView : TextView = itemView.findViewById(R.id.textView10)

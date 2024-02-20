@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="150dp"
+    android:layout_width="105dp"
     android:layout_height="wrap_content"
-    android:paddingEnd="20dp"
+    android:layout_marginEnd="20dp"
     >
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imagePoster"
         style="@style/ShapeAppearanceOverlay.App.circleImageView"
-        android:layout_width="140dp"
-        android:layout_height="180dp"
+        android:layout_width="105dp"
+        android:layout_height="140dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/account"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.circleImageView"        android:src="@drawable/aaaaby8rhdsiftokfnzl3or_t_cixonehoe5v47ck_yov6sq9u6dgcxi6g0vjlelkvrdotghhneztw9qa_q14oimsyyoualu2zqn4ioramujvt3qfeugs5iotornev_a18bszhmztw"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.432">
 
     </com.google.android.material.imageview.ShapeableImageView>
 

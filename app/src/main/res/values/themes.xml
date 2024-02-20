@@ -10,4 +10,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">15dp</item>
     </style>
+
+    <style name="TransparentStatusBarTheme" parent="Base.Theme.Cineflix" >
+        <item name="android:statusBarColor" >@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>

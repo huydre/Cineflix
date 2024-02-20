@@ -10,6 +10,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import javax.inject.Inject
 
+
+const val API_KEY = "8012e4149af0c58d8ecbd982582fcbf0"
+
 private val retrofit: Retrofit by lazy {
     Retrofit.Builder()
         .baseUrl("https://api.themoviedb.org/3/")
@@ -28,11 +31,20 @@ interface ApiService {
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ):Response<MovieResponse>
+
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMovie(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int
+    ):Response<MovieResponse>
 }
 
 class MovieRepository {
-    suspend fun getPopularMovies(apiKey: String, page: Int): Response<MovieResponse> {
-        return movieApiService.getPopularMovie(apiKey, page)
+    suspend fun getPopularMovies(page: Int): Response<MovieResponse> {
+        return movieApiService.getPopularMovie(API_KEY, page)
+    }
+    suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
+        return movieApiService.getTopRatedMovie(API_KEY, page)
     }
 }
 

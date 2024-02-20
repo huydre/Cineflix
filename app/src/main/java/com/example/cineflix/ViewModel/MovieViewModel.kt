@@ -31,17 +31,31 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
     val popularMovies: LiveData<List<Movie>> get() = _popularMovies
     
 
-    fun getPopularMovies(apiKey: String, page: Int) {
+    fun getPopularMovies(page: Int) {
         viewModelScope.launch {
             try {
-                val response = repository.getPopularMovies(apiKey, page)
+                val response = repository.getPopularMovies(page)
                 val movieResponse = response.body()
-                Log.d(TAG, "getPopularMovies: " + response.body())
                 movieResponse?.let {
                     _popularMovies.value = it.results
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "getPopularMovies Error: " + e.message)
+            }
+
+        }
+    }
+
+    fun getTopRatedMovies(page: Int) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTopRatedMovies(page)
+                val movieResponse = response.body()
+                movieResponse?.let {
+                    _popularMovies.value = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
             }
 
         }

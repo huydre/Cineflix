@@ -147,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="Trending"
+                android:text="Top Rated"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -185,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:scrollHorizontally="true"
-                android:text="Popular"
+                android:text="Now Playing"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -219,7 +219,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_height="20dp"
                 tools:layout_editor_absoluteX="13dp"
                 tools:layout_editor_absoluteY="142dp">
 

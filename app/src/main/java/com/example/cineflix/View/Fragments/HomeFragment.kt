@@ -63,7 +63,8 @@ class HomeFragment : Fragment() {
 
         movieViewModel.popularMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
-                popularListAdapter.setMovies(it)
+                val lst = it.subList(0,10)
+                popularListAdapter.setMovies(lst)
 
                 if (!it.isEmpty()) {
                     val prgbar1 =  view.findViewById<ProgressBar>(R.id.progressBar)
@@ -81,7 +82,8 @@ class HomeFragment : Fragment() {
 
         movieViewModel.topRatedMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
-                topRatedListAdapter.setMovies(it)
+                val lst = it.subList(0,10)
+                topRatedListAdapter.setMovies(lst)
 
                 if (!it.isEmpty()) {
                     val prgbar2 =  view.findViewById<ProgressBar>(R.id.progressBar2)
@@ -100,7 +102,8 @@ class HomeFragment : Fragment() {
 
         movieViewModel.nowPlayingMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
-                nowPlayingListAdapter.setMovies(it)
+                val lst = it.subList(0,10)
+                nowPlayingListAdapter.setMovies(lst)
                 if(it.isNotEmpty()) {
                     val prgbar3 = view.findViewById<ProgressBar>(R.id.progressBar3)
                     prgbar3.visibility = View.GONE

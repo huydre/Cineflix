@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cineflix.Adapters.NowPlayingListAdapter
 import com.example.cineflix.Adapters.PopularListAdapter
 import com.example.cineflix.Adapters.TopRatedListAdapter
 import com.example.cineflix.MovieRepository
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var popularListAdapter: PopularListAdapter
     private lateinit var topRatedListAdapter: TopRatedListAdapter
+    private lateinit var nowPlayingListAdapter: NowPlayingListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +88,23 @@ class HomeFragment : Fragment() {
                     prgbar2.visibility = View.GONE
                 }
 
+            }
+        })
+
+        //View 3
+        val recyclerView3 : RecyclerView = view.findViewById(R.id.view3)
+        recyclerView3.layoutManager = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
+        nowPlayingListAdapter = NowPlayingListAdapter(emptyList())
+        recyclerView3.adapter = nowPlayingListAdapter
+        movieViewModel.getNowPlayingMovies(1)
+
+        movieViewModel.nowPlayingMovies.observe(viewLifecycleOwner, Observer { movies ->
+            movies?.let {
+                nowPlayingListAdapter.setMovies(it)
+                if(it.isNotEmpty()) {
+                    val prgbar3 = view.findViewById<ProgressBar>(R.id.progressBar3)
+                    prgbar3.visibility = View.GONE
+                }
             }
         })
 

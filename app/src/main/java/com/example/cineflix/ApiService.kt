@@ -37,6 +37,12 @@ interface ApiService {
         @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ):Response<MovieResponse>
+
+    @GET("movie/now_playing")
+    suspend fun getNowPlayingMovie(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int
+    ):Response<MovieResponse>
 }
 
 class MovieRepository {
@@ -45,6 +51,9 @@ class MovieRepository {
     }
     suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
         return movieApiService.getTopRatedMovie(API_KEY, page)
+    }
+    suspend fun getNowPlayingMovies(page: Int): Response<MovieResponse> {
+        return movieApiService.getNowPlayingMovie(API_KEY, page)
     }
 }
 

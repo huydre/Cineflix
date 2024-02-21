@@ -1,14 +1,20 @@
 package com.example.cineflix.Adapters
 
+import android.content.ContentValues.TAG
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Model.Movie
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.MovieDetailsActivity
 
 class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayingListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -24,6 +30,13 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w500/${movieResult.poster_path}")
         holder.tileTextView.text = ""
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
+            intent.putExtra("movie_id", movieResult.id)
+            holder.itemView.context.startActivity(intent)
+            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
+        }
     }
 
     override fun getItemCount(): Int {

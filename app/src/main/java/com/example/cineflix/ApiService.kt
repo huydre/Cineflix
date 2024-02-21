@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 
 const val API_KEY = "8012e4149af0c58d8ecbd982582fcbf0"
+const val LANGUAGE = "vi-VN"
 
 private val retrofit: Retrofit by lazy {
     Retrofit.Builder()
@@ -29,31 +30,34 @@ interface ApiService {
     @GET("movie/popular")
     suspend fun getPopularMovie(
         @Query("api_key") apiKey: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("language") language: String
     ):Response<MovieResponse>
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovie(
         @Query("api_key") apiKey: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("language") language: String
     ):Response<MovieResponse>
 
     @GET("movie/now_playing")
     suspend fun getNowPlayingMovie(
         @Query("api_key") apiKey: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("language") language: String
     ):Response<MovieResponse>
 }
 
 class MovieRepository {
     suspend fun getPopularMovies(page: Int): Response<MovieResponse> {
-        return movieApiService.getPopularMovie(API_KEY, page)
+        return movieApiService.getPopularMovie(API_KEY, page, LANGUAGE)
     }
     suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
-        return movieApiService.getTopRatedMovie(API_KEY, page)
+        return movieApiService.getTopRatedMovie(API_KEY, page, LANGUAGE)
     }
     suspend fun getNowPlayingMovies(page: Int): Response<MovieResponse> {
-        return movieApiService.getNowPlayingMovie(API_KEY, page)
+        return movieApiService.getNowPlayingMovie(API_KEY, page, LANGUAGE)
     }
 }
 

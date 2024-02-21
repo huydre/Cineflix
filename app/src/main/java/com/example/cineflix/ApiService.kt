@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import javax.inject.Inject
 
@@ -47,6 +48,14 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("language") language: String
     ):Response<MovieResponse>
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ):Response<MovieResponse>
+
 }
 
 class MovieRepository {
@@ -58,6 +67,9 @@ class MovieRepository {
     }
     suspend fun getNowPlayingMovies(page: Int): Response<MovieResponse> {
         return movieApiService.getNowPlayingMovie(API_KEY, page, LANGUAGE)
+    }
+    suspend fun getMovieDetails(movieId: String): Response<MovieResponse> {
+        return movieApiService.getMovieDetails(movieId, API_KEY, LANGUAGE)
     }
 }
 

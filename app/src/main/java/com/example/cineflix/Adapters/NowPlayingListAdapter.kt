@@ -15,6 +15,8 @@ import coil.load
 import com.example.cineflix.Model.Movie
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayingListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -34,6 +36,9 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
         holder.itemView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
             intent.putExtra("movie_id", movieResult.id)
+            intent.putExtra("movie_title", movieResult.title)
+            intent.putExtra("movie_year", movieResult.release_date)
+            intent.putExtra("movie_overview", movieResult.overview)
             holder.itemView.context.startActivity(intent)
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
         }

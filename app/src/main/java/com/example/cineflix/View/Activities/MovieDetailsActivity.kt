@@ -1,21 +1,40 @@
 package com.example.cineflix.View.Activities
 
 import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.MediaController
 import android.widget.TextView
-import com.example.cineflix.Adapters.NowPlayingListAdapter
-import com.example.cineflix.Model.Movie
+import android.widget.VideoView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
-import kotlinx.serialization.json.Json
+import com.example.cineflix.ViewModel.MovieViewModel
+import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+
 
 class MovieDetailsActivity : AppCompatActivity() {
+
+    private lateinit var movieViewModel: MovieViewModel
+
+    var videoView: VideoView?= null
+
+    var mediaController: MediaController?= null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val repository = MovieRepository()
+        val movieViewModelFactory = MovieViewModelFactory(repository)
+        movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
 
-        val movieId = intent.getIntExtra("movie_id",-1)
+        val movieId = intent.getIntExtra("movie_id",0)
         val movieTitle = intent.getStringExtra("movie_title")
         val movieYear = intent.getStringExtra("movie_year")
         val movieOverview = intent.getStringExtra("movie_overview")
@@ -27,6 +46,29 @@ class MovieDetailsActivity : AppCompatActivity() {
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)
         overview.text = movieOverview
+
+        movieViewModel.getMovieVideos(movieId.toString())
+//        movieViewModel.movieVideos.observe(this) { videos ->
+//            videos?.let {
+//                videoId = it.results.get(0).id
+//            }
+//        }
+        val youTubePlayerView = findViewById<YouTubePlayerView>(R.id.youtube_player_view)
+        lifecycle.addObserver(youTubePlayerView)
+
+        youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                movieViewModel.movieVideos.observe(this@MovieDetailsActivity) { videos ->
+                    videos?.let {
+                        val videoId = it.results.firstOrNull()?.key ?: ""
+                        youTubePlayer.loadVideo(videoId, 0f)
+//                        Log.d(TAG, "onReady: Video Id: $videoId")
+                    }
+                }
+            }
+        })
+
+        Log.d(TAG, "onReady: " + youTubePlayerView.id)
 
     }
 }

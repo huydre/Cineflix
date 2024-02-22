@@ -2,6 +2,7 @@ package com.example.cineflix
 
 import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.MovieResponse
+import com.example.cineflix.Model.Video
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -49,12 +50,11 @@ interface ApiService {
         @Query("language") language: String
     ):Response<MovieResponse>
 
-    @GET("movie/{movie_id}")
-    suspend fun getMovieDetails(
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(
         @Path("movie_id") movieId: String,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
-    ):Response<MovieResponse>
+        @Query("api_key") apiKey: String
+    ):Response<Video>
 
 }
 
@@ -68,8 +68,8 @@ class MovieRepository {
     suspend fun getNowPlayingMovies(page: Int): Response<MovieResponse> {
         return movieApiService.getNowPlayingMovie(API_KEY, page, LANGUAGE)
     }
-    suspend fun getMovieDetails(movieId: String): Response<MovieResponse> {
-        return movieApiService.getMovieDetails(movieId, API_KEY, LANGUAGE)
+    suspend fun getMovieVideos(movieId: String): Response<Video> {
+        return movieApiService.getMovieVideos(movieId, API_KEY)
     }
 }
 

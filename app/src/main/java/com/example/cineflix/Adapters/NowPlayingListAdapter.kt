@@ -8,17 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Model.Movie
+import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.example.cineflix.ViewModel.MovieViewModel
+import com.example.cineflix.ViewModel.MovieViewModelFactory
 
 class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayingListAdapter.MovieViewHolder>() {
+
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imagePoster)
         val tileTextView : TextView = itemView.findViewById(R.id.textView10)
@@ -29,6 +32,9 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
     }
 
     override fun onBindViewHolder(holder: NowPlayingListAdapter.MovieViewHolder, position: Int) {
+
+
+
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w500/${movieResult.poster_path}")
         holder.tileTextView.text = ""

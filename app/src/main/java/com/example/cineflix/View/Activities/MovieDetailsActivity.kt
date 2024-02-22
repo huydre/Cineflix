@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.MediaController
 import android.widget.TextView
 import android.widget.VideoView
@@ -30,6 +31,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
 
         super.onCreate(savedInstanceState)
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_movie_details)
 
         val movieId = intent.getIntExtra("movie_id",0)

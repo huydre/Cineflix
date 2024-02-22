@@ -29,7 +29,7 @@ class SimilarListAdapter(var lst:List<Movie>): RecyclerView.Adapter<SimilarListA
 
     override fun onBindViewHolder(holder: SimilarListAdapter.MovieViewHolder, position: Int) {
         val movieResult = lst[position]
-        holder.imageView.load("https://media.themoviedb.org/t/p/w500/${movieResult.poster_path}")
+        holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
 
         holder.itemView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)

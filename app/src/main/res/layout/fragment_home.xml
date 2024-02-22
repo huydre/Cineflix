@@ -41,29 +41,29 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:padding="20dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/bigPoster"
                     style="@style/ShapeAppearanceOverlay.App.circleImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.circleImageView"
-                    app:srcCompat="@drawable/aaaaby8rhdsiftokfnzl3or_t_cixonehoe5v47ck_yov6sq9u6dgcxi6g0vjlelkvrdotghhneztw9qa_q14oimsyyoualu2zqn4ioramujvt3qfeugs5iotornev_a18bszhmztw" />
+                    android:background="@color/shimmerColor"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.circleImageView" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageView5"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                    app:layout_constraintBottom_toBottomOf="@+id/bigPoster"
+                    app:layout_constraintEnd_toEndOf="@+id/bigPoster"
                     app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@+id/imageView3"
+                    app:layout_constraintStart_toStartOf="@+id/bigPoster"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.circleImageView"
                     app:srcCompat="@drawable/gradient_bg" />
 
@@ -97,7 +97,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                    app:layout_constraintBottom_toBottomOf="@+id/bigPoster"
                     app:layout_constraintEnd_toEndOf="@+id/imageView5" />
 
 
@@ -226,6 +226,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="70dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/shimmerFrameLayout3"
                     android:layout_width="match_parent"
@@ -252,18 +265,6 @@
                     </LinearLayout>
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/view3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="70dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"

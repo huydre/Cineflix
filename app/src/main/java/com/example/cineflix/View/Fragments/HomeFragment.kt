@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.cineflix.Adapters.NowPlayingListAdapter
 import com.example.cineflix.Adapters.PopularListAdapter
 import com.example.cineflix.Adapters.TopRatedListAdapter
@@ -20,6 +23,7 @@ import com.example.cineflix.R
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.imageview.ShapeableImageView
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -54,6 +58,8 @@ class HomeFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        val bigPoster = view.findViewById<ShapeableImageView>(R.id.bigPoster)
+
         //View 1
         val recyclerView1: RecyclerView = view.findViewById(R.id.view1)
         recyclerView1.layoutManager = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
@@ -64,12 +70,40 @@ class HomeFragment : Fragment() {
 
         movieViewModel.popularMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
-                val lst = it.subList(0,10)
+                val lst = it.subList(1,11)
                 popularListAdapter.setMovies(lst)
+
+                bigPoster.load("https://media.themoviedb.org/t/p/w500/${it.get(0).poster_path}")
 
                 if (!it.isEmpty()) {
                     val shimmer1 =  view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout1)
-                    shimmer1.visibility = View.GONE
+
+                    val fadeIn = AlphaAnimation(0f, 1f)
+                    fadeIn.duration = 600 // Đặt thời gian fade
+                    fadeIn.fillAfter = true
+                    fadeIn.setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(animation: Animation) {}
+
+                        override fun onAnimationEnd(animation: Animation) {
+                            shimmer1.visibility = View.GONE
+                        }
+
+                        override fun onAnimationRepeat(animation: Animation) {}
+                    })
+                    recyclerView1.startAnimation(fadeIn)
+
+                    val fadeIn2 = AlphaAnimation(0f, 1f)
+                    fadeIn2.duration = 900
+                    fadeIn2.fillAfter = true
+                    fadeIn2.setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(animation: Animation) {}
+
+                        override fun onAnimationEnd(animation: Animation) {
+                        }
+
+                        override fun onAnimationRepeat(animation: Animation) {}
+                    })
+                    bigPoster.startAnimation(fadeIn2)
                 }
             }
         })

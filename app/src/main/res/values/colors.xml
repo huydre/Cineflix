@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bottom_bar">#648C84</color>
-    <color name="shimmerColor">#C2C2C2</color>
+    <color name="shimmerColor">#455145</color>
 </resources>

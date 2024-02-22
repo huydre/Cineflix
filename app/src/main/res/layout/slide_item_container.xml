@@ -12,6 +12,7 @@
         android:layout_width="125dp"
         android:layout_height="180dp"
         android:scaleType="centerCrop"
+        android:background="@color/shimmerColor"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.circleImageView"        android:src="@drawable/aaaaby8rhdsiftokfnzl3or_t_cixonehoe5v47ck_yov6sq9u6dgcxi6g0vjlelkvrdotghhneztw9qa_q14oimsyyoualu2zqn4ioramujvt3qfeugs5iotornev_a18bszhmztw"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

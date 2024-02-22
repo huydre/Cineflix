@@ -36,7 +36,7 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
 
 
         val movieResult = lst[position]
-        holder.imageView.load("https://media.themoviedb.org/t/p/w500/${movieResult.poster_path}")
+        holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
 
         holder.itemView.setOnClickListener{

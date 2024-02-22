@@ -1,5 +1,6 @@
 package com.example.cineflix
 
+import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.MovieResponse
 import com.example.cineflix.Model.Video
@@ -56,6 +57,11 @@ interface ApiService {
         @Query("api_key") apiKey: String
     ):Response<Video>
 
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Response<Credit>
 }
 
 class MovieRepository {
@@ -70,6 +76,9 @@ class MovieRepository {
     }
     suspend fun getMovieVideos(movieId: String): Response<Video> {
         return movieApiService.getMovieVideos(movieId, API_KEY)
+    }
+    suspend fun getMovieCredits(movieId: String): Response<Credit>{
+        return movieApiService.getMovieCredits(movieId, API_KEY)
     }
 }
 

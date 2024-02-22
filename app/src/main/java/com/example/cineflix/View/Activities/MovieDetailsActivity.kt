@@ -1,5 +1,6 @@
 package com.example.cineflix.View.Activities
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -21,10 +22,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private lateinit var movieViewModel: MovieViewModel
 
-    var videoView: VideoView?= null
-
-    var mediaController: MediaController?= null
-
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val repository = MovieRepository()
@@ -42,17 +40,14 @@ class MovieDetailsActivity : AppCompatActivity() {
         val title = findViewById<TextView>(R.id.movieTitle)
         val year = findViewById<TextView>(R.id.movieYear)
         val overview = findViewById<TextView>(R.id.movieOverview)
+        val actor = findViewById<TextView>(R.id.movieActor)
 
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)
         overview.text = movieOverview
 
         movieViewModel.getMovieVideos(movieId.toString())
-//        movieViewModel.movieVideos.observe(this) { videos ->
-//            videos?.let {
-//                videoId = it.results.get(0).id
-//            }
-//        }
+
         val youTubePlayerView = findViewById<YouTubePlayerView>(R.id.youtube_player_view)
         lifecycle.addObserver(youTubePlayerView)
 
@@ -62,13 +57,22 @@ class MovieDetailsActivity : AppCompatActivity() {
                     videos?.let {
                         val videoId = it.results.firstOrNull()?.key ?: ""
                         youTubePlayer.loadVideo(videoId, 0f)
-//                        Log.d(TAG, "onReady: Video Id: $videoId")
                     }
                 }
             }
         })
 
-        Log.d(TAG, "onReady: " + youTubePlayerView.id)
+        // Get movie credits
+        movieViewModel.getMovieCredits(movieId.toString())
+
+        movieViewModel.movieCredits.observe(this@MovieDetailsActivity) { credit ->
+            credit?.let {
+                val credits = credit.cast.sortedByDescending { it.popularity }.subList(0,5)
+                val names = credits.map { it.name }
+//                val actorList = names.joinToString {  }
+                actor.text = "Diễn viên: " + names.joinToString(separator = ", ") + "..."
+            }
+        }
 
     }
 }

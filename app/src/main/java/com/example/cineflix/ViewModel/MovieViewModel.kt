@@ -11,6 +11,7 @@ import com.example.cineflix.Model.Movie
 import com.example.cineflix.MovieRepository
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.Video
 import com.example.cineflix.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +39,10 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
     val nowPlayingMovies: LiveData<List<Movie>> get() = _nowplayingMovies
 
     private val _movieVideos = MutableLiveData<Video>()
-    val movieVideos : LiveData<Video> get() = _movieVideos
+    val movieVideos: LiveData<Video> get() = _movieVideos
+
+    private val _movieCredits = MutableLiveData<Credit>()
+    val movieCredits: LiveData<Credit> get() = _movieCredits
     
 
     fun getPopularMovies(page: Int) {
@@ -100,4 +104,18 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
         }
     }
 
+    fun getMovieCredits(movieId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getMovieCredits(movieId)
+                val videoRespone = response.body()
+                videoRespone?.let {
+                    _movieCredits.value = it
+                }
+
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
 }

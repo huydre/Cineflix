@@ -62,6 +62,12 @@ interface ApiService {
         @Path("movie_id") movieId: String,
         @Query("api_key") apiKey: String
     ): Response<Credit>
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getMovieSimilar(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String
+    ): Response<MovieResponse>
 }
 
 class MovieRepository {
@@ -79,6 +85,9 @@ class MovieRepository {
     }
     suspend fun getMovieCredits(movieId: String): Response<Credit>{
         return movieApiService.getMovieCredits(movieId, API_KEY)
+    }
+    suspend fun getMovieSimilar(movieId: String): Response<MovieResponse>{
+        return movieApiService.getMovieSimilar(movieId, API_KEY)
     }
 }
 

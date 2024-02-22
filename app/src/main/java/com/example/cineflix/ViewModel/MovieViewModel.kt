@@ -43,6 +43,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _movieCredits = MutableLiveData<Credit>()
     val movieCredits: LiveData<Credit> get() = _movieCredits
+
+    private val _movieSimilar = MutableLiveData<List<Movie>>()
+    val movieSimilar: LiveData<List<Movie>> get() = _movieSimilar
     
 
     fun getPopularMovies(page: Int) {
@@ -113,6 +116,20 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                     _movieCredits.value = it
                 }
 
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getMovieSimilar(movieId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getMovieSimilar(movieId)
+                val movieResponse = response.body()
+                movieResponse?.let {
+                    _movieSimilar.value  = it.results
+                }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)
             }

@@ -19,6 +19,7 @@ import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.facebook.shimmer.ShimmerFrameLayout
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -67,8 +68,8 @@ class HomeFragment : Fragment() {
                 popularListAdapter.setMovies(lst)
 
                 if (!it.isEmpty()) {
-                    val prgbar1 =  view.findViewById<ProgressBar>(R.id.progressBar)
-                    prgbar1.visibility = View.GONE
+                    val shimmer1 =  view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout1)
+                    shimmer1.visibility = View.GONE
                 }
             }
         })
@@ -86,8 +87,8 @@ class HomeFragment : Fragment() {
                 topRatedListAdapter.setMovies(lst)
 
                 if (!it.isEmpty()) {
-                    val prgbar2 =  view.findViewById<ProgressBar>(R.id.progressBar2)
-                    prgbar2.visibility = View.GONE
+                    val shimmer2 =  view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout2)
+                    shimmer2.visibility = View.GONE
                 }
 
             }
@@ -105,8 +106,8 @@ class HomeFragment : Fragment() {
                 val lst = it.subList(0,10)
                 nowPlayingListAdapter.setMovies(lst)
                 if(it.isNotEmpty()) {
-                    val prgbar3 = view.findViewById<ProgressBar>(R.id.progressBar3)
-                    prgbar3.visibility = View.GONE
+                    val shimmer3 = view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout3)
+                    shimmer3.visibility = View.GONE
                 }
             }
         })

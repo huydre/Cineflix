@@ -84,6 +84,9 @@ dependencies {
 
     //Youtube Player
     implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+
+    //Facebook Shimmer
+    implementation ("com.facebook.shimmer:shimmer:0.5.0@aar")
 }
 
 kapt {

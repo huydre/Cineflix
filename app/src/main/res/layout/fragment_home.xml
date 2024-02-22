@@ -117,6 +117,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerFrameLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:shimmer_duration="800"
+                    android:paddingBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:orientation="horizontal">
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_marginEnd="10dp"/>
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="10dp"/>
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"/>
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/view1"
                     android:layout_width="match_parent"
@@ -130,16 +156,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:orientation="horizontal"
                     app:layout_constraintVertical_bias="0.0"/>
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/view1"
-                    app:layout_constraintEnd_toEndOf="@+id/view1"
-                    app:layout_constraintStart_toStartOf="@+id/view1"
-                    app:layout_constraintTop_toTopOf="@+id/view1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -156,6 +172,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerFrameLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:shimmer_duration="800"
+                    android:paddingBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:orientation="horizontal">
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_marginEnd="10dp"/>
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="10dp"/>
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"/>
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/view2"
                     android:layout_width="match_parent"
@@ -167,16 +209,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar2"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/view2"
-                    app:layout_constraintEnd_toEndOf="@id/view2"
-                    app:layout_constraintStart_toStartOf="@+id/view2"
-                    app:layout_constraintTop_toTopOf="@+id/view2" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -194,6 +226,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerFrameLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:shimmer_duration="800"
+                    android:paddingBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:orientation="horizontal">
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_marginEnd="10dp"/>
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="10dp"/>
+                        <include layout="@layout/slide_item_container_shimmer"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"/>
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/view3"
                     android:layout_width="match_parent"
@@ -206,16 +264,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar3"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/view3"
-                    app:layout_constraintEnd_toEndOf="@+id/view3"
-                    app:layout_constraintStart_toStartOf="@id/view3"
-                    app:layout_constraintTop_toTopOf="@+id/view3" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"

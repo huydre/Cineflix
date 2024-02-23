@@ -3,6 +3,7 @@ package com.example.cineflix.View.Activities
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.annotation.DimenRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -21,6 +23,7 @@ import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.google.android.material.button.MaterialButton
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -109,7 +112,13 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         })
 
-
+        //Play button
+        val playbtn = findViewById<MaterialButton>(R.id.playBtn)
+        playbtn.setOnClickListener {
+            val intent = Intent(this, MoviePlayerActivity::class.java)
+            intent.putExtra("movie_id", movieId.toString())
+            startActivity(intent)
+        }
 
     }
 }

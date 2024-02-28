@@ -42,7 +42,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="550dp"
                 android:padding="20dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -59,7 +59,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imageView5"
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
+                    android:layout_height="150dp"
                     app:layout_constraintBottom_toBottomOf="@+id/bigPoster"
                     app:layout_constraintEnd_toEndOf="@+id/bigPoster"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -108,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="Popular"
+                android:text="Phim chiếu rạp"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -163,7 +163,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="Top Rated"
+                android:text="Phim được đánh giá cao"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -217,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:scrollHorizontally="true"
-                android:text="Now Playing"
+                android:text="Hôm nay xem gì"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />

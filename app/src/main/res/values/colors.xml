@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bottom_bar">#648C84</color>
-    <color name="shimmerColor">#455145</color>
+    <color name="bottom_bar">#BE3333</color>
+    <color name="shimmerColor">#514545</color>
     <color name="red">#AF2117</color>
 </resources>

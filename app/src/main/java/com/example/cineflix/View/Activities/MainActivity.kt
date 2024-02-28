@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cineflix.Adapters.PopularListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
+import com.example.cineflix.Utils.SuperEmbed
 import com.example.cineflix.View.Fragments.AccountFragment
 import com.example.cineflix.View.Fragments.BookmarkFragment
 import com.example.cineflix.View.Fragments.HomeFragment

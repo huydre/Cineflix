@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.cineflix"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -32,7 +32,6 @@ android {
         jvmTarget = "1.8"
     }
 }
-
 
 dependencies {
 
@@ -87,6 +86,20 @@ dependencies {
 
     //Facebook Shimmer
     implementation ("com.facebook.shimmer:shimmer:0.5.0@aar")
+
+    //Exo Player
+    implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
+    implementation ("com.google.android.exoplayer:exoplayer-core:2.19.1")
+    implementation ("com.google.android.exoplayer:exoplayer-dash:2.19.1")
+    implementation ("com.google.android.exoplayer:exoplayer-hls:2.19.1")
+    implementation ("com.google.android.exoplayer:exoplayer-smoothstreaming:2.19.1")
+    implementation ("com.android.support:multidex:1.0.3")
+    implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.1")
+
+    implementation ("com.github.Blatzar:NiceHttp:0.4.4")
+
+    implementation("org.jsoup:jsoup:1.11.3")
+    implementation(group = "khttp", name = "khttp", version = "1.0.0")
 }
 
 kapt {

@@ -2,4 +2,5 @@
 <resources>
     <color name="bottom_bar">#648C84</color>
     <color name="shimmerColor">#455145</color>
+    <color name="red">#AF2117</color>
 </resources>

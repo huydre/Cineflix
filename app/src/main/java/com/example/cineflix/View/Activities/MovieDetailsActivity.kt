@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +27,7 @@ import com.google.android.material.button.MaterialButton
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.runBlocking
 
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -117,26 +119,28 @@ class MovieDetailsActivity : AppCompatActivity() {
         videoUrl = ""
         //Play button
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
-        playbtn.setOnClickListener {
+        playbtn.setOnClickListener{
             val intent = Intent(this, MoviePlayerActivity::class.java)
             //get Link from OPhim
             val repositorys = OPhimRepository()
             val oPhimViewModelFactory = OPhimViewModelFactory(repositorys)
             oPhimViewModel = ViewModelProvider(this, oPhimViewModelFactory).get(OPhimViewModel::class.java)
             oPhimViewModel.getOPhimDetails(slug)
-            oPhimViewModel.oPhimDetails.observe(this@MovieDetailsActivity) {details ->
+            oPhimViewModel.oPhimDetails.observe(this@MovieDetailsActivity) { details ->
                 details?.let {
-                    videoUrl = it.get(0).episodes.get(0).server_data.get(0).link_m3u8
-                    intent.putExtra("movie_id", movieId.toString())
-                    intent.putExtra("video_url", videoUrl)
-                    startActivity(intent)
+                    val videoUrl = it.get(0).episodes.get(0).server_data.get(0).link_m3u8
+                    if (videoUrl.isNotEmpty()) {
+                        intent.putExtra("movie_id", movieId.toString())
+                        intent.putExtra("video_url", videoUrl)
+                        intent.putExtra("movie_title", movieTitle)
+                        startActivity(intent)
+                    }
+                    else {
+                        Toast.makeText(this, "Video URL is unavailable", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
-
-        Log.d(TAG, "onCreate: " + slug)
-
-
     }
 
     private fun ConvertNameToSlug(name: String) : String {

@@ -83,20 +83,15 @@
             android:layout_height="wrap_content">
             <ImageButton
                 android:id="@+id/exo_pause"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:focusable="true"
-                android:background="@drawable/play_ripple"
-                android:src="@drawable/netflix_pause_button"
-                android:visibility="gone"/>
+                style="@style/ExoMediaButton.Pause"
+                android:layout_width="60dp"
+                android:layout_height="60dp"/>
             <ImageButton
                 android:id="@+id/exo_play"
-                android:src="@drawable/icon_play"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:focusable="true"
-                android:background="@drawable/play_ripple"
-                android:visibility="gone"/>
+                style="@style/ExoMediaButton.Play"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:focusable="true"/>
 
             <ProgressBar
                 android:layout_width="match_parent"
@@ -145,6 +140,15 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="8dp">
+
+            <TextView
+                android:id="@id/exo_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="00:00:00"
+                android:textColor="@android:color/white"
+                android:textSize="17sp" />
 
             <com.google.android.exoplayer2.ui.DefaultTimeBar
                 android:id="@+id/exo_progress"

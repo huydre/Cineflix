@@ -9,7 +9,10 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +30,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
@@ -42,14 +46,18 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
     private lateinit var buffer: ProgressBar
     private lateinit var play : ImageButton
     private lateinit var pause : ImageButton
-    private lateinit var wakeLock: PowerManager.WakeLock
-
+    private lateinit var goBack: ImageButton
+    private lateinit var title: TextView
+    private lateinit var screenScale: LinearLayout
+    private lateinit var lockLL : LinearLayout
+    private var fit = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_player)
 
         val movieId = intent.getStringExtra("movie_id")
+        val movieTitle = intent.getStringExtra("movie_title").toString()
 
         //ExoPlayer
         videoUrl = intent.getStringExtra("video_url").toString()
@@ -57,20 +65,59 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
         buffer = findViewById(R.id.buffering)
         pause = findViewById(R.id.exo_pause)
         play = findViewById(R.id.exo_pause)
+        goBack = findViewById(R.id.videoView_go_back)
+        title = findViewById(R.id.videoView_title)
+        screenScale = findViewById(R.id.videoView_screen_size)
+        val playerView = findViewById<PlayerView>(R.id.video_view)
+        val screenResizeTv : TextView = findViewById(R.id.screen_resize_text)
+        val screenResizeIv : ImageView = findViewById(R.id.screen_resize_img)
 
-        onStart()
+        title.text = movieTitle
 
-//        Log.d(TAG, "onCreate: " + videoUrl)
+        goBack.setOnClickListener {
+            finish()
+        }
+
+        screenScale.setOnClickListener{
+            when(fit) {
+                1 -> {
+                    playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
+                    screenResizeTv.text = "Fill"
+                    screenResizeIv.setImageResource(R.drawable.fill_screen)
+                    fit = 2
+                }
+
+                2 -> {
+                    playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                    screenResizeTv.text = "Fit"
+                    screenResizeIv.setImageResource(R.drawable.fit_screen)
+                    fit = 3
+                }
+
+                else -> {
+                    playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                    screenResizeTv.text = "Zoom"
+                    screenResizeIv.setImageResource(R.drawable.baseline_zoom_out_map_24)
+                    fit = 1
+                }
+            }
+        }
 
     }
 
     override fun onStart() {
         super.onStart()
         initializePlayer()
+        Log.d(TAG, "onStart: started")
     }
 
     override fun onStop() {
         super.onStop()
+        releasePlayer()
+        Log.d(TAG, "onStop: stopped")
+    }
+    override fun onPause() {
+        super.onPause()
         releasePlayer()
     }
 
@@ -124,6 +171,11 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
     override fun onPlayerError(error: PlaybackException) {
         // handle error
         Log.e("VideoPlayerActivity", "error: $error")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        releasePlayer()
     }
 
     override fun onPlaybackStateChanged(playbackState: Int) {

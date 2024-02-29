@@ -39,7 +39,9 @@ import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import kotlinx.coroutines.Dispatchers
@@ -184,6 +186,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         playerViewFullscreen.player = simpleExoplayer
         simpleExoplayer.seekTo(playbackPosition)
         simpleExoplayer.prepare()
+        seekBarFeature()
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
@@ -290,6 +293,23 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val lp = this.window.attributes
         lp.screenBrightness = d * value
         this.window.attributes = lp
+    }
+
+    private fun seekBarFeature() {
+        findViewById<DefaultTimeBar>(R.id.exo_progress).addListener(object : TimeBar.OnScrubListener{
+            override fun onScrubStart(timeBar: TimeBar, position: Long) {
+                simpleExoplayer.pause()
+            }
+
+            override fun onScrubMove(timeBar: TimeBar, position: Long) {
+                simpleExoplayer.seekTo(position)
+            }
+
+            override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
+                simpleExoplayer.play()
+            }
+
+        })
     }
 
     private fun playerPause(){

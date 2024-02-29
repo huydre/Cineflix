@@ -160,8 +160,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:progress="50"
-                app:played_color="@android:color/holo_red_light"
+                app:scrubber_color="@android:color/holo_red_light"
                 app:unplayed_color="@android:color/white"
+                app:played_color="@android:color/holo_red_light"
                 android:scrollbarThumbVertical="@android:color/holo_red_light"
                 android:scrollbarThumbHorizontal="@android:color/holo_red_light" />
 

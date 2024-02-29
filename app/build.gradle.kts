@@ -99,6 +99,9 @@ dependencies {
     //Double Tap Feature
     implementation("com.github.vkay94:DoubleTapPlayerView:1.0.4")
 
+    //SeekBar Preview
+    implementation ("com.github.rubensousa:previewseekbar-exoplayer:2.18.1.0")
+
     implementation ("com.github.Blatzar:NiceHttp:0.4.4")
 
     implementation("org.jsoup:jsoup:1.11.3")

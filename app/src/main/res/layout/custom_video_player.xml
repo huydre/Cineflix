@@ -101,6 +101,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:id="@+id/buffering"
+                android:indeterminateTint="@color/red"
                 />
         </FrameLayout>
 

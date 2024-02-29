@@ -19,14 +19,7 @@
             app:surface_type="surface_view"
             app:use_controller="true"
             app:controller_layout_id="@layout/custom_video_player"
-            app:show_buffering="always"
             >
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="invisible" />
         </com.google.android.exoplayer2.ui.PlayerView>
 
         <LinearLayout
@@ -50,7 +43,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginBottom="7dp"
                 android:layout_weight="0"
-                android:src="@drawable/netflix_brightness_four" />
+                android:src="@drawable/netflix_brightness_one" />
 
             <SeekBar
                 android:id="@+id/videoView_brightness"

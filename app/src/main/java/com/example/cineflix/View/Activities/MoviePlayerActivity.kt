@@ -73,6 +73,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private var maxVolume: Int = 0
     private lateinit var gestureDetector: GestureDetector
     private var isLocked = false
+    private lateinit var brightnessImage: ImageView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,10 +99,12 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         gestureDetector = GestureDetector(this, this)
         findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
 
+        brightnessImage = findViewById(R.id.videoView_brightness_image)
         brightnessLL = findViewById(R.id.videoView_two_layout)
         brightnessSeek = findViewById(R.id.videoView_brightness)
 //        val currbrightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)*3
         brightnessSeek.max = 30
+
 //        brightness = currbrightness / 10
 
         if(audioManager == null) audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -233,14 +236,15 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     override fun onPlaybackStateChanged(playbackState: Int) {
         if (playbackState == Player.STATE_BUFFERING) {
             buffer.visibility = View.VISIBLE
-            play.visibility = View.GONE
-            pause.visibility = View.GONE
+            play.setImageResource(0)
+            pause.setImageResource(0)
         }
         else {
-            play.visibility = View.VISIBLE
-            pause.visibility = View.VISIBLE
+            play.setImageResource(R.drawable.netlfix_play_button)
+            pause.setImageResource(R.drawable.netflix_pause_button)
             buffer.visibility = View.GONE
         }
+        super.onPlaybackStateChanged(playbackState)
     }
 
     private fun fullscreen() {
@@ -270,6 +274,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
                 if(newValue in 0..30) brightness = newValue
                 brightnessSeek.progress = brightness
+                setBrightnessImage(brightnessSeek.progress)
                 setScreenBrightness(brightness)
             }
             else{
@@ -293,6 +298,14 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val lp = this.window.attributes
         lp.screenBrightness = d * value
         this.window.attributes = lp
+        setBrightnessImage(brightnessSeek.progress)
+    }
+
+    private fun setBrightnessImage(value: Int) {
+        if (value == 0)  brightnessImage.setImageResource(R.drawable.netflix_brightness_one)
+        if (value == 10)  brightnessImage.setImageResource(R.drawable.netflix_brightness_two)
+        if (value == 20)  brightnessImage.setImageResource(R.drawable.netflix_brightness_three)
+        if (value == 30)  brightnessImage.setImageResource(R.drawable.netflix_brightness_four)
     }
 
     private fun seekBarFeature() {

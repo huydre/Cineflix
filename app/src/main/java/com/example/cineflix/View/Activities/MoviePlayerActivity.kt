@@ -8,6 +8,8 @@ import android.content.res.Resources
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
@@ -74,6 +76,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private lateinit var gestureDetector: GestureDetector
     private var isLocked = false
     private lateinit var brightnessImage: ImageView
+    private lateinit var unlockIv : LinearLayout
+
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +99,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val playerView = findViewById<PlayerView>(R.id.video_view)
         val screenResizeTv : TextView = findViewById(R.id.screen_resize_text)
         val screenResizeIv : ImageView = findViewById(R.id.screen_resize_img)
+        lockLL  = findViewById(R.id.videoView_lock_screen)
+        unlockIv = findViewById(R.id.videoView_unlock_screen)
 
         gestureDetector = GestureDetector(this, this)
         findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
@@ -118,6 +124,18 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
         goBack.setOnClickListener {
             finish()
+        }
+
+        lockLL.setOnClickListener{
+            isLocked = true
+            playerView.useController = false
+        }
+
+        unlockIv.setOnClickListener {
+            isLocked = false
+            playerView.useController = true
+            playerView.showController()
+            unlockIv.visibility = View.GONE
         }
 
         screenScale.setOnClickListener{
@@ -151,6 +169,16 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
                 if (motionEvent.action == MotionEvent.ACTION_UP) {
                     brightnessLL.visibility = View.GONE
                     volumeLL.visibility = View.GONE
+                }
+            }
+            else {
+                if (unlockIv.visibility == View.VISIBLE) {
+                    unlockIv.visibility = View.GONE
+                } else {
+                    unlockIv.visibility = View.VISIBLE
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        unlockIv.visibility = View.GONE
+                    }, 5000)
                 }
             }
             return@setOnTouchListener false
@@ -248,21 +276,21 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     }
 
     private fun fullscreen() {
-        // Ẩn ActionBar
-        supportActionBar?.hide()
-        // Đặt activity thành Fullscreen
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+//        supportActionBar?.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        window.decorView.apply {
+            systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                            View.SYSTEM_UI_FLAG_IMMERSIVE or
+                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                            View.SYSTEM_UI_FLAG_FULLSCREEN
+                    )
+        }
     }
 
     override fun onScroll(event: MotionEvent?, event1: MotionEvent, dX: Float, dY: Float): Boolean {
         minSwipeY += dY
         val sWidth = Resources.getSystem().displayMetrics.widthPixels
-
-        Log.d(TAG, "onScroll: scrolled")
 
         if(abs(dX)< abs(dY) && abs(minSwipeY) > 50){
             if(event!!.x < sWidth/2){

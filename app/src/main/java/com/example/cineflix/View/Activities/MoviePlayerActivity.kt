@@ -1,17 +1,25 @@
 package com.example.cineflix.View.Activities
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Resources
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
@@ -36,9 +44,10 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 
-class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
+class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetector.OnGestureListener, AudioManager.OnAudioFocusChangeListener{
 
     private lateinit var simpleExoplayer: SimpleExoPlayer
     private var playbackPosition: Long = 0
@@ -50,8 +59,20 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
     private lateinit var title: TextView
     private lateinit var screenScale: LinearLayout
     private lateinit var lockLL : LinearLayout
+    private lateinit var brightnessLL: LinearLayout
     private var fit = 1
+    private var minSwipeY: Float = 0f
+    private var brightness: Int = 0
+    private lateinit var brightnessSeek : SeekBar
+    private lateinit var volumeLL: LinearLayout
+    private lateinit var volumeSeek : SeekBar
+    private var volume : Int = 0
+    private var audioManager: AudioManager? = null
+    private var maxVolume: Int = 0
+    private lateinit var gestureDetector: GestureDetector
+    private var isLocked = false
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_player)
@@ -71,6 +92,22 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
         val playerView = findViewById<PlayerView>(R.id.video_view)
         val screenResizeTv : TextView = findViewById(R.id.screen_resize_text)
         val screenResizeIv : ImageView = findViewById(R.id.screen_resize_img)
+
+        gestureDetector = GestureDetector(this, this)
+        findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+
+        brightnessLL = findViewById(R.id.videoView_two_layout)
+        brightnessSeek = findViewById(R.id.videoView_brightness)
+//        val currbrightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)*3
+        brightnessSeek.max = 30
+//        brightness = currbrightness / 10
+
+        if(audioManager == null) audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        maxVolume = audioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        volumeLL = findViewById(R.id.volume_ll)
+        volumeSeek = findViewById(R.id.volume_seek)
+        volumeSeek.max = maxVolume
+        volume = maxVolume/2
 
         title.text = movieTitle
 
@@ -101,6 +138,17 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
                     fit = 1
                 }
             }
+        }
+
+        playerView.setOnTouchListener { _, motionEvent ->
+            if (!isLocked) {
+                gestureDetector.onTouchEvent(motionEvent)
+                if (motionEvent.action == MotionEvent.ACTION_UP) {
+                    brightnessLL.visibility = View.GONE
+                    volumeLL.visibility = View.GONE
+                }
+            }
+            return@setOnTouchListener false
         }
 
     }
@@ -178,6 +226,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
         releasePlayer()
     }
 
+
     override fun onPlaybackStateChanged(playbackState: Int) {
         if (playbackState == Player.STATE_BUFFERING) {
             buffer.visibility = View.VISIBLE
@@ -200,5 +249,85 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener{
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
+    override fun onScroll(event: MotionEvent?, event1: MotionEvent, dX: Float, dY: Float): Boolean {
+        minSwipeY += dY
+        val sWidth = Resources.getSystem().displayMetrics.widthPixels
+
+        Log.d(TAG, "onScroll: scrolled")
+
+        if(abs(dX)< abs(dY) && abs(minSwipeY) > 50){
+            if(event!!.x < sWidth/2){
+                //Vuốt tăng giảm độ sáng
+                brightnessLL.visibility = View.VISIBLE
+                volumeLL.visibility = View.GONE
+                val increase = dY > 0
+                val newValue = if(increase) brightness + 1 else brightness - 1
+
+                if(newValue in 0..30) brightness = newValue
+                brightnessSeek.progress = brightness
+                setScreenBrightness(brightness)
+            }
+            else{
+                //Vuốt tăng giảm âm lượng
+                brightnessLL.visibility = View.GONE
+                volumeLL.visibility = View.VISIBLE
+
+                val increase = dY > 0
+                val newValue = if(increase) volume + 5 else volume - 5
+                if(newValue in 0..maxVolume) volume = newValue
+                volumeSeek.progress = volume
+                audioManager!!.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
+            }
+            minSwipeY = 0f
+        }
+        return true
+    }
+
+    private fun setScreenBrightness(value: Int){
+        val d = 1.0f/30
+        val lp = this.window.attributes
+        lp.screenBrightness = d * value
+        this.window.attributes = lp
+    }
+
+    private fun playerPause(){
+        simpleExoplayer.pause()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return gestureDetector.onTouchEvent(event)
+    }
+
+    override fun onSingleTapUp(p0: MotionEvent): Boolean = false
+
+    override fun onDown(p0: MotionEvent): Boolean = false
+
+    override fun onShowPress(p0: MotionEvent) = Unit
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+//        if(subSelectBg.visibility != View.VISIBLE && !qualitySelectBg.isVisible && !openSubll.isVisible)
+//            super.onBackPressed()
+//        else if (openSubll.isVisible){
+//            openSubll.visibility = View.GONE
+//            subSelectBg.visibility = View.VISIBLE
+//        }
+//        else{
+//            subSelectBg.visibility = View.GONE
+//            qualitySelectBg.visibility = View.GONE
+//            mainPlayer.visibility = View.VISIBLE
+//            playerPlay()
+//        }
+    }
+
+    override fun onLongPress(p0: MotionEvent) = Unit
+
+    override fun onFling(p0: MotionEvent?, p1: MotionEvent, p2: Float, p3: Float): Boolean  = false
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        if(focusChange <= 0) playerPause()
     }
 }

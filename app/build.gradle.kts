@@ -96,6 +96,9 @@ dependencies {
     implementation ("com.android.support:multidex:1.0.3")
     implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.1")
 
+    //Double Tap Feature
+    implementation("com.github.vkay94:DoubleTapPlayerView:1.0.4")
+
     implementation ("com.github.Blatzar:NiceHttp:0.4.4")
 
     implementation("org.jsoup:jsoup:1.11.3")

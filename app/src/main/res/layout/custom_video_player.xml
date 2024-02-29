@@ -70,6 +70,7 @@
             android:layout_height="60dp"
             android:background="@drawable/play_ripple"
             android:focusable="true"
+            android:backgroundTint="@android:color/transparent"
             android:src="@drawable/ic_rewind" />
 
         <Space
@@ -83,14 +84,16 @@
             android:layout_height="wrap_content">
             <ImageButton
                 android:id="@+id/exo_pause"
-                style="@style/ExoMediaButton.Pause"
-                android:layout_width="60dp"
-                android:layout_height="60dp"/>
+                android:src="@drawable/netflix_pause_button"
+                android:background="@android:color/transparent"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
             <ImageButton
                 android:id="@+id/exo_play"
-                style="@style/ExoMediaButton.Play"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:src="@drawable/netlfix_play_button"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@android:color/transparent"
                 android:focusable="true"/>
 
             <ProgressBar
@@ -113,6 +116,7 @@
             android:background="@drawable/play_ripple"
             android:focusable="true"
             android:layout_height="60dp"
+            android:backgroundTint="@android:color/transparent"
             android:src="@drawable/ic_forward" />
 
         <Space

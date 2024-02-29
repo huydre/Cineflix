@@ -23,5 +23,10 @@
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/bottom_bar</item>
+    </style>
+
+
     <color name="ripple_color">#9C9595</color>
 </resources>

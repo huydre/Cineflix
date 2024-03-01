@@ -25,6 +25,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.cineflix.OPhimRepository
@@ -32,6 +33,7 @@ import com.example.cineflix.R
 import com.example.cineflix.Utils.OPhim
 import com.example.cineflix.ViewModel.OPhimViewModel
 import com.example.cineflix.ViewModel.OPhimViewModelFactory
+import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
@@ -163,7 +165,25 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             }
         }
 
+        val gestureDetectorDouble = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+
+                if (e.x > playerView.width / 2) {
+                    // Double tapped on the right side - forward seek
+                    simpleExoplayer.seekTo(simpleExoplayer.currentPosition + 10000)
+//                        seekBar.progress = player.currentPosition.toInt()
+                } else {
+                    // Double tapped on the left side - backward seek
+                    simpleExoplayer.seekTo(simpleExoplayer.currentPosition - 10000)
+//                        seekBar.progress = player.currentPosition.toInt()
+                }
+                playerView.useController = true
+                return super.onDoubleTap(e)
+            }
+        })
+
         playerView.setOnTouchListener { _, motionEvent ->
+            gestureDetectorDouble.onTouchEvent(motionEvent)
             if (!isLocked) {
                 gestureDetector.onTouchEvent(motionEvent)
                 if (motionEvent.action == MotionEvent.ACTION_UP) {
@@ -183,7 +203,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             }
             return@setOnTouchListener false
         }
-
     }
 
     override fun onStart() {

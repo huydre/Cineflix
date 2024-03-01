@@ -230,6 +230,8 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                android:visibility="gone"
+                tools:visibility="visible"
                 >
 
 
@@ -297,6 +299,8 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                android:visibility="gone"
+                tools:visibility="visible"
                 >
 
 

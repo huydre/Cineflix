@@ -32,9 +32,6 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
     }
 
     override fun onBindViewHolder(holder: NowPlayingListAdapter.MovieViewHolder, position: Int) {
-
-
-
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""

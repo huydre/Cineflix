@@ -12,10 +12,12 @@ import com.example.cineflix.MovieRepository
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cineflix.Model.Credit
+import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.Video
 import com.example.cineflix.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import retrofit2.http.Query
 import javax.inject.Inject
 
 
@@ -46,6 +48,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _movieSimilar = MutableLiveData<List<Movie>>()
     val movieSimilar: LiveData<List<Movie>> get() = _movieSimilar
+
+    private val _searchMulti = MutableLiveData<List<SearchMulti>>()
+    val searchMulti: LiveData<List<SearchMulti>> get() = _searchMulti
     
 
     fun getPopularMovies(page: Int) {
@@ -129,6 +134,20 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val movieResponse = response.body()
                 movieResponse?.let {
                     _movieSimilar.value  = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getSearchMulti(query: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getSearchMulti(query)
+                val searchResponse = response.body()
+                searchResponse?.let {
+                    _searchMulti.value = it.results
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

@@ -3,6 +3,8 @@ package com.example.cineflix
 import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.MovieResponse
+import com.example.cineflix.Model.SearchMulti
+import com.example.cineflix.Model.SearchMultiResponse
 import com.example.cineflix.Model.Video
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -68,6 +70,13 @@ interface ApiService {
         @Path("movie_id") movieId: String,
         @Query("api_key") apiKey: String
     ): Response<MovieResponse>
+
+    @GET("search/multi")
+    suspend fun getSearchMulti(
+        @Query("query") query: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Response<SearchMultiResponse>
 }
 
 class MovieRepository {
@@ -88,6 +97,9 @@ class MovieRepository {
     }
     suspend fun getMovieSimilar(movieId: String): Response<MovieResponse>{
         return movieApiService.getMovieSimilar(movieId, API_KEY)
+    }
+    suspend fun getSearchMulti(query: String): Response<SearchMultiResponse> {
+        return movieApiService.getSearchMulti(query, API_KEY, LANGUAGE)
     }
 }
 

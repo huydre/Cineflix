@@ -5,6 +5,7 @@ import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.MovieResponse
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.SearchMultiResponse
+import com.example.cineflix.Model.TVResponse
 import com.example.cineflix.Model.Video
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -71,12 +72,33 @@ interface ApiService {
         @Query("api_key") apiKey: String
     ): Response<MovieResponse>
 
-    @GET("search/multi")
+     @GET("search/multi")
     suspend fun getSearchMulti(
         @Query("query") query: String,
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ): Response<SearchMultiResponse>
+
+    @GET("tv/popular")
+    suspend fun getTVPopular(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int,
+        @Query("language") language: String
+    ) : Response<TVResponse>
+
+    @GET("tv/top_rated")
+    suspend fun getTVTopRated(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int,
+        @Query("language") language: String
+    ) : Response<TVResponse>
+
+    @GET("tv/airing_today")
+    suspend fun getTVAiringToday(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int,
+        @Query("language") language: String
+    ) : Response<TVResponse>
 }
 
 class MovieRepository {
@@ -100,6 +122,15 @@ class MovieRepository {
     }
     suspend fun getSearchMulti(query: String): Response<SearchMultiResponse> {
         return movieApiService.getSearchMulti(query, API_KEY, LANGUAGE)
+    }
+    suspend fun getTVPopular(page: Int) : Response<TVResponse> {
+        return movieApiService.getTVPopular(API_KEY, page, LANGUAGE)
+    }
+    suspend fun getTVTopRated(page: Int) : Response<TVResponse> {
+        return movieApiService.getTVTopRated(API_KEY, page, LANGUAGE)
+    }
+    suspend fun getTVAiringToday(page: Int) : Response<TVResponse> {
+        return movieApiService.getTVAiringToday(API_KEY, page, LANGUAGE)
     }
 }
 

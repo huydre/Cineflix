@@ -13,6 +13,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.SearchMulti
+import com.example.cineflix.Model.TV
+import com.example.cineflix.Model.TVResponse
 import com.example.cineflix.Model.Video
 import com.example.cineflix.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,6 +53,15 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _searchMulti = MutableLiveData<List<SearchMulti>>()
     val searchMulti: LiveData<List<SearchMulti>> get() = _searchMulti
+
+    private val _tvPopular = MutableLiveData<List<TV>>()
+    val tvPopular: LiveData<List<TV>> get() = _tvPopular
+
+    private val _tvTopRated = MutableLiveData<List<TV>>()
+    val tvTopRated: LiveData<List<TV>> get() = _tvTopRated
+
+    private val _tvAiringToday = MutableLiveData<List<TV>>()
+    val tvAiringToday: LiveData<List<TV>> get() = _tvAiringToday
     
 
     fun getPopularMovies(page: Int) {
@@ -148,6 +159,48 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val searchResponse = response.body()
                 searchResponse?.let {
                     _searchMulti.value = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTVPopular(page: Int) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVPopular(page)
+                val tvResponse = response.body()
+                tvResponse?.let {
+                    _tvPopular.value = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTVTopRated(page: Int) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVTopRated(page)
+                val tvResponse = response.body()
+                tvResponse?.let {
+                    _tvTopRated.value = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTVAiringToday(page: Int) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVAiringToday(page)
+                val tvResponse = response.body()
+                tvResponse?.let {
+                    _tvAiringToday.value = it.results
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

@@ -15,15 +15,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.cineflix.Adapters.AiringTodayTVListAdapter
 import com.example.cineflix.Adapters.NowPlayingListAdapter
 import com.example.cineflix.Adapters.PopularListAdapter
+import com.example.cineflix.Adapters.PopularListTVAdapter
 import com.example.cineflix.Adapters.TopRatedListAdapter
+import com.example.cineflix.Adapters.TopRatedTVListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.imageview.ShapeableImageView
+import java.util.Objects
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -38,6 +42,9 @@ class HomeFragment : Fragment() {
     private lateinit var popularListAdapter: PopularListAdapter
     private lateinit var topRatedListAdapter: TopRatedListAdapter
     private lateinit var nowPlayingListAdapter: NowPlayingListAdapter
+    private lateinit var popularListTVAdapter: PopularListTVAdapter
+    private lateinit var topRatedTVListAdapter: TopRatedTVListAdapter
+    private lateinit var airingTodayTVListAdapter: AiringTodayTVListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,11 +144,65 @@ class HomeFragment : Fragment() {
 
         movieViewModel.nowPlayingMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
+
                 val lst = it.subList(0,10)
                 nowPlayingListAdapter.setMovies(lst)
                 if(it.isNotEmpty()) {
                     val shimmer3 = view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout3)
                     shimmer3.visibility = View.GONE
+                }
+            }
+        })
+
+        //View 4
+        val recyclerView4 : RecyclerView = view.findViewById(R.id.view4)
+        recyclerView4.layoutManager = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
+        popularListTVAdapter = PopularListTVAdapter(emptyList())
+        recyclerView4.adapter = popularListTVAdapter
+        movieViewModel.getTVPopular(1)
+
+        movieViewModel.tvPopular.observe(viewLifecycleOwner, Observer { tvs ->
+            tvs?.let {
+                val lst = it
+                popularListTVAdapter.setMovies(lst)
+                if(it.isNotEmpty()) {
+                    val shimmer4 = view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout4)
+                    shimmer4.visibility = View.GONE
+                }
+            }
+        })
+
+        //View 5
+        val recyclerView5: RecyclerView = view.findViewById(R.id.view5)
+        recyclerView5.layoutManager = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
+        topRatedTVListAdapter = TopRatedTVListAdapter(emptyList())
+        recyclerView5.adapter = topRatedTVListAdapter
+        movieViewModel.getTVTopRated(1)
+
+        movieViewModel.tvTopRated.observe(viewLifecycleOwner, Observer { tvs ->
+            tvs?.let {
+                val lst = it
+                topRatedTVListAdapter.setMovies(lst)
+                if(it.isNotEmpty()) {
+                    val shimmer5 = view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout5)
+                    shimmer5.visibility = View.GONE
+                }
+        } })
+
+        //View 6
+        val recyclerView6: RecyclerView = view.findViewById(R.id.view6)
+        recyclerView6.layoutManager = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
+        airingTodayTVListAdapter = AiringTodayTVListAdapter(emptyList())
+        recyclerView6.adapter = airingTodayTVListAdapter
+        movieViewModel.getTVAiringToday(1)
+
+        movieViewModel.tvAiringToday.observe(viewLifecycleOwner, Observer { tvs ->
+            tvs?.let {
+                val lst = it
+                airingTodayTVListAdapter.setMovies(lst)
+                if(it.isNotEmpty()) {
+                    val shimmer6 = view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout6)
+                    shimmer6.visibility = View.GONE
                 }
             }
         })

@@ -99,6 +99,24 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("language") language: String
     ) : Response<TVResponse>
+
+    @GET("movie/{tv_id}/videos")
+    suspend fun getTVVideos(
+        @Path("tv_id") TVId: String,
+        @Query("api_key") apiKey: String
+    ):Response<Video>
+
+    @GET("tv/{tv_id}/credits")
+    suspend fun getTVCredits(
+        @Path("tv_id") TVId: String,
+        @Query("api_key") apiKey: String
+    ): Response<Credit>
+
+    @GET("tv/{series_id}/similar")
+    suspend fun getTVSimilar(
+        @Path("series_id") TvId: String,
+        @Query("api_key") apiKey: String
+    ) : Response<TVResponse>
 }
 
 class MovieRepository {
@@ -131,6 +149,15 @@ class MovieRepository {
     }
     suspend fun getTVAiringToday(page: Int) : Response<TVResponse> {
         return movieApiService.getTVAiringToday(API_KEY, page, LANGUAGE)
+    }
+    suspend fun getTVVideos(TVId: String) : Response<Video> {
+        return movieApiService.getTVVideos(TVId, API_KEY)
+    }
+    suspend fun getTVCredits(TVId: String) : Response<Credit> {
+        return movieApiService.getTVCredits(TVId, API_KEY)
+    }
+    suspend fun getTVSimilar(TVId: String) : Response<TVResponse> {
+        return movieApiService.getTVSimilar(TVId, API_KEY)
     }
 }
 

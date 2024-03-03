@@ -15,6 +15,7 @@ import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.TV
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
+import com.example.cineflix.View.Activities.TvDetailsActivity
 
 class PopularListTVAdapter(var lst:List<TV>): RecyclerView.Adapter<PopularListTVAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -33,15 +34,15 @@ class PopularListTVAdapter(var lst:List<TV>): RecyclerView.Adapter<PopularListTV
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
 
-//        holder.itemView.setOnClickListener{
-//            val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
-//            intent.putExtra("tv_id", movieResult.id)
-//            intent.putExtra("tv_title", movieResult.name)
-//            intent.putExtra("tv_year", movieResult.first_air_date)
-//            intent.putExtra("tv_overview", movieResult.overview)
-//            holder.itemView.context.startActivity(intent)
-//            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
-//        }
+        holder.itemView.setOnClickListener{
+            val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
+            intent.putExtra("tv_id", movieResult.id)
+            intent.putExtra("tv_title", movieResult.name)
+            intent.putExtra("tv_year", movieResult.first_air_date)
+            intent.putExtra("tv_overview", movieResult.overview)
+            holder.itemView.context.startActivity(intent)
+            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_tvDetailsActivity)
+        }
     }
 
     override fun getItemCount(): Int {

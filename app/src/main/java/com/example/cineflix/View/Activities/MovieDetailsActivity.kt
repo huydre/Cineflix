@@ -106,7 +106,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         similarView.addItemDecoration(GridSpacingItemDecoration(3,spacing, includeEdge))
 
 //        similarView.layoutManager = GridLayoutManager(this, 3)
-        similarListAdapter = SimilarListAdapter(emptyList())
+//        similarListAdapter = SimilarListAdapter(emptyList())
         similarView.adapter = similarListAdapter
         movieViewModel.getMovieSimilar(movieId.toString())
 

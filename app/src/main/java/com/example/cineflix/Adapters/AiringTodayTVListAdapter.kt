@@ -1,16 +1,19 @@
 package com.example.cineflix.Adapters
 
 import android.content.ContentValues
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Model.TV
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.TvDetailsActivity
 
 class AiringTodayTVListAdapter(var lst:List<TV>): RecyclerView.Adapter<AiringTodayTVListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -30,13 +33,13 @@ class AiringTodayTVListAdapter(var lst:List<TV>): RecyclerView.Adapter<AiringTod
         holder.tileTextView.text = ""
 
         holder.itemView.setOnClickListener{
-//            val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
-//            intent.putExtra("tv_id", movieResult.id)
-//            intent.putExtra("tv_title", movieResult.name)
-//            intent.putExtra("tv_year", movieResult.first_air_date)
-//            intent.putExtra("tv_overview", movieResult.overview)
-//            holder.itemView.context.startActivity(intent)
-//            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
+            val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
+            intent.putExtra("tv_id", movieResult.id)
+            intent.putExtra("tv_title", movieResult.name)
+            intent.putExtra("tv_year", movieResult.first_air_date)
+            intent.putExtra("tv_overview", movieResult.overview)
+            holder.itemView.context.startActivity(intent)
+            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_tvDetailsActivity)
         }
     }
 

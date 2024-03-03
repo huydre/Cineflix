@@ -62,6 +62,15 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _tvAiringToday = MutableLiveData<List<TV>>()
     val tvAiringToday: LiveData<List<TV>> get() = _tvAiringToday
+
+    private val _tvVideos = MutableLiveData<Video>()
+    val tvVideos: LiveData<Video> get() = _tvVideos
+
+    private val _tvCredits = MutableLiveData<Credit>()
+    val tvCredit: LiveData<Credit> get() = _tvCredits
+
+    private val _tvSimilar = MutableLiveData<List<TV>>()
+    val tvSimilar : LiveData<List<TV>> get() = _tvSimilar
     
 
     fun getPopularMovies(page: Int) {
@@ -201,6 +210,50 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val tvResponse = response.body()
                 tvResponse?.let {
                     _tvAiringToday.value = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTvVideos(TvId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVVideos(TvId)
+                val videoRespone = response.body()
+                videoRespone?.let {
+                    _tvVideos.value = it
+                }
+
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTvCredits(TvId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVCredits(TvId)
+                val creditResponse = response.body()
+                creditResponse?.let {
+                    _tvCredits.value = it
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTVSimilar(TvId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVSimilar(TvId)
+                val tvResponse = response.body()
+                Log.d(TAG, "getTVSimilar: " + response)
+                tvResponse?.let {
+                    _tvSimilar.value = it.results
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

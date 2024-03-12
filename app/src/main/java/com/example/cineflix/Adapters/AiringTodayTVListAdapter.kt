@@ -38,6 +38,7 @@ class AiringTodayTVListAdapter(var lst:List<TV>): RecyclerView.Adapter<AiringTod
             intent.putExtra("tv_title", movieResult.name)
             intent.putExtra("tv_year", movieResult.first_air_date)
             intent.putExtra("tv_overview", movieResult.overview)
+            intent.putExtra("tv_backdrop", movieResult.backdrop_path)
             holder.itemView.context.startActivity(intent)
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_tvDetailsActivity)
         }

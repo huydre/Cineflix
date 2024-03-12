@@ -6,6 +6,7 @@ import com.example.cineflix.Model.MovieResponse
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.SearchMultiResponse
 import com.example.cineflix.Model.TVResponse
+import com.example.cineflix.Model.TvDetails
 import com.example.cineflix.Model.Video
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -117,6 +118,13 @@ interface ApiService {
         @Path("series_id") TvId: String,
         @Query("api_key") apiKey: String
     ) : Response<TVResponse>
+
+    @GET("tv/{series_id}")
+    suspend fun getTVDetails(
+        @Path("series_id") TvId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ) : Response<TvDetails>
 }
 
 class MovieRepository {
@@ -158,6 +166,9 @@ class MovieRepository {
     }
     suspend fun getTVSimilar(TVId: String) : Response<TVResponse> {
         return movieApiService.getTVSimilar(TVId, API_KEY)
+    }
+    suspend fun getTVDetails(TVId: String): Response<TvDetails> {
+        return movieApiService.getTVDetails(TVId, API_KEY, LANGUAGE)
     }
 }
 

@@ -72,7 +72,6 @@ class TvSimilarFragment : Fragment() {
 
         movieViewModel.tvSimilar.observe(viewLifecycleOwner, Observer { tvs ->
             tvs?.let {
-                Log.d(TAG, "onCreateView: " + it)
                 similarTVListAdapter.setMovies(it.subList(0,9))
             }
         })

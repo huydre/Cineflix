@@ -15,6 +15,7 @@ import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.TV
 import com.example.cineflix.Model.TVResponse
+import com.example.cineflix.Model.TvDetails
 import com.example.cineflix.Model.Video
 import com.example.cineflix.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -71,6 +72,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _tvSimilar = MutableLiveData<List<TV>>()
     val tvSimilar : LiveData<List<TV>> get() = _tvSimilar
+
+    private val _tvDetails = MutableLiveData<TvDetails>()
+    val tvDetails : LiveData<TvDetails> get() = _tvDetails
     
 
     fun getPopularMovies(page: Int) {
@@ -251,9 +255,22 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
             try {
                 val response = repository.getTVSimilar(TvId)
                 val tvResponse = response.body()
-                Log.d(TAG, "getTVSimilar: " + response)
                 tvResponse?.let {
                     _tvSimilar.value = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTVDetails(TvId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVDetails(TvId)
+                val tvResponse = response.body()
+                tvResponse?.let {
+                    _tvDetails.value = it
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

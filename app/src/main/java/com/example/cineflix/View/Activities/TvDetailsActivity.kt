@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import coil.load
 import com.example.cineflix.Adapters.SimilarListAdapter
 import com.example.cineflix.Adapters.TabLayoutTvDetailsAdapter
 import com.example.cineflix.MovieRepository
@@ -40,6 +42,7 @@ class TvDetailsActivity : AppCompatActivity() {
         val movieTitle = intent.getStringExtra("tv_title")
         val movieYear = intent.getStringExtra("tv_year")
         val movieOverview = intent.getStringExtra("tv_overview")
+        val tvBackdropPath = intent.getStringExtra("tv_backdrop")
 
 
         val title = findViewById<TextView>(R.id.tvTitle)
@@ -53,20 +56,24 @@ class TvDetailsActivity : AppCompatActivity() {
 
         movieViewModel.getTvVideos(TVId.toString())
 
-        val youTubePlayerView = findViewById<YouTubePlayerView>(R.id.youtube_player_view2)
-        lifecycle.addObserver(youTubePlayerView)
+//        val youTubePlayerView = findViewById<YouTubePlayerView>(R.id.youtube_player_view2)
+//        lifecycle.addObserver(youTubePlayerView)
 
-        youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                movieViewModel.tvVideos.observe(this@TvDetailsActivity) { videos ->
-                    videos?.let {
-                        Log.d(TAG, "onReady: " + it)
-                        val videoId = it.results.firstOrNull()?.key ?: ""
-                        youTubePlayer.loadVideo(videoId, 0f)
-                    }
-                }
-            }
-        })
+//        youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+//            override fun onReady(youTubePlayer: YouTubePlayer) {
+//                movieViewModel.tvVideos.observe(this@TvDetailsActivity) { videos ->
+//                    videos?.let {
+//                        Log.d(TAG, "onReady: " + it)
+//                        val videoId = it.results.firstOrNull()?.key ?: ""
+//                        youTubePlayer.loadVideo(videoId, 0f)
+//                    }
+//                }
+//            }
+//        })
+
+        val TvBackdrop = findViewById<ImageView>(R.id.TVbackdrop)
+        TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${tvBackdropPath}")
+
 
         //Get TV credits
         movieViewModel.getTvCredits(TVId.toString())

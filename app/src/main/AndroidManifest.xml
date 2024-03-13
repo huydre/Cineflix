@@ -17,6 +17,16 @@
         android:theme="@style/Theme.Cineflix"
         tools:targetApi="31">
         <activity
+            android:name=".View.Activities.SplashScreenActivity"
+            android:theme="@style/SplashScreenTheme"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".View.Activities.TvDetailsActivity"
             android:exported="false" />
         <activity
@@ -27,12 +37,7 @@
             android:exported="false" />
         <activity
             android:name=".View.Activities.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
     </application>
 

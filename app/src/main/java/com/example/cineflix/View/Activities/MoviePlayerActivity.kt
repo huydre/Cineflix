@@ -51,6 +51,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -84,6 +85,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private var isLocked = false
     private lateinit var brightnessImage: ImageView
     private lateinit var unlockIv : LinearLayout
+    private lateinit var sourceAndSubtile: LinearLayout
 
     private lateinit var oPhimViewModel: OPhimViewModel
 
@@ -115,6 +117,18 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val screenResizeIv : ImageView = findViewById(R.id.screen_resize_img)
         lockLL  = findViewById(R.id.videoView_lock_screen)
         unlockIv = findViewById(R.id.videoView_unlock_screen)
+        sourceAndSubtile = findViewById(R.id.sourceAndSubtitleLL)
+        val videoViewTrackBtn = findViewById<LinearLayout>(R.id.videoView_track)
+        val trackCancleBtn = findViewById<MaterialButton>(R.id.cancle_btn)
+        val nextEPBtn = findViewById<LinearLayout>(R.id.videoView_next_ep)
+
+        videoViewTrackBtn.setOnClickListener{
+            sourceAndSubtile.visibility = View.VISIBLE
+        }
+
+        trackCancleBtn.setOnClickListener {
+            sourceAndSubtile.visibility = View.GONE
+        }
 
         gestureDetector = GestureDetector(this, this)
         findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
@@ -138,6 +152,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             title.text = movieTitle
         }
         else {
+            nextEPBtn.visibility = View.VISIBLE
             title.text = "${movieTitle} Phần ${season} Tập ${episode}"
         }
 

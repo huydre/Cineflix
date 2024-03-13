@@ -124,7 +124,92 @@
                 android:textSize="12dp"
                 android:textColor="@color/red"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sourceAndSubtitleLL"
+            android:paddingTop="30dp"
+            android:paddingHorizontal="20dp"
+            android:background="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="gone"
+            >
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:text="Nguồn Phim"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/sourceRC"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:text="Phụ đề"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/subtitleRC"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.button.MaterialButton
+                    app:cornerRadius="5dp"
+                    android:id="@+id/apply_btn"
+                    android:text="Áp dụng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/white"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_marginRight="20dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancle_btn"
+                    android:text="Huỷ bỏ"
+                    app:cornerRadius="5dp"
+                    android:layout_gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#141414"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
     </FrameLayout>
+
+
 
     <include layout="@layout/custom_video_player"
         android:visibility="gone"

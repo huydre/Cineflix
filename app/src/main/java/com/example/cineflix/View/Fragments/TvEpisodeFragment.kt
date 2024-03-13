@@ -35,6 +35,7 @@ class TvEpisodeFragment : Fragment() {
     private var selectedSeason : Int = 1
     private lateinit var episodeListAdapter: EpisodeListAdapter
     private var tvId : String = ""
+    private var fisrtSeasonIs0 : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +65,10 @@ class TvEpisodeFragment : Fragment() {
             tvs?.let {
                 val newSeasons = it.seasons.map { "Mùa " + it.season_number.toString() }
                 items = newSeasons.toTypedArray()
+                if (it.seasons.get(0).season_number == 1) {
+                    fisrtSeasonIs0 = 1
+                }
+//                Log.d(TAG, "onCreateView: " + newSeasons)
             }
         })
 
@@ -98,7 +103,9 @@ class TvEpisodeFragment : Fragment() {
             setItems(items) { dialog, which ->
                 val selectedItem = items[which]
                 seasonSelect.setText(selectedItem)
-                selectedSeason = which
+                selectedSeason = which + fisrtSeasonIs0
+
+                Log.d(TAG, "showSingleChoiceDialog: " + which)
 
                 movieViewModel.getTVSeasonDetails(tvId, selectedSeason.toString())
                 movieViewModel.tvSeasonDetails.observe(viewLifecycleOwner, Observer { tvs ->

@@ -5,6 +5,7 @@ import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.MovieResponse
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.SearchMultiResponse
+import com.example.cineflix.Model.SeasonDetails
 import com.example.cineflix.Model.TVResponse
 import com.example.cineflix.Model.TvDetails
 import com.example.cineflix.Model.Video
@@ -125,6 +126,14 @@ interface ApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ) : Response<TvDetails>
+
+    @GET("tv/{series_id}/season/{season_number}")
+    suspend fun getTVSeasonDetails(
+        @Path("series_id") TvId: String,
+        @Path("season_number") SeasonId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ) : Response<SeasonDetails>
 }
 
 class MovieRepository {
@@ -169,6 +178,9 @@ class MovieRepository {
     }
     suspend fun getTVDetails(TVId: String): Response<TvDetails> {
         return movieApiService.getTVDetails(TVId, API_KEY, LANGUAGE)
+    }
+    suspend fun getTVSeasonDetails(TVId: String, SeasonId: String): Response<SeasonDetails> {
+        return movieApiService.getTVSeasonDetails(TVId, SeasonId, API_KEY, LANGUAGE)
     }
 }
 

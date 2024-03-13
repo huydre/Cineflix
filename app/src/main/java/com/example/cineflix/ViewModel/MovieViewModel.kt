@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.SearchMulti
+import com.example.cineflix.Model.SeasonDetails
 import com.example.cineflix.Model.TV
 import com.example.cineflix.Model.TVResponse
 import com.example.cineflix.Model.TvDetails
@@ -75,7 +76,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _tvDetails = MutableLiveData<TvDetails>()
     val tvDetails : LiveData<TvDetails> get() = _tvDetails
-    
+
+    private val _tvSeasonDetails = MutableLiveData<SeasonDetails>()
+    val tvSeasonDetails : LiveData<SeasonDetails> get() = _tvSeasonDetails
 
     fun getPopularMovies(page: Int) {
         viewModelScope.launch {
@@ -271,6 +274,20 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val tvResponse = response.body()
                 tvResponse?.let {
                     _tvDetails.value = it
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getTVSeasonDetails(TvId: String, SeasonId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTVSeasonDetails(TvId, SeasonId)
+                val tvResponse = response.body()
+                tvResponse?.let {
+                    _tvSeasonDetails.value = it
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

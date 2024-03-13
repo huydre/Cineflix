@@ -12,6 +12,10 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.cineflix.Adapters.EpisodeListAdapter
+import com.example.cineflix.Adapters.SimilarTVListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.ViewModel.MovieViewModel
@@ -27,6 +31,7 @@ class TvEpisodeFragment : Fragment() {
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var seasonSelect: MaterialButton
     private var selectedSeason : Int = 0
+    private lateinit var episodeListAdapter: EpisodeListAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +72,21 @@ class TvEpisodeFragment : Fragment() {
         seasonSelect.setOnClickListener {
             showSingleChoiceDialog(items, selectedSeason)
         }
+
+        //Episode
+        val TVEpisodeView = view.findViewById<RecyclerView>(R.id.tvEpisodeView)
+        TVEpisodeView.layoutManager = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.VERTICAL, false)
+        episodeListAdapter = EpisodeListAdapter(emptyList())
+        TVEpisodeView.adapter = episodeListAdapter
+
+        movieViewModel.getTVSeasonDetails("63174", "1")
+        movieViewModel.tvSeasonDetails.observe(viewLifecycleOwner, Observer { tvs ->
+            tvs?.let {
+                val lst = it.episodes
+                episodeListAdapter.setMovies(lst)
+                Log.d(TAG, "onCreateView: " + it.episodes)
+            }
+        })
 
         return view
     }

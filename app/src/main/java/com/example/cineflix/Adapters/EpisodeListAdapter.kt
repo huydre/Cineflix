@@ -37,6 +37,7 @@ class EpisodeListAdapter (var lst:List<EpisodeX>): RecyclerView.Adapter<EpisodeL
         holder.tileTextView.text = "${movieResult.episode_number}.  ${movieResult.name}"
         holder.durationTV.text = "${movieResult.runtime.toString()}m"
         holder.overviewTV.text = movieResult.overview
+        if (movieResult.overview.isEmpty()) holder.overviewTV.visibility = View.GONE
 
 
         holder.itemView.setOnClickListener{

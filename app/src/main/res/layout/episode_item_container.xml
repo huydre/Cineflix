@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:text="TextViews"
+                android:textStyle="bold"
                 android:textSize="14dp"
                 android:textColor="@android:color/white"
                 android:ellipsize="end" />

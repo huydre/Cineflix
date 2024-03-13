@@ -18,6 +18,8 @@ import com.example.cineflix.Adapters.EpisodeListAdapter
 import com.example.cineflix.Adapters.SimilarTVListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.TvDetailsActivity
+import com.example.cineflix.View.Activities.getTvId
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.google.android.material.button.MaterialButton
@@ -30,9 +32,9 @@ class TvEpisodeFragment : Fragment() {
     private var param2: String? = null
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var seasonSelect: MaterialButton
-    private var selectedSeason : Int = 0
+    private var selectedSeason : Int = 1
     private lateinit var episodeListAdapter: EpisodeListAdapter
-
+    private var tvId : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class TvEpisodeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_tv_episode, container, false)
+        tvId = getTvId()
 
         val repository = MovieRepository()
         val movieViewModelFactory = MovieViewModelFactory(repository)
@@ -55,19 +58,20 @@ class TvEpisodeFragment : Fragment() {
 
         var items = emptyArray<String>()
 
-
-        movieViewModel.getTVDetails("63174")
+        movieViewModel.getTVDetails(tvId)
         movieViewModel.tvDetails.observe(viewLifecycleOwner, Observer { tvs ->
             tvs?.let {
                 val newSeasons = it.seasons.map { "Mùa " + it.season_number.toString() }
                 items = newSeasons.toTypedArray()
-                if (it.seasons.get(0).season_number == 0) {
-                    selectedSeason = 1
-                }
+//                if (it.seasons.get(0).season_number == 0) {
+//                    selectedSeason = 1
+//                }
             }
         })
 
         seasonSelect = view.findViewById(R.id.season_select)
+
+        seasonSelect.setText("Mùa ${selectedSeason}")
 
         seasonSelect.setOnClickListener {
             showSingleChoiceDialog(items, selectedSeason)
@@ -79,12 +83,11 @@ class TvEpisodeFragment : Fragment() {
         episodeListAdapter = EpisodeListAdapter(emptyList())
         TVEpisodeView.adapter = episodeListAdapter
 
-        movieViewModel.getTVSeasonDetails("63174", "1")
+        movieViewModel.getTVSeasonDetails(tvId, selectedSeason.toString())
         movieViewModel.tvSeasonDetails.observe(viewLifecycleOwner, Observer { tvs ->
             tvs?.let {
                 val lst = it.episodes
                 episodeListAdapter.setMovies(lst)
-                Log.d(TAG, "onCreateView: " + it.episodes)
             }
         })
 
@@ -94,11 +97,19 @@ class TvEpisodeFragment : Fragment() {
     private fun showSingleChoiceDialog(items: Array<String>, selectedItemIndex: Int) {
         val builder = AlertDialog.Builder(requireContext())
         builder.apply {
-            setSingleChoiceItems(items, selectedItemIndex) { dialog, which ->
+            setItems(items) { dialog, which ->
                 val selectedItem = items[which]
                 seasonSelect.setText(selectedItem)
                 selectedSeason = which
-                Toast.makeText(requireContext(), "You selected: $selectedItem", Toast.LENGTH_SHORT).show()
+
+                movieViewModel.getTVSeasonDetails(tvId, selectedSeason.toString())
+                movieViewModel.tvSeasonDetails.observe(viewLifecycleOwner, Observer { tvs ->
+                    tvs?.let {
+                        val lst = it.episodes
+                        episodeListAdapter.setMovies(lst)
+                    }
+                })
+
                 dialog.dismiss()
             }
         }

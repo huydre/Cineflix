@@ -53,7 +53,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieTitle = intent.getStringExtra("movie_title")
         val movieYear = intent.getStringExtra("movie_year")
         val movieOverview = intent.getStringExtra("movie_overview")
-        val slug = ConvertNameToSlug(movieTitle.toString())
+//        val slug = ConvertNameToSlug(movieTitle.toString())
 
         val title = findViewById<TextView>(R.id.movieTitle)
         val year = findViewById<TextView>(R.id.movieYear)
@@ -121,53 +121,10 @@ class MovieDetailsActivity : AppCompatActivity() {
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
         playbtn.setOnClickListener{
             val intent = Intent(this, MoviePlayerActivity::class.java)
-            //get Link from OPhim
-            val repositorys = OPhimRepository()
-            val oPhimViewModelFactory = OPhimViewModelFactory(repositorys)
-            oPhimViewModel = ViewModelProvider(this, oPhimViewModelFactory).get(OPhimViewModel::class.java)
-            oPhimViewModel.getOPhimDetails(slug)
-            oPhimViewModel.oPhimDetails.observe(this@MovieDetailsActivity) { details ->
-                details?.let {
-                    val videoUrl = it.get(0).episodes.get(0).server_data.get(0).link_m3u8
-                    if (videoUrl.isNotEmpty()) {
-                        intent.putExtra("movie_id", movieId.toString())
-                        intent.putExtra("video_url", videoUrl)
-                        intent.putExtra("movie_title", movieTitle)
-                        startActivity(intent)
-                    }
-                    else {
-                        Toast.makeText(this, "Video URL is unavailable", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            intent.putExtra("media_type", "movie")
+            intent.putExtra("title", movieTitle)
+            startActivity(intent)
         }
-    }
-
-    private fun ConvertNameToSlug(name: String) : String {
-        val regex = Regex("[^a-zA-Z0-9\\s]")
-        val slug = convert(name).replace(regex, "")
-            .toLowerCase()
-            .replace("\\s+".toRegex(), "-")
-        return slug
-    }
-
-    fun convert(str: String): String {
-        var str = str
-        str = str.replace("à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ".toRegex(), "a")
-        str = str.replace("è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ".toRegex(), "e")
-        str = str.replace("ì|í|ị|ỉ|ĩ".toRegex(), "i")
-        str = str.replace("ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ".toRegex(), "o")
-        str = str.replace("ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ".toRegex(), "u")
-        str = str.replace("ỳ|ý|ỵ|ỷ|ỹ".toRegex(), "y")
-        str = str.replace("đ".toRegex(), "d")
-        str = str.replace("À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ".toRegex(), "A")
-        str = str.replace("È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ".toRegex(), "E")
-        str = str.replace("Ì|Í|Ị|Ỉ|Ĩ".toRegex(), "I")
-        str = str.replace("Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ".toRegex(), "O")
-        str = str.replace("Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ".toRegex(), "U")
-        str = str.replace("Ỳ|Ý|Ỵ|Ỷ|Ỹ".toRegex(), "Y")
-        str = str.replace("Đ".toRegex(), "D")
-        return str
     }
 }
 

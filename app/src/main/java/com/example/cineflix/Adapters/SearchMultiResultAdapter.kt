@@ -16,6 +16,7 @@ import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
+import com.example.cineflix.View.Activities.TvDetailsActivity
 import com.example.cineflix.View.Fragments.SearchFragment
 
 class SearchMultiResultAdapter(var lst:List<SearchMulti>): RecyclerView.Adapter<SearchMultiResultAdapter.MovieViewHolder>() {
@@ -43,7 +44,14 @@ class SearchMultiResultAdapter(var lst:List<SearchMulti>): RecyclerView.Adapter<
                 Navigation.createNavigateOnClickListener(R.id.action_searchFragment_to_movieDetailsActivity)
             }
             else {
-                Toast.makeText(holder.itemView.context, "Phần này đang được phát triển", Toast.LENGTH_SHORT).show()
+                val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
+                intent.putExtra("tv_id", movieResult.id)
+                intent.putExtra("tv_title", movieResult.name)
+                intent.putExtra("tv_year", movieResult.first_air_date)
+                intent.putExtra("tv_overview", movieResult.overview)
+                intent.putExtra("tv_backdrop", movieResult.backdrop_path)
+                holder.itemView.context.startActivity(intent)
+                Navigation.createNavigateOnClickListener(R.id.action_searchFragment_to_tvDetailsActivity)
             }
         }
     }

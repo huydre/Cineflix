@@ -15,7 +15,10 @@ import coil.load
 import com.example.cineflix.Model.EpisodeX
 import com.example.cineflix.Model.TV
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.MoviePlayerActivity
 import com.example.cineflix.View.Activities.TvDetailsActivity
+import com.example.cineflix.View.Activities.getTvTitle
+import com.example.cineflix.View.Fragments.getSeason
 
 class EpisodeListAdapter (var lst:List<EpisodeX>): RecyclerView.Adapter<EpisodeListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -30,7 +33,6 @@ class EpisodeListAdapter (var lst:List<EpisodeX>): RecyclerView.Adapter<EpisodeL
         return MovieViewHolder(view)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.still_path}")
@@ -41,14 +43,15 @@ class EpisodeListAdapter (var lst:List<EpisodeX>): RecyclerView.Adapter<EpisodeL
 
 
         holder.itemView.setOnClickListener{
-//            val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
-//            intent.putExtra("tv_id", movieResult.id)
-//            intent.putExtra("tv_title", movieResult.name)
-//            intent.putExtra("tv_year", movieResult.first_air_date)
-//            intent.putExtra("tv_overview", movieResult.overview)
-//            intent.putExtra("tv_backdrop", movieResult.backdrop_path)
-//            holder.itemView.context.startActivity(intent)
-//            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_tvDetailsActivity)
+            val season = getSeason()
+            val movieTitle = getTvTitle()
+            val intent = Intent(holder.itemView.context, MoviePlayerActivity::class.java)
+            intent.putExtra("tv_id", movieResult.id)
+            intent.putExtra("title", movieTitle)
+            intent.putExtra("season",season )
+            intent.putExtra("episode", position+1)
+            intent.putExtra("media_type", "tv")
+            holder.itemView.context.startActivity(intent)
         }
     }
 

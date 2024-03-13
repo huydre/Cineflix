@@ -39,7 +39,7 @@ class SimilarTVListAdapter(var lst:List<TV>): RecyclerView.Adapter<SimilarTVList
             intent.putExtra("tv_overview", movieResult.overview)
             intent.putExtra("tv_backdrop", movieResult.backdrop_path)
             holder.itemView.context.startActivity(intent)
-            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
+            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_tvDetailsActivity)
         }
     }
 

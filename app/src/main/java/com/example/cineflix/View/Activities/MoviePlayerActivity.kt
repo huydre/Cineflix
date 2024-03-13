@@ -23,9 +23,12 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GestureDetectorCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.cineflix.OPhimRepository
@@ -55,9 +58,11 @@ import kotlin.math.abs
 
 class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetector.OnGestureListener, AudioManager.OnAudioFocusChangeListener{
 
+    private val _videoUrl = MutableLiveData<String>()
+    val videoUrl: LiveData<String> = _videoUrl
+
     private lateinit var simpleExoplayer: SimpleExoPlayer
     private var playbackPosition: Long = 0
-    private lateinit var videoUrl: String
     private lateinit var buffer: ProgressBar
     private lateinit var play : ImageButton
     private lateinit var pause : ImageButton
@@ -80,6 +85,9 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private lateinit var brightnessImage: ImageView
     private lateinit var unlockIv : LinearLayout
 
+    private lateinit var oPhimViewModel: OPhimViewModel
+
+
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,10 +95,14 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         setContentView(R.layout.activity_movie_player)
 
         val movieId = intent.getStringExtra("movie_id")
-        val movieTitle = intent.getStringExtra("movie_title").toString()
+        val mediaType = intent.getStringExtra("media_type")
+        val movieTitle = intent.getStringExtra("title").toString()
+        val season = intent.getIntExtra("season", 0)
+        val episode = intent.getIntExtra("episode", 0)
+
+        getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
 
         //ExoPlayer
-        videoUrl = intent.getStringExtra("video_url").toString()
         fullscreen()
         buffer = findViewById(R.id.buffering)
         pause = findViewById(R.id.exo_pause)
@@ -122,7 +134,12 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         volumeSeek.max = maxVolume
         volume = maxVolume/2
 
-        title.text = movieTitle
+        if (mediaType == "movie") {
+            title.text = movieTitle
+        }
+        else {
+            title.text = "${movieTitle} Phần ${season} Tập ${episode}"
+        }
 
         goBack.setOnClickListener {
             finish()
@@ -208,13 +225,11 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     override fun onStart() {
         super.onStart()
         initializePlayer()
-        Log.d(TAG, "onStart: started")
     }
 
     override fun onStop() {
         super.onStop()
         releasePlayer()
-        Log.d(TAG, "onStop: stopped")
     }
     override fun onPause() {
         super.onPause()
@@ -223,7 +238,13 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
     private fun initializePlayer() {
         simpleExoplayer = SimpleExoPlayer.Builder(this).build()
-        preparePlayer(videoUrl)
+//        preparePlayer(videoUrl.value.toString())
+        videoUrl.observe(this) {url ->
+            if  (!url.isNullOrEmpty()) {
+                preparePlayer(url)
+            }
+
+        }
     }
 
     private fun preparePlayer(videoUrl: String) {
@@ -389,18 +410,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-//        if(subSelectBg.visibility != View.VISIBLE && !qualitySelectBg.isVisible && !openSubll.isVisible)
-//            super.onBackPressed()
-//        else if (openSubll.isVisible){
-//            openSubll.visibility = View.GONE
-//            subSelectBg.visibility = View.VISIBLE
-//        }
-//        else{
-//            subSelectBg.visibility = View.GONE
-//            qualitySelectBg.visibility = View.GONE
-//            mainPlayer.visibility = View.VISIBLE
-//            playerPlay()
-//        }
     }
 
     override fun onLongPress(p0: MotionEvent) = Unit
@@ -410,4 +419,55 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     override fun onAudioFocusChange(focusChange: Int) {
         if(focusChange <= 0) playerPause()
     }
+
+    fun getOphimVideoUrl(title: String, mediaType: String, s: Int, e: Int) {
+        var slug = ConvertNameToSlug(title)
+        if (mediaType == "tv") {
+            slug += "-phan-${s}"
+        }
+        val repositorys = OPhimRepository()
+        val oPhimViewModelFactory = OPhimViewModelFactory(repositorys)
+        oPhimViewModel = ViewModelProvider(this, oPhimViewModelFactory).get(OPhimViewModel::class.java)
+        oPhimViewModel.getOPhimDetails(slug)
+        oPhimViewModel.oPhimDetails.observe(this@MoviePlayerActivity) { details ->
+            details?.let {
+                if (mediaType == "movie") {
+                    _videoUrl.value = it.get(0).episodes.get(0).server_data.get(0).link_m3u8
+                }
+                else {
+
+                    _videoUrl.value = it.get(0).episodes.get(0).server_data.get(e-1).link_m3u8
+                }
+            }
+        }
+        Log.d(TAG, "getOphimVideoUrl: " + slug)
+    }
+
+    private fun ConvertNameToSlug(name: String) : String {
+        val regex = Regex("[^a-zA-Z0-9\\s]")
+        val slug = convert(name).replace(regex, "")
+            .toLowerCase()
+            .replace("\\s+".toRegex(), "-")
+        return slug
+    }
+
+    fun convert(str: String): String {
+        var str = str
+        str = str.replace("à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ".toRegex(), "a")
+        str = str.replace("è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ".toRegex(), "e")
+        str = str.replace("ì|í|ị|ỉ|ĩ".toRegex(), "i")
+        str = str.replace("ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ".toRegex(), "o")
+        str = str.replace("ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ".toRegex(), "u")
+        str = str.replace("ỳ|ý|ỵ|ỷ|ỹ".toRegex(), "y")
+        str = str.replace("đ".toRegex(), "d")
+        str = str.replace("À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ".toRegex(), "A")
+        str = str.replace("È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ".toRegex(), "E")
+        str = str.replace("Ì|Í|Ị|Ỉ|Ĩ".toRegex(), "I")
+        str = str.replace("Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ".toRegex(), "O")
+        str = str.replace("Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ".toRegex(), "U")
+        str = str.replace("Ỳ|Ý|Ỵ|Ỷ|Ỹ".toRegex(), "Y")
+        str = str.replace("Đ".toRegex(), "D")
+        return str
+    }
 }
+

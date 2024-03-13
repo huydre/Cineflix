@@ -1,29 +1,24 @@
 package com.example.cineflix.View.Activities
 
-import android.content.ContentValues.TAG
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
-import com.example.cineflix.Adapters.SimilarListAdapter
 import com.example.cineflix.Adapters.TabLayoutTvDetailsAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
-import com.example.cineflix.View.Fragments.TvEpisodeFragment
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 private var tvID : String = ""
+private var movieTitle : String? = ""
 
 class TvDetailsActivity : AppCompatActivity() {
 
@@ -44,7 +39,7 @@ class TvDetailsActivity : AppCompatActivity() {
 
         val TVId = intent.getIntExtra("tv_id",0)
         tvID = TVId.toString()
-        val movieTitle = intent.getStringExtra("tv_title")
+        movieTitle = intent.getStringExtra("tv_title")
         val movieYear = intent.getStringExtra("tv_year")
         val movieOverview = intent.getStringExtra("tv_overview")
         val tvBackdropPath = intent.getStringExtra("tv_backdrop")
@@ -55,6 +50,7 @@ class TvDetailsActivity : AppCompatActivity() {
         val actor = findViewById<TextView>(R.id.tvActor)
         val tvSeasonCount = findViewById<TextView>(R.id.tvSeasonCount)
         val TvBackdrop = findViewById<ImageView>(R.id.TVbackdrop)
+        val playBtn = findViewById<MaterialButton>(R.id.playBtnTV)
 
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)
@@ -116,11 +112,26 @@ class TvDetailsActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 tabLayout.selectTab(tabLayout.getTabAt(position))
+
+
             }
         })
+
+        playBtn.setOnClickListener {
+            val intent = Intent(this, MoviePlayerActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", movieTitle)
+            intent.putExtra("season", 1)
+            intent.putExtra("episode", 1)
+            startActivity(intent)
+        }
     }
 }
 
 fun getTvId(): String {
     return tvID
+}
+
+fun getTvTitle(): String? {
+    return movieTitle
 }

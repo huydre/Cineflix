@@ -22,20 +22,24 @@ import com.example.cineflix.View.Activities.TvDetailsActivity
 import com.example.cineflix.View.Activities.getTvId
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.example.cineflix.databinding.FragmentTvEpisodeBinding
 import com.google.android.material.button.MaterialButton
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
+private var selectedSeason : Int = 1
 
 class TvEpisodeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var seasonSelect: MaterialButton
-    private var selectedSeason : Int = 1
     private lateinit var episodeListAdapter: EpisodeListAdapter
     private var tvId : String = ""
     private var fisrtSeasonIs0 : Int = 0
+    private var _binding: FragmentTvEpisodeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,8 +95,11 @@ class TvEpisodeFragment : Fragment() {
             tvs?.let {
                 val lst = it.episodes
                 episodeListAdapter.setMovies(lst)
+                Log.d(TAG, "onCreateViews: " + episodeListAdapter.itemCount)
             }
         })
+
+
 
         return view
     }
@@ -104,8 +111,6 @@ class TvEpisodeFragment : Fragment() {
                 val selectedItem = items[which]
                 seasonSelect.setText(selectedItem)
                 selectedSeason = which + fisrtSeasonIs0
-
-                Log.d(TAG, "showSingleChoiceDialog: " + which)
 
                 movieViewModel.getTVSeasonDetails(tvId, selectedSeason.toString())
                 movieViewModel.tvSeasonDetails.observe(viewLifecycleOwner, Observer { tvs ->
@@ -123,4 +128,7 @@ class TvEpisodeFragment : Fragment() {
     }
 }
 
-// Nếu bộ phim nào không có mùa 0 thì selectSeason phải chuyển về 0
+fun getSeason(): Int {
+    return selectedSeason
+}
+

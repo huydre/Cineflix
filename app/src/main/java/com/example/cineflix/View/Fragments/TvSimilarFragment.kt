@@ -15,8 +15,11 @@ import com.example.cineflix.Adapters.SimilarTVListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.GridSpacingItemDecoration
+import com.example.cineflix.View.Activities.getTvId
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.example.cineflix.databinding.FragmentTvEpisodeBinding
+import com.example.cineflix.databinding.FragmentTvSimilarBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +35,10 @@ class TvSimilarFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private var _binding: FragmentTvSimilarBinding? = null
+    private val binding get() = _binding!!
+
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var similarTVListAdapter: SimilarTVListAdapter
@@ -51,6 +58,8 @@ class TvSimilarFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_tv_similar, container, false)
 
+        val tvID = getTvId()
+
         val repository = MovieRepository()
         val movieViewModelFactory = MovieViewModelFactory(repository)
         movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
@@ -68,7 +77,7 @@ class TvSimilarFragment : Fragment() {
 
         similarTVView.addItemDecoration(GridSpacingItemDecoration(3,spacing, includeEdge))
 
-        movieViewModel.getTVSimilar("63174")
+        movieViewModel.getTVSimilar(tvID)
 
         movieViewModel.tvSimilar.observe(viewLifecycleOwner, Observer { tvs ->
             tvs?.let {
@@ -78,6 +87,4 @@ class TvSimilarFragment : Fragment() {
 
         return view
     }
-
-
 }

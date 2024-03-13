@@ -13,6 +13,8 @@ import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.example.cineflix.Adapters.SimilarListAdapter
 import com.example.cineflix.Adapters.TabLayoutTvDetailsAdapter
+import com.example.cineflix.Model.Season
+import com.example.cineflix.Model.TvDetails
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
 import com.example.cineflix.View.Fragments.TvEpisodeFragment
@@ -24,6 +26,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 private var tvID : String = ""
+
 
 class TvDetailsActivity : AppCompatActivity() {
 
@@ -44,30 +47,33 @@ class TvDetailsActivity : AppCompatActivity() {
 
         val TVId = intent.getIntExtra("tv_id",0)
         tvID = TVId.toString()
-        val movieTitle = intent.getStringExtra("tv_title")
-        val movieYear = intent.getStringExtra("tv_year")
-        val movieOverview = intent.getStringExtra("tv_overview")
-        val tvBackdropPath = intent.getStringExtra("tv_backdrop")
-
 
         val title = findViewById<TextView>(R.id.tvTitle)
         val year = findViewById<TextView>(R.id.tvYear)
         val overview = findViewById<TextView>(R.id.tvOverview)
         val actor = findViewById<TextView>(R.id.tvActor)
+        val tvSeasonCount = findViewById<TextView>(R.id.tvSeasonCount)
+        val TvBackdrop = findViewById<ImageView>(R.id.TVbackdrop)
 
-        title.text = movieTitle
-        year.text = movieYear.toString().substring(0,4)
-        overview.text = movieOverview
+        //Get TV Details
+        movieViewModel.getTVDetails(TVId.toString())
+        movieViewModel.tvDetails.observe(this@TvDetailsActivity) {tvs ->
+            tvs?.let {
+                tvSeasonCount.text = "${tvs.number_of_seasons} Mùa"
+                title.text = it.name
+                year.text = it.first_air_date.substring(0,4)
+                overview.text = it.overview
+                TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${it.backdrop_path}")
+            }
+        }
+
+
 
         movieViewModel.getTvVideos(TVId.toString())
-
-        val TvBackdrop = findViewById<ImageView>(R.id.TVbackdrop)
-        TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${tvBackdropPath}")
 
 
         //Get TV credits
         movieViewModel.getTvCredits(TVId.toString())
-
         movieViewModel.tvCredit.observe(this@TvDetailsActivity) { credit ->
             credit?.let {
                 val credits = credit.cast.sortedByDescending { it.popularity }.subList(0,5)
@@ -113,6 +119,6 @@ class TvDetailsActivity : AppCompatActivity() {
     }
 }
 
-public fun getTvId(): String {
+fun getTvId(): String {
     return tvID
 }

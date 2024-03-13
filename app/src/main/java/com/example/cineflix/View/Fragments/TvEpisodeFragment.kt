@@ -58,14 +58,12 @@ class TvEpisodeFragment : Fragment() {
 
         var items = emptyArray<String>()
 
+        //
         movieViewModel.getTVDetails(tvId)
         movieViewModel.tvDetails.observe(viewLifecycleOwner, Observer { tvs ->
             tvs?.let {
                 val newSeasons = it.seasons.map { "Mùa " + it.season_number.toString() }
                 items = newSeasons.toTypedArray()
-//                if (it.seasons.get(0).season_number == 0) {
-//                    selectedSeason = 1
-//                }
             }
         })
 
@@ -117,3 +115,5 @@ class TvEpisodeFragment : Fragment() {
         dialog.show()
     }
 }
+
+// Nếu bộ phim nào không có mùa 0 thì selectSeason phải chuyển về 0

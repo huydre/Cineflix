@@ -20,6 +20,10 @@
         <item name="cornerSize">15dp</item>
     </style>
 
+    <style name="rounded_corner">
+        <item name="cornerSize">12dp</item>
+    </style>
+
     <style name="TransparentStatusBarTheme" parent="Base.Theme.Cineflix" >
         <item name="android:statusBarColor" >@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
@@ -31,7 +35,7 @@
     </style>
 
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/bottom_bar</item>
+        <item name="android:color">@android:color/transparent</item>
     </style>
 
 

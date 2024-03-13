@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <gradient
-                android:startColor="#BE6161"
-                android:centerColor="#521515"
-                android:endColor="#210A0A"
-                android:type="radial"
-                android:gradientRadius="110%p"
-                android:centerX="1"
-                android:centerY="0"
-                />
-        </shape>
-    </item>
-    <item>
-        <shape>
-            <gradient
-                android:startColor="#741913"
-                android:centerColor="@android:color/transparent"
-                android:endColor="@android:color/transparent"
-                android:type="radial"
-                android:gradientRadius="110%p"
-                android:centerX="0.1"
-                android:centerY="0.8"
-                />
-        </shape>
-    </item>
-</layer-list>
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <item>-->
+<!--        <shape>-->
+<!--            <gradient-->
+<!--                android:startColor="#BE6161"-->
+<!--                android:centerColor="#521515"-->
+<!--                android:endColor="#210A0A"-->
+<!--                android:type="radial"-->
+<!--                android:gradientRadius="110%p"-->
+<!--                android:centerX="1"-->
+<!--                android:centerY="0"-->
+<!--                />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--    <item>-->
+<!--        <shape>-->
+<!--            <gradient-->
+<!--                android:startColor="#741913"-->
+<!--                android:centerColor="@android:color/transparent"-->
+<!--                android:endColor="@android:color/transparent"-->
+<!--                android:type="radial"-->
+<!--                android:gradientRadius="110%p"-->
+<!--                android:centerX="0.1"-->
+<!--                android:centerY="0.8"-->
+<!--                />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--</layer-list>-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <gradient android:startColor="#141414" android:endColor="#2C3332" android:angle="90" />
+</shape>

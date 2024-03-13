@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_tvDetailsActivity"
             app:destination="@id/tvDetailsActivity" />
+        <action
+            android:id="@+id/action_homeFragment_to_moviePlayerActivity2"
+            app:destination="@id/moviePlayerActivity2" />
     </fragment>
     <activity
         android:id="@+id/moviePlayerActivity2"

@@ -1,6 +1,7 @@
 package com.example.cineflix.View.Fragments
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import android.view.animation.Animation
 import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -23,9 +25,12 @@ import com.example.cineflix.Adapters.TopRatedListAdapter
 import com.example.cineflix.Adapters.TopRatedTVListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.MovieDetailsActivity
+import com.example.cineflix.View.Activities.MoviePlayerActivity
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import java.util.Objects
 
@@ -66,6 +71,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val bigPoster = view.findViewById<ShapeableImageView>(R.id.bigPoster)
+        val playBtn = view.findViewById<MaterialButton>(R.id.playBtn)
 
         //View 1
         val recyclerView1: RecyclerView = view.findViewById(R.id.view1)
@@ -78,9 +84,18 @@ class HomeFragment : Fragment() {
         movieViewModel.popularMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
                 val lst = it.subList(1,11)
-                popularListAdapter.setMovies(lst)
 
-                bigPoster.load("https://media.themoviedb.org/t/p/w500/${it.get(0).poster_path}")
+                val bigPosterMovie = it.get(0)
+                popularListAdapter.setMovies(lst)
+                playBtn.setOnClickListener {
+                    val intent = Intent(context, MoviePlayerActivity::class.java)
+                    intent.putExtra("media_type", "movie")
+                    intent.putExtra("title", bigPosterMovie.title)
+                    context?.startActivity(intent)
+                    Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_moviePlayerActivity2)
+                }
+
+                bigPoster.load("https://media.themoviedb.org/t/p/w500/${bigPosterMovie.poster_path}")
 
                 if (!it.isEmpty()) {
                     val shimmer1 =  view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout1)

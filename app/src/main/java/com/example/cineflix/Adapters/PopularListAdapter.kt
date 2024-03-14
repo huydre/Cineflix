@@ -24,7 +24,6 @@ class PopularListAdapter(var lst:List<Movie>): RecyclerView.Adapter<PopularListA
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-//        Log.d(TAG, "onBindViewHolder: " + lst)
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
@@ -36,6 +35,7 @@ class PopularListAdapter(var lst:List<Movie>): RecyclerView.Adapter<PopularListA
             intent.putExtra("movie_year", movieResult.release_date)
             intent.putExtra("movie_overview", movieResult.overview)
             intent.putExtra("movie_backdropPath", movieResult.backdrop_path)
+            intent.putExtra("poster_path", movieResult.poster_path)
             holder.itemView.context.startActivity(intent)
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
         }

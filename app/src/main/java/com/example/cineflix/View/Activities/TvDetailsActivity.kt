@@ -1,9 +1,11 @@
 package com.example.cineflix.View.Activities
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
@@ -21,6 +23,7 @@ import com.google.android.material.tabs.TabLayout
 private var tvID : String = ""
 private var movieTitle : String? = ""
 private var numberOfSeason : Int = 0
+private lateinit var posterPath: String
 
 class TvDetailsActivity : AppCompatActivity() {
 
@@ -39,12 +42,13 @@ class TvDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tv_details)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        val TVId = intent.getIntExtra("tv_id",0)
+        val TVId = intent.getIntExtra("movie_id",0)
         tvID = TVId.toString()
         movieTitle = intent.getStringExtra("tv_title")
         val movieYear = intent.getStringExtra("tv_year")
         val movieOverview = intent.getStringExtra("tv_overview")
         val tvBackdropPath = intent.getStringExtra("tv_backdrop")
+        posterPath = intent.getStringExtra("poster_path").toString()
 
         val title = findViewById<TextView>(R.id.tvTitle)
         val year = findViewById<TextView>(R.id.tvYear)
@@ -139,10 +143,12 @@ class TvDetailsActivity : AppCompatActivity() {
 
         playBtn.setOnClickListener {
             val intent = Intent(this, MoviePlayerActivity::class.java)
+            intent.putExtra("movie_id", TVId)
             intent.putExtra("media_type", "tv")
             intent.putExtra("title", movieTitle)
             intent.putExtra("season", 1)
             intent.putExtra("episode", 1)
+            intent.putExtra("poster_path", posterPath)
             startActivity(intent)
         }
     }

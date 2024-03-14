@@ -40,6 +40,8 @@ class SimilarListAdapter(var lst:List<Movie>): RecyclerView.Adapter<SimilarListA
             intent.putExtra("movie_year", movieResult.release_date)
             intent.putExtra("movie_overview", movieResult.overview)
             intent.putExtra("movie_backdropPath", movieResult.backdrop_path)
+            intent.putExtra("poster_path", movieResult.poster_path)
+
             holder.itemView.context.startActivity(intent)
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
         }

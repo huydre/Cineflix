@@ -10,27 +10,26 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PowerManager
-import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GestureDetectorCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.cineflix.Model.local.watching.ContinueWatching
+import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
 import com.example.cineflix.OPhimRepository
 import com.example.cineflix.R
 import com.example.cineflix.Utils.OPhim
@@ -53,6 +52,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -90,7 +90,15 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private lateinit var brightnessImage: ImageView
     private lateinit var unlockIv : LinearLayout
     private lateinit var sourceAndSubtile: LinearLayout
+    private lateinit var mediaType: String
+    private lateinit var movieTitle: String
+    private var movieId: Int = 0
+    private var season: Int = 0
+    private var episode: Int = 0
+    private lateinit var posterPath: String
 
+    private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
+    private val watchHistoryDao by lazy { database.watchDAO() }
     private lateinit var oPhimViewModel: OPhimViewModel
 
 
@@ -100,11 +108,12 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_player)
 
-        val movieId = intent.getStringExtra("movie_id")
-        val mediaType = intent.getStringExtra("media_type")
-        val movieTitle = intent.getStringExtra("title").toString()
-        var season = intent.getIntExtra("season", 0)
-        var episode = intent.getIntExtra("episode", 0)
+        movieId = intent.getIntExtra("movie_id", 0)
+        mediaType = intent.getStringExtra("media_type").toString()
+        movieTitle = intent.getStringExtra("title").toString()
+        season = intent.getIntExtra("season", 0)
+        episode = intent.getIntExtra("episode", 0)
+        posterPath = intent.getStringExtra("poster_path").toString()
 
         getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
 
@@ -333,6 +342,24 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     }
 
     override fun onDestroy() {
+
+        GlobalScope.launch(Dispatchers.IO) {
+            watchHistoryDao.insert(
+                ContinueWatching(
+                    progress = playbackPosition.toInt(),
+                    posterPath = posterPath,
+                    tmdbID = movieId,
+                    title = movieTitle,
+                    media_type = mediaType,
+                    season = season,
+                    episode = episode,
+                    year = "2024"
+                )
+            )
+
+//            val test = watchHistoryDao.getContinueWatching()
+//            Log.d(TAG, "onDestroy: " + test)
+        }
         super.onDestroy()
         releasePlayer()
     }

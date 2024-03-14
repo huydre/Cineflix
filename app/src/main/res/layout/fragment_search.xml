@@ -17,7 +17,7 @@
         android:layout_marginHorizontal="10dp"
         android:iconifiedByDefault="false"
         android:queryHint="Tìm kiếm..."
-        app:queryBackground="@android:color/transparent"
+        android:queryBackground="@null"
         android:background="@drawable/rectangle_box_slim"
         >
         <com.google.android.material.textfield.TextInputLayout
@@ -77,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginHorizontal="5dp"
+            android:layout_marginHorizontal="2dp"
             >
             <TextView
                 android:id="@+id/resultTitle"

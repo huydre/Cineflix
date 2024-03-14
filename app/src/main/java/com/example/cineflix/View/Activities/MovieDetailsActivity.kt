@@ -38,6 +38,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var similarListAdapter: SimilarListAdapter
     private lateinit var oPhimViewModel: OPhimViewModel
+    private lateinit var posterPath: String
 
 
     @SuppressLint("SetTextI18n")
@@ -56,6 +57,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieYear = intent.getStringExtra("movie_year")
         val movieOverview = intent.getStringExtra("movie_overview")
         val movieBackdrop = intent.getStringExtra("movie_backdropPath")
+        posterPath = intent.getStringExtra("poster_path").toString()
 //        val slug = ConvertNameToSlug(movieTitle.toString())
         val backBtn = findViewById<MaterialButton>(R.id.backBtn)
 
@@ -114,8 +116,10 @@ class MovieDetailsActivity : AppCompatActivity() {
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
         playbtn.setOnClickListener{
             val intent = Intent(this, MoviePlayerActivity::class.java)
+            intent.putExtra("movie_id", movieId)
             intent.putExtra("media_type", "movie")
             intent.putExtra("title", movieTitle)
+            intent.putExtra("poster_path", posterPath)
             startActivity(intent)
         }
     }

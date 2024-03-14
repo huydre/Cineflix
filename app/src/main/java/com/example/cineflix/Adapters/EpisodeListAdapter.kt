@@ -46,7 +46,7 @@ class EpisodeListAdapter (var lst:List<EpisodeX>): RecyclerView.Adapter<EpisodeL
             val season = getSeason()
             val movieTitle = getTvTitle()
             val intent = Intent(holder.itemView.context, MoviePlayerActivity::class.java)
-            intent.putExtra("tv_id", movieResult.id)
+            intent.putExtra("movie_id", movieResult.id)
             intent.putExtra("title", movieTitle)
             intent.putExtra("season",season )
             intent.putExtra("episode", position+1)

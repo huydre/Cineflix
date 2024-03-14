@@ -10,7 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -18,21 +19,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Adapters.AiringTodayTVListAdapter
+import com.example.cineflix.Adapters.ContinueWatchingListAdapter
 import com.example.cineflix.Adapters.NowPlayingListAdapter
 import com.example.cineflix.Adapters.PopularListAdapter
 import com.example.cineflix.Adapters.PopularListTVAdapter
 import com.example.cineflix.Adapters.TopRatedListAdapter
 import com.example.cineflix.Adapters.TopRatedTVListAdapter
+import com.example.cineflix.Model.local.watching.ContinueWatching
+import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
+import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
-import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.MoviePlayerActivity
+import com.example.cineflix.ViewModel.ContinueWatchingViewModel
+import com.example.cineflix.ViewModel.ContinueWatchingViewModelFactory
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
-import java.util.Objects
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -50,6 +55,17 @@ class HomeFragment : Fragment() {
     private lateinit var popularListTVAdapter: PopularListTVAdapter
     private lateinit var topRatedTVListAdapter: TopRatedTVListAdapter
     private lateinit var airingTodayTVListAdapter: AiringTodayTVListAdapter
+    private lateinit var continueWatchingListAdapyer: ContinueWatchingListAdapter
+
+    private lateinit var continueWatchingRepository: ContinueWatchingRepository
+    private val database by lazy { ContinueWatchingDatabase.getInstance(requireContext()) }
+    private val watchHistoryDao by lazy { database.watchDAO() }
+    private lateinit var viewModelFactory: ContinueWatchingViewModelFactory
+    private val viewModel: ContinueWatchingViewModel by viewModels(
+        factoryProducer = {
+            viewModelFactory
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +105,7 @@ class HomeFragment : Fragment() {
                 popularListAdapter.setMovies(lst)
                 playBtn.setOnClickListener {
                     val intent = Intent(context, MoviePlayerActivity::class.java)
+                    intent.putExtra("movie_id", bigPosterMovie.id)
                     intent.putExtra("media_type", "movie")
                     intent.putExtra("title", bigPosterMovie.title)
                     context?.startActivity(intent)
@@ -221,6 +238,25 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
+        //Continue Watching
+        continueWatchingRepository = ContinueWatchingRepository(watchHistoryDao)
+        viewModelFactory = ContinueWatchingViewModelFactory(watchHistoryDao)
+
+        val recyclerViewCW: RecyclerView = view.findViewById(R.id.viewCW)
+        recyclerViewCW.layoutManager  = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
+        continueWatchingListAdapyer = ContinueWatchingListAdapter(emptyList())
+        recyclerViewCW.adapter = continueWatchingListAdapyer
+
+        val viewStateObserver = Observer<List<ContinueWatching>> { watchFrom ->
+            if (watchFrom.isNotEmpty()) {
+                val textCW = view.findViewById<TextView>(R.id.textViewCW)
+                recyclerViewCW.visibility = View.VISIBLE
+                textCW.visibility = View.VISIBLE
+            }
+            continueWatchingListAdapyer.setMovies(watchFrom)
+        }
+        viewModel.allWatchHistory.observe(viewLifecycleOwner,viewStateObserver)
 
         // Inflate the layout for this fragment
         return view

@@ -19,6 +19,7 @@ import com.google.android.material.tabs.TabLayout
 
 private var tvID : String = ""
 private var movieTitle : String? = ""
+private var numberOfSeason : Int = 0
 
 class TvDetailsActivity : AppCompatActivity() {
 
@@ -62,6 +63,7 @@ class TvDetailsActivity : AppCompatActivity() {
         movieViewModel.tvDetails.observe(this@TvDetailsActivity) {tvs ->
             tvs?.let {
                 tvSeasonCount.text = "${tvs.number_of_seasons.toString()} Mùa"
+                numberOfSeason = tvs.number_of_seasons
 //                title.text = it.name
 //                year.text = it.first_air_date.substring(0,4)
 //                overview.text = it.overview
@@ -134,4 +136,8 @@ fun getTvId(): String {
 
 fun getTvTitle(): String? {
     return movieTitle
+}
+
+fun getTVSeasonCount(): Int {
+    return numberOfSeason
 }

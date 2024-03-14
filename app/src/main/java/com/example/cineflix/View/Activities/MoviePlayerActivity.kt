@@ -62,6 +62,9 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private val _videoUrl = MutableLiveData<String>()
     val videoUrl: LiveData<String> = _videoUrl
 
+    private val _numberOfEpisode = MutableLiveData<Int>()
+    val numberOfEpisode: LiveData<Int> = _numberOfEpisode
+
     private lateinit var simpleExoplayer: SimpleExoPlayer
     private var playbackPosition: Long = 0
     private lateinit var buffer: ProgressBar
@@ -81,6 +84,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private var volume : Int = 0
     private var audioManager: AudioManager? = null
     private var maxVolume: Int = 0
+    private var seasonCount: Int = 0
     private lateinit var gestureDetector: GestureDetector
     private var isLocked = false
     private lateinit var brightnessImage: ImageView
@@ -99,8 +103,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val movieId = intent.getStringExtra("movie_id")
         val mediaType = intent.getStringExtra("media_type")
         val movieTitle = intent.getStringExtra("title").toString()
-        val season = intent.getIntExtra("season", 0)
-        val episode = intent.getIntExtra("episode", 0)
+        var season = intent.getIntExtra("season", 0)
+        var episode = intent.getIntExtra("episode", 0)
 
         getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
 
@@ -130,6 +134,23 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             sourceAndSubtile.visibility = View.GONE
         }
 
+        nextEPBtn.setOnClickListener {
+            // Chuyển sang tập tiếp theo
+            val currentEpisodeUrl = videoUrl.value
+            episode += 1
+            getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
+            // Nếu tập tiếp theo không có thì chuyển qua season mới
+            if (currentEpisodeUrl == videoUrl.value && season < seasonCount) {
+                season += 1
+                episode = 1
+                getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
+            }
+            else {
+                nextEPBtn.visibility = View.GONE
+            }
+            title.text = "${movieTitle} Phần ${season} Tập ${episode}"
+        }
+
         gestureDetector = GestureDetector(this, this)
         findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
 
@@ -152,6 +173,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             title.text = movieTitle
         }
         else {
+            seasonCount = getTVSeasonCount()
             nextEPBtn.visibility = View.VISIBLE
             title.text = "${movieTitle} Phần ${season} Tập ${episode}"
         }
@@ -450,8 +472,10 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
                     _videoUrl.value = it.get(0).episodes.get(0).server_data.get(0).link_m3u8
                 }
                 else {
-
-                    _videoUrl.value = it.get(0).episodes.get(0).server_data.get(e-1).link_m3u8
+                    _numberOfEpisode.value = it.get(0).episodes.get(0).server_data.size
+                    if (numberOfEpisode.value!! >= e ) {
+                        _videoUrl.value = it.get(0).episodes.get(0).server_data.get(e-1).link_m3u8
+                    }
                 }
             }
         }

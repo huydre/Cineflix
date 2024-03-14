@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <FrameLayout
                 android:id="@+id/backdropFL"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +76,7 @@
                 android:layout_marginTop="10dp"
                 >
                 <ImageView
+                    android:id="@+id/star_icon"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/star"
                     android:layout_width="wrap_content"
@@ -309,7 +311,49 @@
                     />
             </LinearLayout>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backBtn"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="70dp"
+            app:cornerRadius="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="start"
+            app:icon="@drawable/ic_back_button"
+            app:iconSize="23dp"
+            app:iconTint="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/airplayBtn"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="70dp"
+            app:cornerRadius="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="end"
+            app:icon="@drawable/ic_air_play"
+            app:iconGravity="end"
+            app:iconSize="23dp"
+            app:iconTint="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

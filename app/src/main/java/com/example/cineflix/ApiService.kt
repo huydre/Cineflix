@@ -76,10 +76,11 @@ interface ApiService {
         @Query("api_key") apiKey: String
     ): Response<Credit>
 
-    @GET("movie/{movie_id}/similar")
+    @GET("movie/{movie_id}/recommendations")
     suspend fun getMovieSimilar(
         @Path("movie_id") movieId: String,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ): Response<MovieResponse>
 
      @GET("search/multi")
@@ -122,10 +123,11 @@ interface ApiService {
         @Query("api_key") apiKey: String
     ): Response<Credit>
 
-    @GET("tv/{series_id}/similar")
+    @GET("tv/{series_id}/recommendations")
     suspend fun getTVSimilar(
         @Path("series_id") TvId: String,
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
     ) : Response<TVResponse>
 
     @GET("tv/{series_id}")
@@ -164,7 +166,7 @@ class MovieRepository {
         return movieApiService.getMovieCredits(movieId, API_KEY)
     }
     suspend fun getMovieSimilar(movieId: String): Response<MovieResponse>{
-        return movieApiService.getMovieSimilar(movieId, API_KEY)
+        return movieApiService.getMovieSimilar(movieId, API_KEY, LANGUAGE)
     }
     suspend fun getSearchMulti(query: String): Response<SearchMultiResponse> {
         return movieApiService.getSearchMulti(query, API_KEY, LANGUAGE)
@@ -185,7 +187,7 @@ class MovieRepository {
         return movieApiService.getTVCredits(TVId, API_KEY)
     }
     suspend fun getTVSimilar(TVId: String) : Response<TVResponse> {
-        return movieApiService.getTVSimilar(TVId, API_KEY)
+        return movieApiService.getTVSimilar(TVId, API_KEY, LANGUAGE)
     }
     suspend fun getTVDetails(TVId: String): Response<TvDetails> {
         return movieApiService.getTVDetails(TVId, API_KEY, LANGUAGE)

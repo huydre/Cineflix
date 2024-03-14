@@ -1,6 +1,7 @@
 package com.example.cineflix.View.Activities
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
@@ -52,11 +53,18 @@ class TvDetailsActivity : AppCompatActivity() {
         val tvSeasonCount = findViewById<TextView>(R.id.tvSeasonCount)
         val TvBackdrop = findViewById<ImageView>(R.id.TVbackdrop)
         val playBtn = findViewById<MaterialButton>(R.id.playBtnTV)
+        val tvRate = findViewById<TextView>(R.id.tvRate)
+        val starIcon = findViewById<ImageView>(R.id.star_icon)
+        val backBtn = findViewById<MaterialButton>(R.id.backBtn)
 
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)
         overview.text = movieOverview
         TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${tvBackdropPath}")
+
+        backBtn.setOnClickListener {
+            finish()
+        }
 
         //Get TV Details
         movieViewModel.getTVDetails(TVId.toString())
@@ -64,6 +72,16 @@ class TvDetailsActivity : AppCompatActivity() {
             tvs?.let {
                 tvSeasonCount.text = "${tvs.number_of_seasons.toString()} Mùa"
                 numberOfSeason = tvs.number_of_seasons
+                val rated = it.vote_average
+                tvRate.text = rated.toString().substring(0,3)
+                if (rated < 7 && rated >= 4) {
+                    starIcon.setColorFilter(Color.parseColor("#D2D531"))
+                    tvRate.setTextColor(Color.parseColor("#D2D531"))
+                }
+                else if (rated < 4 ) {
+                    starIcon.setColorFilter(Color.parseColor("#DB2360"))
+                    tvRate.setTextColor(Color.parseColor("#DB2360"))
+                }
 //                title.text = it.name
 //                year.text = it.first_air_date.substring(0,4)
 //                overview.text = it.overview

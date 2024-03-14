@@ -57,12 +57,17 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieOverview = intent.getStringExtra("movie_overview")
         val movieBackdrop = intent.getStringExtra("movie_backdropPath")
 //        val slug = ConvertNameToSlug(movieTitle.toString())
+        val backBtn = findViewById<MaterialButton>(R.id.backBtn)
 
         val title = findViewById<TextView>(R.id.movieTitle)
         val year = findViewById<TextView>(R.id.movieYear)
         val overview = findViewById<TextView>(R.id.movieOverview)
         val actor = findViewById<TextView>(R.id.movieActor)
         val backdrop = findViewById<ImageView>(R.id.MovieBackdrop)
+
+        backBtn.setOnClickListener {
+            finish()
+        }
 
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)

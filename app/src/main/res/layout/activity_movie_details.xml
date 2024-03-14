@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".View.Activities.MovieDetailsActivity"
-    android:background="@drawable/gradient_color_bg">
+    android:background="#141414">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -18,38 +18,100 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="-16dp">
 
-            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-                android:id="@+id/youtube_player_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+
+            <FrameLayout
+                android:id="@+id/MoviebackdropFL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="300dp">
+                <ImageView
+                    android:src="@drawable/aaaaby8rhdsiftokfnzl3or_t_cixonehoe5v47ck_yov6sq9u6dgcxi6g0vjlelkvrdotghhneztw9qa_q14oimsyyoualu2zqn4ioramujvt3qfeugs5iotornev_a18bszhmztw"
+                    android:id="@+id/MovieBackdrop"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:contentDescription="TODO" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_gravity="bottom"
+                    android:id="@+id/imageView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:srcCompat="@drawable/backdrop_gradient" />
+            </FrameLayout>
+
+<!--            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView-->
+<!--                android:id="@+id/youtube_player_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="50dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/movieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
                 android:text="Movie Name"
                 android:textColor="@android:color/white"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/youtube_player_view" />
+                app:layout_constraintTop_toBottomOf="@+id/MoviebackdropFL" />
 
-            <TextView
-                android:id="@+id/movieYear"
-                android:layout_width="wrap_content"
+<!--            <TextView-->
+<!--                android:id="@+id/movieYear"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="year"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/movieTitle" />-->
+
+            <LinearLayout
+                android:id="@+id/MovieRateLL"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:text="year"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movieTitle" />
+                app:layout_constraintTop_toBottomOf="@+id/movieTitle"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                >
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="TODO"
+                    app:tint="#5AD065" />
+                <TextView
+                    android:id="@+id/tvRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8.8"
+                    android:textColor="#5AD065"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="16dp"
+                    />
+                <TextView
+                    android:id="@+id/movieYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="YEAR"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16dp"
+                    />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/playBtn"
@@ -70,28 +132,7 @@
                 app:iconGravity="textStart"
                 app:iconTint="@android:color/black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movieYear" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/saveBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="12dp"
-                android:text="Danh Sách"
-                android:textColor="@android:color/white"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                app:backgroundTint="#2B2B2D"
-                app:cornerRadius="10dp"
-                app:icon="@drawable/add"
-                app:iconGravity="textStart"
-                app:iconTint="@android:color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playBtn" />
+                app:layout_constraintTop_toBottomOf="@+id/MovieRateLL" />
 
             <TextView
                 android:id="@+id/movieOverview"
@@ -105,7 +146,7 @@
                 android:text="Đang câpj nhật ..."
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/saveBtn" />
+                app:layout_constraintTop_toBottomOf="@+id/playBtn" />
 
             <TextView
                 android:id="@+id/movieActor"
@@ -118,6 +159,91 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/movieOverview" />
 
+            <LinearLayout
+                android:id="@+id/ButtonGroupLL"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movieActor"
+                android:orientation="horizontal"
+                android:gravity="left"
+                android:layout_marginHorizontal="25dp"
+                >
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp">
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_add_big"
+                        android:backgroundTint="@android:color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:text="Danh Sách"
+                        android:textSize="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#9D999A"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp">
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_like"
+                        android:backgroundTint="@android:color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="8dp"
+                        />
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:text="Yêu Thích"
+                        android:textSize="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#9D999A"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_send"
+                        android:backgroundTint="@android:color/transparent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5.8dp"
+                        />
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:text="Chia sẻ"
+                        android:textSize="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#9D999A"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
@@ -129,7 +255,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movieActor" />
+                app:layout_constraintTop_toBottomOf="@+id/ButtonGroupLL" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/similarView"

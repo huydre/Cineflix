@@ -42,6 +42,7 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
             intent.putExtra("movie_title", movieResult.title)
             intent.putExtra("movie_year", movieResult.release_date)
             intent.putExtra("movie_overview", movieResult.overview)
+            intent.putExtra("movie_backdropPath", movieResult.backdrop_path)
             holder.itemView.context.startActivity(intent)
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
         }

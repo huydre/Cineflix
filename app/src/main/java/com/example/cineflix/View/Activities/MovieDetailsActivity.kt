@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.cineflix.Adapters.SimilarListAdapter
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.OPhimRepository
@@ -28,6 +30,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import kotlinx.coroutines.runBlocking
+import kotlin.math.log
 
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -35,7 +38,6 @@ class MovieDetailsActivity : AppCompatActivity() {
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var similarListAdapter: SimilarListAdapter
     private lateinit var oPhimViewModel: OPhimViewModel
-    private lateinit var videoUrl: String
 
 
     @SuppressLint("SetTextI18n")
@@ -53,32 +55,23 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieTitle = intent.getStringExtra("movie_title")
         val movieYear = intent.getStringExtra("movie_year")
         val movieOverview = intent.getStringExtra("movie_overview")
+        val movieBackdrop = intent.getStringExtra("movie_backdropPath")
 //        val slug = ConvertNameToSlug(movieTitle.toString())
 
         val title = findViewById<TextView>(R.id.movieTitle)
         val year = findViewById<TextView>(R.id.movieYear)
         val overview = findViewById<TextView>(R.id.movieOverview)
         val actor = findViewById<TextView>(R.id.movieActor)
+        val backdrop = findViewById<ImageView>(R.id.MovieBackdrop)
 
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)
         overview.text = movieOverview
+        backdrop.load("https://media.themoviedb.org/t/p/w780/${movieBackdrop}")
 
-        movieViewModel.getMovieVideos(movieId.toString())
-
-        val youTubePlayerView = findViewById<YouTubePlayerView>(R.id.youtube_player_view)
-        lifecycle.addObserver(youTubePlayerView)
-
-        youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                movieViewModel.movieVideos.observe(this@MovieDetailsActivity) { videos ->
-                    videos?.let {
-                        val videoId = it.results.firstOrNull()?.key ?: ""
-                        youTubePlayer.loadVideo(videoId, 0f)
-                    }
-                }
-            }
-        })
+        if (movieOverview.isNullOrBlank()) {
+            overview.visibility = View.GONE
+        }
 
         // Get movie credits
         movieViewModel.getMovieCredits(movieId.toString())
@@ -87,7 +80,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             credit?.let {
                 val credits = credit.cast.sortedByDescending { it.popularity }.subList(0,5)
                 val names = credits.map { it.name }
-//                val actorList = names.joinToString {  }
                 actor.text = "Diễn viên: " + names.joinToString(separator = ", ") + "..."
             }
         }
@@ -104,9 +96,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         similarView.adapter = similarListAdapter
 
         similarView.addItemDecoration(GridSpacingItemDecoration(3,spacing, includeEdge))
-
-//        similarView.layoutManager = GridLayoutManager(this, 3)
-//        similarListAdapter = SimilarListAdapter(emptyList())
         similarView.adapter = similarListAdapter
         movieViewModel.getMovieSimilar(movieId.toString())
 
@@ -116,7 +105,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         })
 
-        videoUrl = ""
         //Play button
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
         playbtn.setOnClickListener{
@@ -130,7 +118,6 @@ class MovieDetailsActivity : AppCompatActivity() {
 
 
 class GridSpacingItemDecoration(private val spanCount: Int, private val spacing: Int, private val includeEdge: Boolean) : RecyclerView.ItemDecoration() {
-
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildAdapterPosition(view) // item position
         val column = position % spanCount // item column

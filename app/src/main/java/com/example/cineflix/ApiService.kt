@@ -2,6 +2,7 @@ package com.example.cineflix
 
 import com.example.cineflix.Model.Credit
 import com.example.cineflix.Model.Movie
+import com.example.cineflix.Model.MovieDetails
 import com.example.cineflix.Model.MovieResponse
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.SearchMultiResponse
@@ -42,7 +43,7 @@ interface ApiService {
         @Query("language") language: String
     ):Response<MovieResponse>
 
-    @GET("movie/top_rated")
+    @GET("trending/movie/day")
     suspend fun getTopRatedMovie(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int,
@@ -55,6 +56,13 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("language") language: String
     ):Response<MovieResponse>
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: String,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String
+    ): Response<MovieDetails>
 
     @GET("movie/{movie_id}/videos")
     suspend fun getMovieVideos(
@@ -145,6 +153,9 @@ class MovieRepository {
     }
     suspend fun getNowPlayingMovies(page: Int): Response<MovieResponse> {
         return movieApiService.getNowPlayingMovie(API_KEY, page, LANGUAGE)
+    }
+    suspend fun getMovieDetails(movieId: String): Response<MovieDetails> {
+        return movieApiService.getMovieDetails(movieId, API_KEY, LANGUAGE)
     }
     suspend fun getMovieVideos(movieId: String): Response<Video> {
         return movieApiService.getMovieVideos(movieId, API_KEY)

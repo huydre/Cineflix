@@ -16,6 +16,7 @@ import com.example.cineflix.View.Activities.MovieDetailsActivity
 class SimilarListAdapter(var lst:List<Movie>): RecyclerView.Adapter<SimilarListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imagePoster)
+        val title: TextView = itemView.findViewById(R.id.title)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimilarListAdapter.MovieViewHolder {
@@ -30,6 +31,7 @@ class SimilarListAdapter(var lst:List<Movie>): RecyclerView.Adapter<SimilarListA
     override fun onBindViewHolder(holder: SimilarListAdapter.MovieViewHolder, position: Int) {
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
+        holder.title.text = movieResult.title
 
         holder.itemView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
@@ -37,6 +39,7 @@ class SimilarListAdapter(var lst:List<Movie>): RecyclerView.Adapter<SimilarListA
             intent.putExtra("movie_title", movieResult.title)
             intent.putExtra("movie_year", movieResult.release_date)
             intent.putExtra("movie_overview", movieResult.overview)
+            intent.putExtra("movie_backdropPath", movieResult.backdrop_path)
             holder.itemView.context.startActivity(intent)
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
         }

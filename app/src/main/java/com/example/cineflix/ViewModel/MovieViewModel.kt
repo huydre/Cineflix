@@ -12,6 +12,7 @@ import com.example.cineflix.MovieRepository
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cineflix.Model.Credit
+import com.example.cineflix.Model.MovieDetails
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.SeasonDetails
 import com.example.cineflix.Model.TV
@@ -43,6 +44,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _nowplayingMovies = MutableLiveData<List<Movie>>()
     val nowPlayingMovies: LiveData<List<Movie>> get() = _nowplayingMovies
+
+    private val _movieDetails = MutableLiveData<MovieDetails>()
+    val movieDetails: LiveData<MovieDetails> get() = _movieDetails
 
     private val _movieVideos = MutableLiveData<Video>()
     val movieVideos: LiveData<Video> get() = _movieVideos
@@ -117,6 +121,20 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val movieResponse = response.body()
                 movieResponse?.let {
                     _nowplayingMovies.value  = it.results
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getMovieDetails(movieId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getMovieDetails(movieId)
+                val movieResponse = response.body()
+                movieResponse?.let {
+                    _movieDetails.value = it
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

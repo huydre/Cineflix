@@ -168,7 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="Phim được đánh giá cao"
+                android:text="Mọi người cũng xem"
                 android:textColor="@android:color/white"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -222,7 +222,7 @@
                 android:layout_height="wrap_content">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="160dp"
                     android:background="@drawable/network_gradient"
                     android:layout_marginBottom="20dp">
 

@@ -30,4 +30,7 @@ interface ContinueWatchingDAO {
 
     @Query("SELECT * FROM continue_watching WHERE `tmdbID`=:id")
     fun getProgress(id:Int) : LiveData<ContinueWatching?>
+
+    @Query("SELECT * FROM continue_watching WHERE `tmdbID`=:id")
+    fun getProgressTest(id:Int) : ContinueWatching
 }

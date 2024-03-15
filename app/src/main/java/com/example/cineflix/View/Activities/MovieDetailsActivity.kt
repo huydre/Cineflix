@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Adapters.SimilarListAdapter
+import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.OPhimRepository
 import com.example.cineflix.R
@@ -29,6 +30,9 @@ import com.google.android.material.button.MaterialButton
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.log
 
@@ -39,6 +43,11 @@ class MovieDetailsActivity : AppCompatActivity() {
     private lateinit var similarListAdapter: SimilarListAdapter
     private lateinit var oPhimViewModel: OPhimViewModel
     private lateinit var posterPath: String
+    private var playbackPosition: Long = 0
+    private var isWatching: Boolean = false
+
+    private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
+    private val watchHistoryDao by lazy { database.watchDAO() }
 
 
     @SuppressLint("SetTextI18n")
@@ -80,6 +89,16 @@ class MovieDetailsActivity : AppCompatActivity() {
             overview.visibility = View.GONE
         }
 
+        //Continue Watching
+        GlobalScope.launch(Dispatchers.IO) {
+            val test = watchHistoryDao.getProgressTest(movieId)
+            test?.let {
+                playbackPosition = it.progress
+                isWatching = true
+                Log.d(TAG, "onCreate: " + it)
+            }
+        }
+
         // Get movie credits
         movieViewModel.getMovieCredits(movieId.toString())
 
@@ -114,12 +133,26 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         //Play button
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
+
+        if (isWatching) {
+            playbtn.setText("Tiếp tục xem")
+        }
+
         playbtn.setOnClickListener{
             val intent = Intent(this, MoviePlayerActivity::class.java)
-            intent.putExtra("movie_id", movieId)
-            intent.putExtra("media_type", "movie")
-            intent.putExtra("title", movieTitle)
-            intent.putExtra("poster_path", posterPath)
+            if (isWatching) {
+                intent.putExtra("movie_id", movieId)
+                intent.putExtra("media_type", "movie")
+                intent.putExtra("title", movieTitle)
+                intent.putExtra("poster_path", posterPath)
+                intent.putExtra("progress", playbackPosition)
+            }
+            else {
+                intent.putExtra("movie_id", movieId)
+                intent.putExtra("media_type", "movie")
+                intent.putExtra("title", movieTitle)
+                intent.putExtra("poster_path", posterPath)
+            }
             startActivity(intent)
         }
     }

@@ -6,19 +6,36 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
+import com.example.cineflix.Adapters.ContinueWatchingListAdapter
 import com.example.cineflix.Adapters.TabLayoutTvDetailsAdapter
+import com.example.cineflix.Model.local.watching.ContinueWatching
+import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
+import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
+import com.example.cineflix.View.Fragments.HomeFragment
+import com.example.cineflix.ViewModel.ContinueWatchingViewModel
+import com.example.cineflix.ViewModel.ContinueWatchingViewModelFactory
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
+import androidx.activity.viewModels
+import com.example.cineflix.Model.local.watching.ContinueWatchingDAO
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 private var tvID : String = ""
 private var movieTitle : String? = ""
@@ -31,6 +48,20 @@ class TvDetailsActivity : AppCompatActivity() {
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var tabLayoutAdapter: TabLayoutTvDetailsAdapter
+    private var playbackPosition: Long = 0
+    private var isWatching: Boolean = false
+    private var season: Int = 1
+    private var episode: Int = 1
+
+    private lateinit var continueWatchingRepository: ContinueWatchingRepository
+    private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
+    private val watchHistoryDao by lazy { database.watchDAO() }
+    private lateinit var viewModelFactory: ContinueWatchingViewModelFactory
+    private val viewModel: ContinueWatchingViewModel by viewModels(
+        factoryProducer = {
+            viewModelFactory
+        }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -68,6 +99,17 @@ class TvDetailsActivity : AppCompatActivity() {
 
         backBtn.setOnClickListener {
             finish()
+        }
+
+        //Continue Watching
+        GlobalScope.launch(Dispatchers.IO) {
+            val test = watchHistoryDao.getProgressTest(TVId)
+            test?.let {
+                playbackPosition = it.progress
+                season = it.season
+                episode = it.episode
+                isWatching = true
+            }
         }
 
         //Get TV Details
@@ -141,14 +183,29 @@ class TvDetailsActivity : AppCompatActivity() {
             }
         })
 
+        if (isWatching) {
+            playBtn.setText("Tiếp tục xem M${season}:T${episode}")
+        }
+
         playBtn.setOnClickListener {
             val intent = Intent(this, MoviePlayerActivity::class.java)
-            intent.putExtra("movie_id", TVId)
-            intent.putExtra("media_type", "tv")
-            intent.putExtra("title", movieTitle)
-            intent.putExtra("season", 1)
-            intent.putExtra("episode", 1)
-            intent.putExtra("poster_path", posterPath)
+            if (isWatching) {
+                intent.putExtra("movie_id", TVId)
+                intent.putExtra("media_type", "tv")
+                intent.putExtra("title", movieTitle)
+                intent.putExtra("season", season)
+                intent.putExtra("episode", episode)
+                intent.putExtra("poster_path", posterPath)
+                intent.putExtra("progress", playbackPosition)
+            }
+            else {
+                intent.putExtra("movie_id", TVId)
+                intent.putExtra("media_type", "tv")
+                intent.putExtra("title", movieTitle)
+                intent.putExtra("season", 1)
+                intent.putExtra("episode", 1)
+                intent.putExtra("poster_path", posterPath)
+            }
             startActivity(intent)
         }
     }

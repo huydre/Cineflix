@@ -20,6 +20,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.LifecycleOwner
@@ -161,6 +162,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             title.text = "${movieTitle} Phần ${season} Tập ${episode}"
             playbackPosition = 0
         }
+
+
 
         gestureDetector = GestureDetector(this, this)
         findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
@@ -344,23 +347,37 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     }
 
     override fun onDestroy() {
-
         GlobalScope.launch(Dispatchers.IO) {
-            watchHistoryDao.insert(
-                ContinueWatching(
-                    progress = playbackPosition.toLong(),
-                    posterPath = posterPath,
-                    tmdbID = movieId,
-                    title = movieTitle,
-                    media_type = mediaType,
-                    season = season,
-                    episode = episode,
-                    year = "2024"
+            if (mediaType == "movie") {
+                if (playbackPosition > 0) {
+                    watchHistoryDao.insert(
+                        ContinueWatching(
+                            progress = playbackPosition.toLong(),
+                            posterPath = posterPath,
+                            tmdbID = movieId,
+                            title = movieTitle,
+                            media_type = mediaType,
+                            season = season,
+                            episode = episode,
+                            year = "2024"
+                        )
+                    )
+                }
+            }
+            else {
+                watchHistoryDao.insert(
+                    ContinueWatching(
+                        progress = playbackPosition.toLong(),
+                        posterPath = posterPath,
+                        tmdbID = movieId,
+                        title = movieTitle,
+                        media_type = mediaType,
+                        season = season,
+                        episode = episode,
+                        year = "2024"
+                    )
                 )
-            )
-
-            val test = watchHistoryDao.getContinueWatching()
-            Log.d(TAG, "onDestroy: " + test)
+            }
         }
         super.onDestroy()
         releasePlayer()
@@ -508,7 +525,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
                 }
             }
         }
-        Log.d(TAG, "getOphimVideoUrl: " + slug)
     }
 
     private fun ConvertNameToSlug(name: String) : String {

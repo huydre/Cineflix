@@ -107,6 +107,7 @@
             android:orientation="vertical"
             >
             <androidx.recyclerview.widget.RecyclerView
+                android:nestedScrollingEnabled="false"
                 android:id="@+id/search_history_rc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,21 +115,6 @@
                 tools:visibility="visible"
                 android:layout_margin="10dp"
                 />
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:id="@+id/delete_all_button"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Xoá lịch sử"-->
-<!--                android:textSize="18sp"-->
-<!--                android:backgroundTint="#212121"-->
-<!--                app:cornerRadius="0dp"-->
-<!--                android:paddingVertical="12dp"-->
-<!--                app:icon="@drawable/trash_ic"-->
-<!--                app:iconGravity="textStart"-->
-<!--                android:textColor="@android:color/white"-->
-<!--                app:iconTint="@android:color/white"-->
-<!--                android:layout_weight="0"-->
-<!--                />-->
         </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/query"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="18dp"
+        android:text="TextView" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/delete_query"
+        app:iconTint="@android:color/white"
+        app:icon="@drawable/trash_ic"
+        app:iconGravity="textEnd"
+        android:drawablePadding="0dp"
+        app:iconPadding="0dp"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_width="50dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

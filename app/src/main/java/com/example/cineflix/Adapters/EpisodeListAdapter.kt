@@ -17,6 +17,7 @@ import com.example.cineflix.Model.TV
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MoviePlayerActivity
 import com.example.cineflix.View.Activities.TvDetailsActivity
+import com.example.cineflix.View.Activities.getTVPosterPath
 import com.example.cineflix.View.Activities.getTvTitle
 import com.example.cineflix.View.Fragments.getSeason
 
@@ -45,12 +46,14 @@ class EpisodeListAdapter (var lst:List<EpisodeX>): RecyclerView.Adapter<EpisodeL
         holder.itemView.setOnClickListener{
             val season = getSeason()
             val movieTitle = getTvTitle()
+            val posterPath = getTVPosterPath()
             val intent = Intent(holder.itemView.context, MoviePlayerActivity::class.java)
-            intent.putExtra("movie_id", movieResult.id)
+            intent.putExtra("movie_id", movieResult.show_id)
             intent.putExtra("title", movieTitle)
             intent.putExtra("season",season )
             intent.putExtra("episode", position+1)
             intent.putExtra("media_type", "tv")
+            intent.putExtra("poster_path", posterPath)
             holder.itemView.context.startActivity(intent)
         }
     }

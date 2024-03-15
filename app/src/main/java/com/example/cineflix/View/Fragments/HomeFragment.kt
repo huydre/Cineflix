@@ -108,6 +108,7 @@ class HomeFragment : Fragment() {
                     intent.putExtra("movie_id", bigPosterMovie.id)
                     intent.putExtra("media_type", "movie")
                     intent.putExtra("title", bigPosterMovie.title)
+                    intent.putExtra("poster_path", bigPosterMovie.poster_path)
                     context?.startActivity(intent)
                     Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_moviePlayerActivity2)
                 }

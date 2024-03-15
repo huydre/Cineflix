@@ -165,3 +165,7 @@ fun getTvTitle(): String? {
 fun getTVSeasonCount(): Int {
     return numberOfSeason
 }
+
+fun getTVPosterPath(): String {
+    return posterPath
+}

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "continue_watching")
 data class ContinueWatching (
-    val progress: Int,
+    val progress: Long,
     val posterPath: String,
     @PrimaryKey(autoGenerate = true)
     val tmdbID: Int? = null,
@@ -19,7 +19,7 @@ data class ContinueWatching (
     val lastUpdate: Long = System.currentTimeMillis()
     ) : Parcelable {
         constructor(parcel: Parcel) : this(
-            parcel.readInt(),
+            parcel.readLong(),
             parcel.readString()?:"",
             parcel.readValue(Int::class.java.classLoader) as? Int,
             parcel.readString()?:"",
@@ -31,7 +31,7 @@ data class ContinueWatching (
         ) {}
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(progress)
+        parcel.writeLong(progress)
         parcel.writeString(posterPath)
         parcel.writeValue(tmdbID)
         parcel.writeString(title)

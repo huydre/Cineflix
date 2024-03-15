@@ -59,6 +59,7 @@ class SearchMultiResultAdapter(var lst:List<SearchMulti>): RecyclerView.Adapter<
                 intent.putExtra("tv_year", movieResult.first_air_date)
                 intent.putExtra("tv_overview", movieResult.overview)
                 intent.putExtra("tv_backdrop", movieResult.backdrop_path)
+                intent.putExtra("poster_path", movieResult.poster_path)
                 holder.itemView.context.startActivity(intent)
                 Navigation.createNavigateOnClickListener(R.id.action_searchFragment_to_tvDetailsActivity)
             }

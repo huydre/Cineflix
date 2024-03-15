@@ -114,6 +114,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         season = intent.getIntExtra("season", 0)
         episode = intent.getIntExtra("episode", 0)
         posterPath = intent.getStringExtra("poster_path").toString()
+        playbackPosition = intent.getLongExtra("progress", 0)
 
         getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
 
@@ -155,9 +156,10 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
                 getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
             }
             else {
-                nextEPBtn.visibility = View.GONE
+//                nextEPBtn.visibility = View.GONE
             }
             title.text = "${movieTitle} Phần ${season} Tập ${episode}"
+            playbackPosition = 0
         }
 
         gestureDetector = GestureDetector(this, this)
@@ -346,7 +348,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         GlobalScope.launch(Dispatchers.IO) {
             watchHistoryDao.insert(
                 ContinueWatching(
-                    progress = playbackPosition.toInt(),
+                    progress = playbackPosition.toLong(),
                     posterPath = posterPath,
                     tmdbID = movieId,
                     title = movieTitle,
@@ -357,8 +359,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
                 )
             )
 
-//            val test = watchHistoryDao.getContinueWatching()
-//            Log.d(TAG, "onDestroy: " + test)
+            val test = watchHistoryDao.getContinueWatching()
+            Log.d(TAG, "onDestroy: " + test)
         }
         super.onDestroy()
         releasePlayer()

@@ -3,22 +3,12 @@ package com.example.cineflix.View.Activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
-import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.cineflix.Adapters.PopularListAdapter
-import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
-import com.example.cineflix.Utils.SuperEmbed
 import com.example.cineflix.View.Fragments.AccountFragment
 import com.example.cineflix.View.Fragments.BookmarkFragment
 import com.example.cineflix.View.Fragments.HomeFragment
 import com.example.cineflix.View.Fragments.SearchFragment
-import com.example.cineflix.ViewModel.MovieViewModel
-import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 

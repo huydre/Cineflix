@@ -14,6 +14,9 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -22,6 +25,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.view.GestureDetectorCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -29,11 +33,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.cineflix.Model.Subtitle
 import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
+import com.example.cineflix.MovieRepository
 import com.example.cineflix.OPhimRepository
 import com.example.cineflix.R
 import com.example.cineflix.Utils.OPhim
+import com.example.cineflix.Utils.OpenSubtiles
+import com.example.cineflix.Utils.SubAdapter
+import com.example.cineflix.ViewModel.MovieViewModel
+import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.example.cineflix.ViewModel.OPhimViewModel
 import com.example.cineflix.ViewModel.OPhimViewModelFactory
 import com.github.vkay94.dtpv.youtube.YouTubeOverlay
@@ -52,10 +64,16 @@ import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.material.button.MaterialButton
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttp
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import kotlin.math.abs
+val openSubtitleAPI = "HtHEMGG6zMnzkmulNP1IguEa3hxqy3VC"
 
 
 class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetector.OnGestureListener, AudioManager.OnAudioFocusChangeListener{
@@ -66,9 +84,10 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private val _numberOfEpisode = MutableLiveData<Int>()
     val numberOfEpisode: LiveData<Int> = _numberOfEpisode
 
+    private lateinit var videoLoading: FrameLayout
     private lateinit var simpleExoplayer: SimpleExoPlayer
     private var playbackPosition: Long = 0
-    private lateinit var buffer: ProgressBar
+//    private lateinit var buffer: ProgressBar
     private lateinit var play : ImageButton
     private lateinit var pause : ImageButton
     private lateinit var goBack: ImageButton
@@ -97,17 +116,28 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private var season: Int = 0
     private var episode: Int = 0
     private lateinit var posterPath: String
+    private val fileLinks: MutableList<String> = mutableListOf()
+
 
     private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
     private val watchHistoryDao by lazy { database.watchDAO() }
     private lateinit var oPhimViewModel: OPhimViewModel
+    private lateinit var movieViewModel: MovieViewModel
 
+    private val openSub = OpenSubtiles(this)
+    var langMap : Map<String,String> = mapOf()
+    private var trackUpdate = 0L
+    private var subUpdateProgress = 0L
 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_player)
+
+        val repository = MovieRepository()
+        val movieViewModelFactory = MovieViewModelFactory(repository)
+        movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
 
         movieId = intent.getIntExtra("movie_id", 0)
         mediaType = intent.getStringExtra("media_type").toString()
@@ -121,7 +151,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
         //ExoPlayer
         fullscreen()
-        buffer = findViewById(R.id.buffering)
+        videoLoading = findViewById(R.id.video_loading_fl)
+//        buffer = findViewById(R.id.buffering)
         pause = findViewById(R.id.exo_pause)
         play = findViewById(R.id.exo_pause)
         goBack = findViewById(R.id.videoView_go_back)
@@ -136,13 +167,104 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val videoViewTrackBtn = findViewById<LinearLayout>(R.id.videoView_track)
         val trackCancleBtn = findViewById<MaterialButton>(R.id.cancle_btn)
         val nextEPBtn = findViewById<LinearLayout>(R.id.videoView_next_ep)
+        val subtitleRV = findViewById<RecyclerView>(R.id.subtitleRC)
+        val trackApplyBtn = findViewById<MaterialButton>(R.id.apply_btn)
+        var selectedItem = "Vietnamese"
+        var lI = 0
+
+
+
+        var fileLink = ""
+
+        var openSubAdapter = SubAdapter{
+            fileLink = it
+        }
+
+        subtitleRV.apply {
+            layoutManager = LinearLayoutManager(this@MoviePlayerActivity)
+            adapter = openSubAdapter
+        }
+
 
         videoViewTrackBtn.setOnClickListener{
             sourceAndSubtile.visibility = View.VISIBLE
         }
 
+        //Get imdb id
+        movieViewModel.getImdbID(movieId.toString(), mediaType)
+        movieViewModel.imdbID.observe(this@MoviePlayerActivity){ id ->
+            id?.let {
+                val imdbID = it.imdb_id
+
+                //Get Subtitle List
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val subRes = openSub.searchSubs(imdbID,"vi",season,episode,mediaType=="movie" )
+                    withContext(Dispatchers.Main){
+                        if (subRes.isEmpty()) Toast.makeText(this@MoviePlayerActivity,"No Subs for this Language",Toast.LENGTH_SHORT).show()
+                        openSubAdapter.submitList(subRes)
+                    }
+                }
+            }
+        }
+
+        trackApplyBtn.setOnClickListener {
+            
+        }
+
+
         trackCancleBtn.setOnClickListener {
             sourceAndSubtile.visibility = View.GONE
+        }
+
+        val rewBtn : ImageButton = findViewById(R.id.exo_rew)
+        val ffwdBtn: ImageButton = findViewById(R.id.exo_ffwd)
+        val right : TextView = findViewById(R.id.right)
+        val left : TextView = findViewById(R.id.left)
+        val leftController : TextView = findViewById(R.id.left_controller)
+        val rightController : TextView = findViewById(R.id.rightController)
+
+        ffwdBtn.setOnClickListener {
+            simpleExoplayer.seekTo(simpleExoplayer.currentPosition + 10000)
+            right.visibility = View.VISIBLE
+            right.text = "+10"
+            rightController.visibility = View.INVISIBLE
+            val slideInRightAnimation = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.slide_in_right)
+            right.startAnimation(slideInRightAnimation)
+            slideInRightAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+
+                override fun onAnimationEnd(animation: Animation) {
+                    right.visibility = View.INVISIBLE
+                    rightController.visibility = View.VISIBLE
+                    right.text = "10"
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            })
+            val rotateRight = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.rotate_right)
+            ffwdBtn.startAnimation(rotateRight)
+        }
+
+        rewBtn.setOnClickListener {
+            simpleExoplayer.seekTo(simpleExoplayer.currentPosition - 10000)
+            left.visibility = View.VISIBLE
+            left.text = "-10"
+            leftController.visibility = View.INVISIBLE
+            val slideInLeftAnimation = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.slide_in_left)
+            left.startAnimation(slideInLeftAnimation)
+            slideInLeftAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+
+                override fun onAnimationEnd(animation: Animation) {
+                    left.visibility = View.INVISIBLE
+                    left.text = "10"
+                    leftController.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            })
+            val rotateLeft = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.rotate_left)
+            rewBtn.startAnimation(rotateLeft)
         }
 
         nextEPBtn.setOnClickListener {
@@ -236,19 +358,68 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val gestureDetectorDouble = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDoubleTap(e: MotionEvent): Boolean {
 
+                playerView.controllerShowTimeoutMs = 0
+
+                val right : TextView = findViewById(R.id.right)
+                val left : TextView = findViewById(R.id.left)
+                val leftController : TextView = findViewById(R.id.left_controller)
+                val rightController : TextView = findViewById(R.id.rightController)
+                val rewAnim : ImageButton = findViewById(R.id.exo_rew)
+                val ffwdAnim: ImageButton = findViewById(R.id.exo_ffwd)
+
                 if (e.x > playerView.width / 2) {
                     // Double tapped on the right side - forward seek
                     simpleExoplayer.seekTo(simpleExoplayer.currentPosition + 10000)
+                    right.visibility = View.VISIBLE
+                    right.text = "+10"
+                    rightController.visibility = View.INVISIBLE
+                    val slideInRightAnimation = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.slide_in_right)
+                    right.startAnimation(slideInRightAnimation)
+                    slideInRightAnimation.setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(animation: Animation) {}
+
+                        override fun onAnimationEnd(animation: Animation) {
+                            right.visibility = View.INVISIBLE
+                            rightController.visibility = View.VISIBLE
+                            right.text = "10"
+                        }
+
+                        override fun onAnimationRepeat(animation: Animation) {}
+                    })
+                    val rotateRight = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.rotate_right)
+                    ffwdAnim.startAnimation(rotateRight)
+
 //                        seekBar.progress = player.currentPosition.toInt()
                 } else {
                     // Double tapped on the left side - backward seek
                     simpleExoplayer.seekTo(simpleExoplayer.currentPosition - 10000)
+                    left.visibility = View.VISIBLE
+                    left.text = "-10"
+                    leftController.visibility = View.INVISIBLE
+                    val slideInLeftAnimation = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.slide_in_left)
+                    left.startAnimation(slideInLeftAnimation)
+                    slideInLeftAnimation.setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(animation: Animation) {}
+
+                        override fun onAnimationEnd(animation: Animation) {
+                            left.visibility = View.INVISIBLE
+                            left.text = "10"
+                            leftController.visibility = View.VISIBLE
+                        }
+
+                        override fun onAnimationRepeat(animation: Animation) {}
+                    })
+                    val rotateLeft = AnimationUtils.loadAnimation(this@MoviePlayerActivity, R.anim.rotate_left)
+                    rewAnim.startAnimation(rotateLeft)
 //                        seekBar.progress = player.currentPosition.toInt()
                 }
-                playerView.useController = true
                 return super.onDoubleTap(e)
             }
         })
+
+
+
+
 
         playerView.setOnTouchListener { _, motionEvent ->
             gestureDetectorDouble.onTouchEvent(motionEvent)
@@ -271,6 +442,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             }
             return@setOnTouchListener false
         }
+
     }
 
     override fun onStart() {
@@ -288,13 +460,15 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     }
 
     private fun initializePlayer() {
-        simpleExoplayer = SimpleExoPlayer.Builder(this).build()
+        simpleExoplayer = SimpleExoPlayer.Builder(this)
+            .setSeekBackIncrementMs(10000L)
+            .setSeekForwardIncrementMs(10000L)
+            .build()
 //        preparePlayer(videoUrl.value.toString())
         videoUrl.observe(this) {url ->
             if  (!url.isNullOrEmpty()) {
                 preparePlayer(url)
             }
-
         }
     }
 
@@ -338,6 +512,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
     private fun releasePlayer() {
         playbackPosition = simpleExoplayer.currentPosition
+        Log.d(TAG, "releasePlayer: " + playbackPosition)
         simpleExoplayer.release()
     }
 
@@ -386,14 +561,14 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         if (playbackState == Player.STATE_BUFFERING) {
-            buffer.visibility = View.VISIBLE
+            videoLoading.visibility = View.VISIBLE
             play.setImageResource(0)
             pause.setImageResource(0)
         }
         else {
             play.setImageResource(R.drawable.netlfix_play_button)
             pause.setImageResource(R.drawable.netflix_pause_button)
-            buffer.visibility = View.GONE
+            videoLoading.visibility = View.GONE
         }
         super.onPlaybackStateChanged(playbackState)
     }
@@ -553,5 +728,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         str = str.replace("Đ".toRegex(), "D")
         return str
     }
+
 }
 

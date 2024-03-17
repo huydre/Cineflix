@@ -12,6 +12,7 @@ import com.example.cineflix.MovieRepository
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.cineflix.Model.Credit
+import com.example.cineflix.Model.Ids
 import com.example.cineflix.Model.MovieDetails
 import com.example.cineflix.Model.SearchMulti
 import com.example.cineflix.Model.SeasonDetails
@@ -83,6 +84,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
 
     private val _tvSeasonDetails = MutableLiveData<SeasonDetails>()
     val tvSeasonDetails : LiveData<SeasonDetails> get() = _tvSeasonDetails
+
+    private val _imdbID = MutableLiveData<Ids>()
+    val imdbID : LiveData<Ids> get() = _imdbID
 
     fun getPopularMovies(page: Int) {
         viewModelScope.launch {
@@ -306,6 +310,29 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                 val tvResponse = response.body()
                 tvResponse?.let {
                     _tvSeasonDetails.value = it
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getImdbID(tmdbID: String, mediaType: String) {
+        viewModelScope.launch {
+            try {
+                if (mediaType == "movie") {
+                    val response = repository.getMovieImdbId(tmdbID)
+                    val responseBody = response.body()
+                    responseBody?.let {
+                        _imdbID.value = it
+                    }
+                }
+                else {
+                    val response = repository.getTvImdbId(tmdbID)
+                    val responseBody = response.body()
+                    responseBody?.let {
+                        _imdbID.value = it
+                    }
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

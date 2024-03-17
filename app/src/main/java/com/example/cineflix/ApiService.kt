@@ -1,6 +1,7 @@
 package com.example.cineflix
 
 import com.example.cineflix.Model.Credit
+import com.example.cineflix.Model.Ids
 import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.MovieDetails
 import com.example.cineflix.Model.MovieResponse
@@ -144,6 +145,17 @@ interface ApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String
     ) : Response<SeasonDetails>
+
+    @GET("movie/{movie_id}/external_ids")
+    suspend fun getMovieImdbID(
+        @Path("movie_id") MovieId: String,
+        @Query("api_key") apiKey: String,
+    ): Response<Ids>
+    @GET("tv/{series_id}/external_ids")
+    suspend fun getTvImdbID(
+        @Path("series_id") TvId: String,
+        @Query("api_key") apiKey: String,
+    ): Response<Ids>
 }
 
 class MovieRepository {
@@ -194,6 +206,12 @@ class MovieRepository {
     }
     suspend fun getTVSeasonDetails(TVId: String, SeasonId: String): Response<SeasonDetails> {
         return movieApiService.getTVSeasonDetails(TVId, SeasonId, API_KEY, LANGUAGE)
+    }
+    suspend fun getMovieImdbId(MovieId: String): Response<Ids> {
+        return movieApiService.getMovieImdbID(MovieId, API_KEY)
+    }
+    suspend fun getTvImdbId(TVId: String): Response<Ids> {
+        return movieApiService.getTvImdbID(TVId, API_KEY)
     }
 }
 

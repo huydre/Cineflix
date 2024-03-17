@@ -31,6 +31,11 @@ class ContinueWatchingViewModel(private val watchingDao: ContinueWatchingDAO) : 
 
     val allWatchHistory : LiveData<List<ContinueWatching>> = watchingDao.getContinueWatchingTest()
 
+    fun deleteMovie(movie: ContinueWatching) {
+        viewModelScope.launch(Dispatchers.IO) {
+            watchingDao.delete(movie)
+        }
+    }
     val searchOpen = MutableLiveData(true)
 
 }

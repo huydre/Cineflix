@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -14,12 +15,19 @@ import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.MoviePlayerActivity
+import com.example.cineflix.ViewModel.ContinueWatchingViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class ContinueWatchingListAdapter(var lst:List<ContinueWatching>): RecyclerView.Adapter<ContinueWatchingListAdapter.MovieViewHolder>() {
+class ContinueWatchingListAdapter(
+    var lst:List<ContinueWatching>,
+    private val viewModel: ContinueWatchingViewModel
+    ): RecyclerView.Adapter<ContinueWatchingListAdapter.MovieViewHolder>() {
 
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imagePoster)
         val tileTextView : TextView = itemView.findViewById(R.id.textviewCWatching)
+        val moreBtn : ImageView = itemView.findViewById(R.id.more_btn)
+        val infoBtn : ImageView = itemView.findViewById(R.id.info_btn)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContinueWatchingListAdapter.MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_cw_contaner, parent, false)
@@ -29,6 +37,34 @@ class ContinueWatchingListAdapter(var lst:List<ContinueWatching>): RecyclerView.
     override fun onBindViewHolder(holder: ContinueWatchingListAdapter.MovieViewHolder, position: Int) {
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.posterPath}")
+
+        holder.moreBtn.setOnClickListener {
+            val bottomSheetDialog = BottomSheetDialog(holder.itemView.context)
+            val bottomSheetView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.bottom_sheet_media_details, null)
+            bottomSheetDialog.setContentView(bottomSheetView)
+
+            val title = bottomSheetView.findViewById<TextView>(R.id.title_text)
+            title.text = movieResult.title
+
+            val closeIcon = bottomSheetView.findViewById<ImageView>(R.id.close_icon)
+            closeIcon.setOnClickListener {
+                bottomSheetDialog.dismiss()
+            }
+
+            val removeBtn = bottomSheetView.findViewById<LinearLayout>(R.id.remove_button)
+            removeBtn.setOnClickListener {
+                viewModel.deleteMovie(movieResult)
+
+                // Remove the movie from the list and notify the adapter
+                lst = lst.filter { it != movieResult }
+                notifyDataSetChanged()
+
+                // Dismiss the bottom sheet dialog
+                bottomSheetDialog.dismiss()
+            }
+
+            bottomSheetDialog.show()
+        }
 
         if (movieResult.media_type == "movie") {
             holder.tileTextView.text = movieResult.title
@@ -56,17 +92,6 @@ class ContinueWatchingListAdapter(var lst:List<ContinueWatching>): RecyclerView.
                 holder.itemView.context.startActivity(intent)
             }
         }
-
-//        holder.itemView.setOnClickListener{
-//            val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
-//            intent.putExtra("movie_id", movieResult.id)
-//            intent.putExtra("movie_title", movieResult.title)
-//            intent.putExtra("movie_year", movieResult.release_date)
-//            intent.putExtra("movie_overview", movieResult.overview)
-//            intent.putExtra("movie_backdropPath", movieResult.backdrop_path)
-//            holder.itemView.context.startActivity(intent)
-//            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_movieDetailsActivity)
-//        }
     }
 
     override fun getItemCount(): Int {

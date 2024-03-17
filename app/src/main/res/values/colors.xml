@@ -4,4 +4,6 @@
     <color name="shimmerColor">#262626</color>
     <color name="red">#AF2117</color>
     <color name="primary">#D0001C</color>
+    <color name="dark_gray">#262626</color>
+    <color name="ripple">#E5E5E5</color>
 </resources>

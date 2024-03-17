@@ -246,7 +246,7 @@ class HomeFragment : Fragment() {
 
         val recyclerViewCW: RecyclerView = view.findViewById(R.id.viewCW)
         recyclerViewCW.layoutManager  = LinearLayoutManager(HomeFragment().context, LinearLayoutManager.HORIZONTAL, false)
-        continueWatchingListAdapyer = ContinueWatchingListAdapter(emptyList())
+        continueWatchingListAdapyer = ContinueWatchingListAdapter(emptyList(), viewModel)
         recyclerViewCW.adapter = continueWatchingListAdapyer
 
         val viewStateObserver = Observer<List<ContinueWatching>> { watchFrom ->

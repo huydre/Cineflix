@@ -101,16 +101,7 @@ class TvDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        //Continue Watching
-        GlobalScope.launch(Dispatchers.IO) {
-            val test = watchHistoryDao.getProgressTest(TVId)
-            test?.let {
-                playbackPosition = it.progress
-                season = it.season
-                episode = it.episode
-                isWatching = true
-            }
-        }
+
 
         //Get TV Details
         movieViewModel.getTVDetails(TVId.toString())
@@ -183,9 +174,7 @@ class TvDetailsActivity : AppCompatActivity() {
             }
         })
 
-        if (isWatching) {
-            playBtn.setText("Tiếp tục xem M${season}:T${episode}")
-        }
+
 
         playBtn.setOnClickListener {
             val intent = Intent(this, MoviePlayerActivity::class.java)
@@ -208,6 +197,21 @@ class TvDetailsActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        //Continue Watching
+        continueWatchingRepository = ContinueWatchingRepository(watchHistoryDao)
+        viewModelFactory = ContinueWatchingViewModelFactory(watchHistoryDao)
+        viewModel.getProgressTest(TVId).observe(this, Observer { watchFrom ->
+            watchFrom?.let {
+                playbackPosition = it.progress
+                season = it.season
+                episode = it.episode
+                isWatching = true
+                if (isWatching) {
+                    playBtn.setText("Tiếp tục xem M${season}:T${episode}")
+                }
+            }
+        })
     }
 }
 

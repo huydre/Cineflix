@@ -11,7 +11,10 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,9 +22,12 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Adapters.SimilarListAdapter
 import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
+import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.OPhimRepository
 import com.example.cineflix.R
+import com.example.cineflix.ViewModel.ContinueWatchingViewModel
+import com.example.cineflix.ViewModel.ContinueWatchingViewModelFactory
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.example.cineflix.ViewModel.OPhimViewModel
@@ -46,8 +52,15 @@ class MovieDetailsActivity : AppCompatActivity() {
     private var playbackPosition: Long = 0
     private var isWatching: Boolean = false
 
+    private lateinit var continueWatchingRepository: ContinueWatchingRepository
     private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
     private val watchHistoryDao by lazy { database.watchDAO() }
+    private lateinit var viewModelFactory: ContinueWatchingViewModelFactory
+    private val viewModel: ContinueWatchingViewModel by viewModels(
+        factoryProducer = {
+            viewModelFactory
+        }
+    )
 
 
     @SuppressLint("SetTextI18n")
@@ -89,16 +102,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             overview.visibility = View.GONE
         }
 
-        //Continue Watching
-        GlobalScope.launch(Dispatchers.IO) {
-            val test = watchHistoryDao.getProgressTest(movieId)
-            test?.let {
-                playbackPosition = it.progress
-                isWatching = true
-                Log.d(TAG, "onCreate: " + it)
-            }
-        }
-
         // Get movie credits
         movieViewModel.getMovieCredits(movieId.toString())
 
@@ -134,10 +137,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         //Play button
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
 
-        if (isWatching) {
-            playbtn.setText("Tiếp tục xem")
-        }
-
         playbtn.setOnClickListener{
             val intent = Intent(this, MoviePlayerActivity::class.java)
             if (isWatching) {
@@ -155,6 +154,19 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        //Continue Watching
+        continueWatchingRepository = ContinueWatchingRepository(watchHistoryDao)
+        viewModelFactory = ContinueWatchingViewModelFactory(watchHistoryDao)
+        viewModel.getProgressTest(movieId).observe(this, Observer { watchFrom ->
+            watchFrom?.let {
+                playbackPosition = it.progress
+                isWatching = true
+                if (isWatching) {
+                    playbtn.setText("Tiếp tục xem")
+                }
+            }
+        })
     }
 }
 

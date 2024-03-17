@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.cineflix.Model.MovieDetails
 import com.example.cineflix.Model.local.watching.ContinueWatching
@@ -26,8 +27,6 @@ class ContinueWatchingViewModelFactory(private val watchingDao: ContinueWatching
 
 class ContinueWatchingViewModel(private val watchingDao: ContinueWatchingDAO) : ViewModel(){
 
-    private val _progress = MutableLiveData<ContinueWatching>()
-    val progress: LiveData<ContinueWatching> get() = _progress
 
     val allWatchHistory : LiveData<List<ContinueWatching>> = watchingDao.getContinueWatchingTest()
 
@@ -36,6 +35,13 @@ class ContinueWatchingViewModel(private val watchingDao: ContinueWatchingDAO) : 
             watchingDao.delete(movie)
         }
     }
+
+    fun getProgressTest(id: Int): LiveData<ContinueWatching?> {
+        return liveData(Dispatchers.IO) {
+            emit(watchingDao.getProgressTest(id))
+        }
+    }
+
     val searchOpen = MutableLiveData(true)
 
 }

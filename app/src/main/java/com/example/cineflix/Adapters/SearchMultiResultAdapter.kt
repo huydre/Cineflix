@@ -40,7 +40,7 @@ class SearchMultiResultAdapter(var lst:List<SearchMulti>): RecyclerView.Adapter<
             holder.title.text = movieResult.title
         }
 
-        holder.itemView.setOnClickListener {
+        holder.imageView.setOnClickListener {
             if (movieResult.media_type == "movie") {
                 val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
                 intent.putExtra("movie_id", movieResult.id)

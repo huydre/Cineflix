@@ -31,7 +31,7 @@ class AiringTodayTVListAdapter(var lst:List<TV>): RecyclerView.Adapter<AiringTod
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
 
-        holder.itemView.setOnClickListener{
+        holder.imageView.setOnClickListener{
             val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
             intent.putExtra("movie_id", movieResult.id)
             intent.putExtra("tv_title", movieResult.name)

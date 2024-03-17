@@ -32,7 +32,7 @@ class ContinueWatchingListAdapter(var lst:List<ContinueWatching>): RecyclerView.
 
         if (movieResult.media_type == "movie") {
             holder.tileTextView.text = movieResult.title
-            holder.itemView.setOnClickListener {
+            holder.imageView.setOnClickListener {
                 val intent = Intent(holder.itemView.context, MoviePlayerActivity::class.java)
                 intent.putExtra("movie_id", movieResult.tmdbID)
                 intent.putExtra("media_type", "movie")
@@ -44,7 +44,7 @@ class ContinueWatchingListAdapter(var lst:List<ContinueWatching>): RecyclerView.
         }
         else {
             holder.tileTextView.text = "M${movieResult.season}:T${movieResult.episode} ${movieResult.title}"
-            holder.itemView.setOnClickListener {
+            holder.imageView.setOnClickListener {
                 val intent = Intent(holder.itemView.context, MoviePlayerActivity::class.java)
                 intent.putExtra("movie_id", movieResult.tmdbID)
                 intent.putExtra("media_type", "tv")

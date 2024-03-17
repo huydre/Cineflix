@@ -14,38 +14,51 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var homeFragment: HomeFragment
+    private lateinit var searchFragment: SearchFragment
+    private lateinit var bookmarkFragment: BookmarkFragment
+    private lateinit var accountFragment: AccountFragment
+    private lateinit var activeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_main)
 
-        val bottomNav : BottomNavigationView = findViewById(R.id.bottom_nav)
-        replaceFragment(HomeFragment())
+        homeFragment = HomeFragment()
+        searchFragment = SearchFragment()
+        bookmarkFragment = BookmarkFragment()
+        accountFragment = AccountFragment()
+        activeFragment = homeFragment
 
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.frameLayout, homeFragment, "home")
+            add(R.id.frameLayout, searchFragment, "search").hide(searchFragment)
+            add(R.id.frameLayout, bookmarkFragment, "bookmark").hide(bookmarkFragment)
+            add(R.id.frameLayout, accountFragment, "account").hide(accountFragment)
+            commit()
+        }
+
+        val bottomNav : BottomNavigationView = findViewById(R.id.bottom_nav)
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navHome -> {
-                    // Xử lý khi người dùng chọn mục "Home"
-                    replaceFragment(HomeFragment())
+                    showFragment(homeFragment)
                     true
                 }
 
                 R.id.navSearch -> {
-                    // Xử lý khi người dùng chọn mục "Search"
-                    replaceFragment(SearchFragment())
+                    showFragment(searchFragment)
                     true
                 }
 
                 R.id.navFavorite -> {
-                    replaceFragment(BookmarkFragment())
-                    // Xử lý khi người dùng chọn mục "Favorite"
+                    showFragment(bookmarkFragment)
                     true
                 }
 
                 R.id.navAccount -> {
-                    replaceFragment(AccountFragment())
-                    // Xử lý khi người dùng chọn mục "Account"
+                    showFragment(accountFragment)
                     true
                 }
 
@@ -53,11 +66,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    private fun replaceFragment(fragment: Fragment) {
 
-        val fragmentManage = supportFragmentManager
-        val fragmentTransaction = fragmentManage.beginTransaction()
-        fragmentTransaction.replace(R.id.frameLayout, fragment)
-        fragmentTransaction.commit()
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().hide(activeFragment).show(fragment).commit()
+        activeFragment = fragment
     }
 }

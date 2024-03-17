@@ -33,7 +33,7 @@ class SimilarListAdapter(var lst:List<Movie>): RecyclerView.Adapter<SimilarListA
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.title.text = movieResult.title
 
-        holder.itemView.setOnClickListener{
+        holder.imageView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
             intent.putExtra("movie_id", movieResult.id)
             intent.putExtra("movie_title", movieResult.title)

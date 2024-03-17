@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,9 +34,11 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private lateinit var searchView : SearchView
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(){
     private var param1: String? = null
     private var param2: String? = null
+
+    lateinit var rootView: ComposeView
 
     private val database by lazy { SearchDatabase.getInstance(requireContext()) }
     private val searchHistoryDao by lazy {database.searchDao()}
@@ -49,7 +53,6 @@ class SearchFragment : Fragment() {
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var searchMultiResultListAdapter: SearchMultiResultAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

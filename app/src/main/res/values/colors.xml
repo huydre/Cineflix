@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bottom_bar">#631723</color>
-    <color name="shimmerColor">#514545</color>
+    <color name="shimmerColor">#262626</color>
     <color name="red">#AF2117</color>
     <color name="primary">#D0001C</color>
 </resources>

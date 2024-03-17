@@ -28,7 +28,7 @@ class PopularListAdapter(var lst:List<Movie>): RecyclerView.Adapter<PopularListA
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
 
-        holder.itemView.setOnClickListener{
+        holder.imageView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
             intent.putExtra("movie_id", movieResult.id)
             intent.putExtra("movie_title", movieResult.title)

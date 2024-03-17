@@ -21,7 +21,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_weight="0"
-            android:background="@drawable/play_ripple"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_baseline_keyboard_backspace_24" />
 
@@ -251,7 +252,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:focusable="true"
-                android:background="@drawable/focus_search"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="10dp"
@@ -280,7 +282,8 @@
 
             <LinearLayout
                 android:focusable="true"
-                android:background="@drawable/focus_search"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:id="@+id/videoView_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -305,7 +308,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:text="Subtitle/Source"
+                    android:text="Nguồn"
                     android:textColor="@android:color/white"
                     android:textSize="12sp" />
 
@@ -313,7 +316,8 @@
 
             <LinearLayout
                 android:focusable="true"
-                android:background="@drawable/focus_search"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:id="@+id/videoView_screen_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -347,7 +351,8 @@
             </LinearLayout>
             <LinearLayout
                 android:focusable="true"
-                android:background="@drawable/focus_search"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:id="@+id/videoView_resolution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -384,7 +389,8 @@
 
             <LinearLayout
                 android:focusable="true"
-                android:background="@drawable/focus_search"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:id="@+id/videoView_next_ep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -412,7 +418,7 @@
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:id="@+id/next_ep_text"
-                    android:text="Next"
+                    android:text="Tiếp theo"
                     android:textColor="@android:color/white"
                     android:textSize="12sp" />
 
@@ -420,7 +426,8 @@
 
             <LinearLayout
                 android:focusable="true"
-                android:background="@drawable/focus_search"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
                 android:id="@+id/videoView_skip_op"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

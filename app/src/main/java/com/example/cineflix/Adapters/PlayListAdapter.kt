@@ -13,8 +13,9 @@ import com.example.cineflix.Model.local.playlist.PlayList
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.TvDetailsActivity
+import com.example.cineflix.ViewModel.PlayListViewModel
 
-class PlayListAdapter (var lst:List<PlayList>): RecyclerView.Adapter<PlayListAdapter.MovieViewHolder>() {
+class PlayListAdapter (private val viewModel: PlayListViewModel, var lst:List<PlayList>): RecyclerView.Adapter<PlayListAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.backdropPL)
         val tileTextView : TextView = itemView.findViewById(R.id.titlePL)
@@ -53,6 +54,12 @@ class PlayListAdapter (var lst:List<PlayList>): RecyclerView.Adapter<PlayListAda
 
     fun setMovies(newList: List<PlayList>) {
         lst = newList
+        notifyDataSetChanged()
+    }
+
+    fun deleteItem(position: Int) {
+        lst.drop(position)
+        viewModel.deleteRecord(lst[position].tmdbID)
         notifyDataSetChanged()
     }
 }

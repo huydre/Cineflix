@@ -32,13 +32,11 @@ class PlayListViewModel(private val playListRepository: PlayListRepository) : Vi
         viewModelScope.launch(Dispatchers.IO) {
             playListRepository.delete(playList)
         }
-
-        fun deleteRecord(id: Int) {
-            viewModelScope.launch(Dispatchers.IO) {
-                playListRepository.deleteRecord(id)
-            }
+    }
+    fun deleteRecord(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playListRepository.deleteRecord(id)
         }
-
     }
     fun getPlayListAll(): LiveData<List<PlayList>> {
         return playListRepository.getPlayListAll()

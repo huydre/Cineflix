@@ -34,6 +34,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    dependenciesInfo {
+        includeInBundle = true
+        includeInApk = true
+    }
+    buildToolsVersion = "34.0.0"
 }
 
 dependencies {
@@ -109,6 +114,8 @@ dependencies {
 
     implementation("org.jsoup:jsoup:1.11.3")
     implementation(group = "khttp", name = "khttp", version = "1.0.0")
+
+    implementation ("it.xabaras.android:recyclerview-swipedecorator:1.4")
 }
 
 kapt {

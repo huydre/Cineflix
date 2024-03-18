@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
+        android:textColor="@android:color/white"
         android:textSize="13dp"/>
     <ImageView
         android:id="@+id/playPL"

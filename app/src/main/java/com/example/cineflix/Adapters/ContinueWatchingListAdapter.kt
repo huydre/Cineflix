@@ -8,11 +8,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.MoviePlayerActivity
+import com.example.cineflix.View.Activities.TvDetailsActivity
 import com.example.cineflix.ViewModel.ContinueWatchingViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -37,6 +40,20 @@ class ContinueWatchingListAdapter(
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.posterPath}")
 
+        holder.infoBtn.setOnClickListener{
+            if (movieResult.media_type == "movie") {
+                val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
+                intent.putExtra("movie_id", movieResult.tmdbID)
+                holder.itemView.context.startActivity(intent)
+            }
+            else {
+                val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
+                intent.putExtra("movie_id", movieResult.tmdbID)
+                holder.itemView.context.startActivity(intent)
+                Navigation.createNavigateOnClickListener(R.id.action_searchFragment_to_tvDetailsActivity)
+            }
+        }
+
         holder.moreBtn.setOnClickListener {
             val bottomSheetDialog = BottomSheetDialog(holder.itemView.context)
             val bottomSheetView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.bottom_sheet_media_details, null)
@@ -48,6 +65,21 @@ class ContinueWatchingListAdapter(
             val closeIcon = bottomSheetView.findViewById<ImageView>(R.id.close_icon)
             closeIcon.setOnClickListener {
                 bottomSheetDialog.dismiss()
+            }
+
+            val detailsBtn = bottomSheetView.findViewById<LinearLayout>(R.id.details_button)
+            detailsBtn.setOnClickListener {
+                if (movieResult.media_type == "movie") {
+                    val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)
+                    intent.putExtra("movie_id", movieResult.tmdbID)
+                    holder.itemView.context.startActivity(intent)
+                }
+                else {
+                    val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)
+                    intent.putExtra("movie_id", movieResult.tmdbID)
+                    holder.itemView.context.startActivity(intent)
+                    Navigation.createNavigateOnClickListener(R.id.action_searchFragment_to_tvDetailsActivity)
+                }
             }
 
             val removeBtn = bottomSheetView.findViewById<LinearLayout>(R.id.remove_button)

@@ -45,9 +45,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 private var tvID : String = ""
+private var TVId : Int = 0
 private var movieTitle : String? = ""
 private var numberOfSeason : Int = 0
-private lateinit var posterPath: String
+private var posterPath: String = ""
+private var movieYear: String = ""
+private var movieOverview: String = ""
+private var tvBackdropPath: String = ""
 
 class TvDetailsActivity : AppCompatActivity() {
 
@@ -93,14 +97,6 @@ class TvDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tv_details)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        val TVId = intent.getIntExtra("movie_id",0)
-        tvID = TVId.toString()
-        movieTitle = intent.getStringExtra("tv_title")
-        val movieYear = intent.getStringExtra("tv_year")
-        val movieOverview = intent.getStringExtra("tv_overview")
-        val tvBackdropPath = intent.getStringExtra("tv_backdrop")
-        posterPath = intent.getStringExtra("poster_path").toString()
-
         val title = findViewById<TextView>(R.id.tvTitle)
         val year = findViewById<TextView>(R.id.tvYear)
         val overview = findViewById<TextView>(R.id.tvOverview)
@@ -114,10 +110,37 @@ class TvDetailsActivity : AppCompatActivity() {
         val addBtn = findViewById<LinearLayout>(R.id.add_btn)
         val addBtnIcon = findViewById<ImageView>(R.id.add_btn_icon)
 
-        title.text = movieTitle
-        year.text = movieYear.toString().substring(0,4)
-        overview.text = movieOverview
-        TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${tvBackdropPath}")
+        TVId = intent.getIntExtra("movie_id",0)
+        tvID = TVId.toString()
+
+        //Get TV Details
+        movieViewModel.getTVDetails(TVId.toString())
+        movieViewModel.tvDetails.observe(this@TvDetailsActivity) {tvs ->
+            tvs?.let {
+                title.text = tvs.name
+                year.text = tvs.first_air_date.substring(0,4)
+                overview.text = tvs.overview
+                TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${tvs.backdrop_path}")
+                tvSeasonCount.text = "${tvs.number_of_seasons} Mùa"
+                numberOfSeason = tvs.number_of_seasons
+                val rated = it.vote_average
+                tvRate.text = rated.toString().substring(0,3)
+                if (rated < 7 && rated >= 4) {
+                    starIcon.setColorFilter(Color.parseColor("#D2D531"))
+                    tvRate.setTextColor(Color.parseColor("#D2D531"))
+                }
+                else if (rated < 4 ) {
+                    starIcon.setColorFilter(Color.parseColor("#DB2360"))
+                    tvRate.setTextColor(Color.parseColor("#DB2360"))
+                }
+
+                movieTitle = tvs.name
+                movieYear = tvs.first_air_date.substring(0,4)
+                movieOverview = tvs.overview
+                tvBackdropPath = tvs.backdrop_path
+                posterPath = tvs.poster_path
+            }
+        }
 
         backBtn.setOnClickListener {
             finish()
@@ -133,7 +156,7 @@ class TvDetailsActivity : AppCompatActivity() {
         addBtn.setOnClickListener {
             val playListItem = PlayList(
                 movieTitle.toString(),
-                tvBackdropPath.toString(),
+                tvBackdropPath,
                 TVId,
                 "tv"
             )
@@ -144,30 +167,6 @@ class TvDetailsActivity : AppCompatActivity() {
                     isAdded = false
                     addBtnIcon.setImageResource(R.drawable.add)
                 }
-            }
-        }
-
-
-        //Get TV Details
-        movieViewModel.getTVDetails(TVId.toString())
-        movieViewModel.tvDetails.observe(this@TvDetailsActivity) {tvs ->
-            tvs?.let {
-                tvSeasonCount.text = "${tvs.number_of_seasons.toString()} Mùa"
-                numberOfSeason = tvs.number_of_seasons
-                val rated = it.vote_average
-                tvRate.text = rated.toString().substring(0,3)
-                if (rated < 7 && rated >= 4) {
-                    starIcon.setColorFilter(Color.parseColor("#D2D531"))
-                    tvRate.setTextColor(Color.parseColor("#D2D531"))
-                }
-                else if (rated < 4 ) {
-                    starIcon.setColorFilter(Color.parseColor("#DB2360"))
-                    tvRate.setTextColor(Color.parseColor("#DB2360"))
-                }
-//                title.text = it.name
-//                year.text = it.first_air_date.substring(0,4)
-//                overview.text = it.overview
-//                TvBackdrop.load("https://media.themoviedb.org/t/p/w780/${it.backdrop_path}")
             }
         }
 

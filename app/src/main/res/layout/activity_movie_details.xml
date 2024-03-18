@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp">
                 <ImageView
-                    android:src="@drawable/aaaaby8rhdsiftokfnzl3or_t_cixonehoe5v47ck_yov6sq9u6dgcxi6g0vjlelkvrdotghhneztw9qa_q14oimsyyoualu2zqn4ioramujvt3qfeugs5iotornev_a18bszhmztw"
+                    android:background="@color/shimmerColor"
                     android:id="@+id/MovieBackdrop"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"

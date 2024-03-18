@@ -55,11 +55,14 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var similarListAdapter: SimilarListAdapter
-    private lateinit var oPhimViewModel: OPhimViewModel
-    private lateinit var posterPath: String
     private var playbackPosition: Long = 0
     private var isWatching: Boolean = false
     private var isAdded: Boolean = false
+    private var movieTitle: String = ""
+    private var movieYear: String = ""
+    private var movieOverview: String = ""
+    private var movieBackdrop: String = ""
+    private  var posterPath: String = ""
 
     private lateinit var continueWatchingRepository: ContinueWatchingRepository
     private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
@@ -97,11 +100,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_details)
 
         val movieId = intent.getIntExtra("movie_id",0)
-        val movieTitle = intent.getStringExtra("movie_title")
-        val movieYear = intent.getStringExtra("movie_year")
-        val movieOverview = intent.getStringExtra("movie_overview")
-        val movieBackdrop = intent.getStringExtra("movie_backdropPath")
-        posterPath = intent.getStringExtra("poster_path").toString()
         val backBtn = findViewById<MaterialButton>(R.id.backBtn)
 
         val title = findViewById<TextView>(R.id.movieTitle)
@@ -111,6 +109,26 @@ class MovieDetailsActivity : AppCompatActivity() {
         val backdrop = findViewById<ImageView>(R.id.MovieBackdrop)
         val addBtn = findViewById<LinearLayout>(R.id.add_btn)
         val addBtnIcon = findViewById<ImageView>(R.id.add_btn_icon)
+
+        // Get movie details
+        movieViewModel.getMovieDetails(movieId.toString())
+        movieViewModel.movieDetails.observe(this@MovieDetailsActivity) {movie ->
+            movie?.let {
+                movieTitle = it.title
+                movieYear = it.release_date
+                movieOverview = it.overview
+                movieBackdrop = it.backdrop_path
+                posterPath = it.poster_path
+                title.text = movieTitle
+                year.text = movieYear.substring(0,4)
+                overview.text = movieOverview
+                backdrop.load("https://media.themoviedb.org/t/p/w780/${movieBackdrop}")
+                if (movieOverview.isNullOrBlank()) {
+                    overview.visibility = View.GONE
+                }
+            }
+
+        }
 
         backBtn.setOnClickListener {
             finish()
@@ -123,6 +141,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         })
 
+        // Add to playlist
         addBtn.setOnClickListener {
             val playListItem = PlayList(
                 movieTitle.toString(),
@@ -140,15 +159,6 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         }
 
-        title.text = movieTitle
-        year.text = movieYear.toString().substring(0,4)
-        overview.text = movieOverview
-        backdrop.load("https://media.themoviedb.org/t/p/w780/${movieBackdrop}")
-
-        if (movieOverview.isNullOrBlank()) {
-            overview.visibility = View.GONE
-        }
-
         // Get movie credits
         movieViewModel.getMovieCredits(movieId.toString())
 
@@ -160,30 +170,27 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         }
 
+
         // Similar View
         val similarView: RecyclerView = findViewById(R.id.similarView)
-
         val spacing = resources.getDimensionPixelSize(R.dimen.grid_spacing) // Khoảng cách giữa các item
         val includeEdge = true // Bao gồm cả mép của RecyclerView
-
         val layoutManager = GridLayoutManager(this, 3)
         similarView.layoutManager = layoutManager
         similarListAdapter = SimilarListAdapter(emptyList())
         similarView.adapter = similarListAdapter
-
         similarView.addItemDecoration(GridSpacingItemDecoration(3,spacing, includeEdge))
         similarView.adapter = similarListAdapter
         movieViewModel.getMovieSimilar(movieId.toString())
-
         movieViewModel.movieSimilar.observe(this, Observer { movies ->
             movies?.let {
                 similarListAdapter.setMovies(it.subList(0,9))
             }
         })
 
+
         //Play button
         val playbtn = findViewById<MaterialButton>(R.id.playBtn)
-
         playbtn.setOnClickListener{
             val intent = Intent(this, MoviePlayerActivity::class.java)
             if (isWatching) {

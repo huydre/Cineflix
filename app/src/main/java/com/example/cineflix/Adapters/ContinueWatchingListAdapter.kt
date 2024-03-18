@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.cineflix.Model.Movie
 import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.R
-import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.MoviePlayerActivity
 import com.example.cineflix.ViewModel.ContinueWatchingViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,6 +26,7 @@ class ContinueWatchingListAdapter(
         val tileTextView : TextView = itemView.findViewById(R.id.textviewCWatching)
         val moreBtn : ImageView = itemView.findViewById(R.id.more_btn)
         val infoBtn : ImageView = itemView.findViewById(R.id.info_btn)
+        val processWatched : ProgressBar = itemView.findViewById(R.id.progressBar)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContinueWatchingListAdapter.MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_cw_contaner, parent, false)
@@ -65,6 +64,9 @@ class ContinueWatchingListAdapter(
 
             bottomSheetDialog.show()
         }
+
+        holder.processWatched.max = movieResult.duration.toInt()
+        holder.processWatched.progress = movieResult.progress.toInt()
 
         if (movieResult.media_type == "movie") {
             holder.tileTextView.text = movieResult.title

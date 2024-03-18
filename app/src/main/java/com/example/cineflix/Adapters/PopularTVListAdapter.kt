@@ -1,8 +1,6 @@
 package com.example.cineflix.Adapters
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +9,8 @@ import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.cineflix.Model.Movie
-import com.example.cineflix.Model.TV
+import com.example.cineflix.Model.network.TV
 import com.example.cineflix.R
-import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.TvDetailsActivity
 
 class PopularListTVAdapter(var lst:List<TV>): RecyclerView.Adapter<PopularListTVAdapter.MovieViewHolder>() {

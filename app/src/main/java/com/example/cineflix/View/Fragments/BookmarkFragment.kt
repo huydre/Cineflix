@@ -1,60 +1,55 @@
 package com.example.cineflix.View.Fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.cineflix.Adapters.PlayListAdapter
+import com.example.cineflix.Model.local.playlist.PlayListDatabase
+import com.example.cineflix.Model.local.playlist.PlayListRepository
 import com.example.cineflix.R
+import com.example.cineflix.ViewModel.PlayListViewModel
+import com.example.cineflix.ViewModel.PlaylistViewModelFactory
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [BookmarkFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BookmarkFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private lateinit var playListAdapter: PlayListAdapter
+
+    private lateinit var playListRepository: PlayListRepository
+    private val playListdatabase by lazy { PlayListDatabase.getInstance(requireContext()) }
+    private val playListDao by lazy { playListdatabase.playListDao() }
+    private lateinit var playListViewModelFactory: PlaylistViewModelFactory
+    private val playListViewModel: PlayListViewModel by viewModels(
+        factoryProducer = {
+            playListViewModelFactory
         }
-    }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bookmark, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_bookmark, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BookmarkFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BookmarkFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        playListRepository = PlayListRepository(playListDao)
+        playListViewModelFactory = PlaylistViewModelFactory(playListRepository)
+
+        val recyclerView : RecyclerView = view.findViewById(R.id.playListRC)
+        recyclerView.layoutManager = LinearLayoutManager(BookmarkFragment().context, LinearLayoutManager.VERTICAL, false)
+        playListAdapter = PlayListAdapter(listOf())
+        recyclerView.adapter = playListAdapter
+
+        playListViewModel.getPlayListAll().observe(viewLifecycleOwner, {
+            playListAdapter.setMovies(it)
+            Log.d(TAG, "onCreateView: " + it)
+        })
+
+        return view
     }
 }

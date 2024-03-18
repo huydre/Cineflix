@@ -20,35 +20,32 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.core.view.GestureDetectorCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cineflix.Model.Subtitle
 import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
+import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.OPhimRepository
 import com.example.cineflix.R
-import com.example.cineflix.Utils.OPhim
 import com.example.cineflix.Utils.OpenSubtiles
 import com.example.cineflix.Utils.SubAdapter
+import com.example.cineflix.ViewModel.ContinueWatchingViewModel
+import com.example.cineflix.ViewModel.ContinueWatchingViewModelFactory
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.example.cineflix.ViewModel.OPhimViewModel
 import com.example.cineflix.ViewModel.OPhimViewModelFactory
-import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
@@ -64,14 +61,9 @@ import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.material.button.MaterialButton
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttp
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import kotlin.math.abs
 val openSubtitleAPI = "HtHEMGG6zMnzkmulNP1IguEa3hxqy3VC"
 
@@ -115,12 +107,19 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     private var movieId: Int = 0
     private var season: Int = 0
     private var episode: Int = 0
+    private var duration: Long = 0
     private lateinit var posterPath: String
     private val fileLinks: MutableList<String> = mutableListOf()
 
-
+    private lateinit var continueWatchingRepository: ContinueWatchingRepository
     private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
     private val watchHistoryDao by lazy { database.watchDAO() }
+    private lateinit var viewModelFactory: ContinueWatchingViewModelFactory
+    private val viewModel: ContinueWatchingViewModel by viewModels(
+        factoryProducer = {
+            viewModelFactory
+        }
+    )
     private lateinit var oPhimViewModel: OPhimViewModel
     private lateinit var movieViewModel: MovieViewModel
 
@@ -139,6 +138,9 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val movieViewModelFactory = MovieViewModelFactory(repository)
         movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
 
+        continueWatchingRepository = ContinueWatchingRepository(watchHistoryDao)
+        viewModelFactory = ContinueWatchingViewModelFactory(watchHistoryDao)
+
         movieId = intent.getIntExtra("movie_id", 0)
         mediaType = intent.getStringExtra("media_type").toString()
         movieTitle = intent.getStringExtra("title").toString()
@@ -146,6 +148,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         episode = intent.getIntExtra("episode", 0)
         posterPath = intent.getStringExtra("poster_path").toString()
         playbackPosition = intent.getLongExtra("progress", 0)
+        seasonCount = intent.getIntExtra("numberSeason", 0)
 
         getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
 
@@ -172,7 +175,14 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         var selectedItem = "Vietnamese"
         var lI = 0
 
-
+        if (mediaType == "movie") {
+            title.text = movieTitle
+        }
+        else {
+            if (seasonCount == 0) seasonCount = getTVSeasonCount()
+            nextEPBtn.visibility = View.VISIBLE
+            title.text = "${movieTitle} Phần ${season} Tập ${episode}"
+        }
 
         var fileLink = ""
 
@@ -268,19 +278,19 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         }
 
         nextEPBtn.setOnClickListener {
-            // Chuyển sang tập tiếp theo
             val currentEpisodeUrl = videoUrl.value
-            episode += 1
-            getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
-            // Nếu tập tiếp theo không có thì chuyển qua season mới
-            if (currentEpisodeUrl == videoUrl.value && season < seasonCount) {
+            if (episode < numberOfEpisode.value!!) {
+                episode += 1
+            } else if (season < seasonCount) {
+                // Nếu tập tiếp theo không có thì chuyển qua season mới
                 season += 1
                 episode = 1
-                getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
+            } else {
+                // Nếu đã đến cuối series, hiển thị thông báo cho người dùng
+                Toast.makeText(this, "Đã đến cuối series", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            else {
-//                nextEPBtn.visibility = View.GONE
-            }
+            getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
             title.text = "${movieTitle} Phần ${season} Tập ${episode}"
             playbackPosition = 0
         }
@@ -305,14 +315,7 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         volumeSeek.max = maxVolume
         volume = maxVolume/2
 
-        if (mediaType == "movie") {
-            title.text = movieTitle
-        }
-        else {
-            seasonCount = getTVSeasonCount()
-            nextEPBtn.visibility = View.VISIBLE
-            title.text = "${movieTitle} Phần ${season} Tập ${episode}"
-        }
+
 
         goBack.setOnClickListener {
             finish()
@@ -357,8 +360,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
         val gestureDetectorDouble = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDoubleTap(e: MotionEvent): Boolean {
-
-                playerView.controllerShowTimeoutMs = 0
 
                 val right : TextView = findViewById(R.id.right)
                 val left : TextView = findViewById(R.id.left)
@@ -477,7 +478,24 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         val mediaSource = buildMediaSource(uri)
         simpleExoplayer.setMediaSource(mediaSource, false)
         simpleExoplayer.playWhenReady = true
-        simpleExoplayer.addListener(this)
+        simpleExoplayer.addListener(object : Player.Listener {
+            @Deprecated("Deprecated in Java")
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if (playbackState == ExoPlayer.STATE_READY) {
+                    duration = simpleExoplayer.duration
+                }
+                if (playbackState == Player.STATE_BUFFERING) {
+                    videoLoading.visibility = View.VISIBLE
+                    play.setImageResource(0)
+                    pause.setImageResource(0)
+                }
+                else {
+                    play.setImageResource(R.drawable.netlfix_play_button)
+                    pause.setImageResource(R.drawable.netflix_pause_button)
+                    videoLoading.visibility = View.GONE
+                }
+            }
+        })
         val playerViewFullscreen = findViewById<PlayerView>(R.id.video_view)
         playerViewFullscreen.player = simpleExoplayer
         simpleExoplayer.seekTo(playbackPosition)
@@ -522,60 +540,25 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
     }
 
     override fun onDestroy() {
-        GlobalScope.launch(Dispatchers.IO) {
-            if (mediaType == "movie") {
-                if (playbackPosition > 0) {
-                    watchHistoryDao.insert(
-                        ContinueWatching(
-                            progress = playbackPosition.toLong(),
-                            posterPath = posterPath,
-                            tmdbID = movieId,
-                            title = movieTitle,
-                            media_type = mediaType,
-                            season = season,
-                            episode = episode,
-                            year = "2024"
-                        )
-                    )
-                }
-            }
-            else {
-                watchHistoryDao.insert(
-                    ContinueWatching(
-                        progress = playbackPosition.toLong(),
-                        posterPath = posterPath,
-                        tmdbID = movieId,
-                        title = movieTitle,
-                        media_type = mediaType,
-                        season = season,
-                        episode = episode,
-                        year = "2024"
-                    )
-                )
-            }
-        }
+        val continueWatching = ContinueWatching(
+            progress = playbackPosition.toLong(),
+            posterPath = posterPath,
+            tmdbID = movieId,
+            title = movieTitle,
+            media_type = mediaType,
+            season = season,
+            episode = episode,
+            year = "2024",
+            numberSeason = seasonCount, // Thêm giá trị này
+            duration = duration
+        )
+        viewModel.saveContinueWatching(continueWatching)
         super.onDestroy()
         releasePlayer()
     }
 
-
-    override fun onPlaybackStateChanged(playbackState: Int) {
-        if (playbackState == Player.STATE_BUFFERING) {
-            videoLoading.visibility = View.VISIBLE
-            play.setImageResource(0)
-            pause.setImageResource(0)
-        }
-        else {
-            play.setImageResource(R.drawable.netlfix_play_button)
-            pause.setImageResource(R.drawable.netflix_pause_button)
-            videoLoading.visibility = View.GONE
-        }
-        super.onPlaybackStateChanged(playbackState)
-    }
-
     private fun fullscreen() {
-//        supportActionBar?.hide()
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         window.decorView.apply {
             systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or

@@ -1,6 +1,6 @@
 package com.example.cineflix
 
-import com.example.cineflix.Model.OPhimRespone
+import com.example.cineflix.Model.network.OPhimRespone
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

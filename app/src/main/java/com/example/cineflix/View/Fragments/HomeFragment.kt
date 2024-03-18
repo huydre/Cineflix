@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,9 @@ import com.example.cineflix.Adapters.PopularListAdapter
 import com.example.cineflix.Adapters.PopularListTVAdapter
 import com.example.cineflix.Adapters.TopRatedListAdapter
 import com.example.cineflix.Adapters.TopRatedTVListAdapter
+import com.example.cineflix.Model.local.playlist.PlayList
+import com.example.cineflix.Model.local.playlist.PlayListDatabase
+import com.example.cineflix.Model.local.playlist.PlayListRepository
 import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
 import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
@@ -35,9 +39,12 @@ import com.example.cineflix.ViewModel.ContinueWatchingViewModel
 import com.example.cineflix.ViewModel.ContinueWatchingViewModelFactory
 import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
+import com.example.cineflix.ViewModel.PlayListViewModel
+import com.example.cineflix.ViewModel.PlaylistViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
+import kotlinx.coroutines.launch
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -57,6 +64,8 @@ class HomeFragment : Fragment() {
     private lateinit var airingTodayTVListAdapter: AiringTodayTVListAdapter
     private lateinit var continueWatchingListAdapyer: ContinueWatchingListAdapter
 
+    private var isAdded: Boolean = false
+
     private lateinit var continueWatchingRepository: ContinueWatchingRepository
     private val database by lazy { ContinueWatchingDatabase.getInstance(requireContext()) }
     private val watchHistoryDao by lazy { database.watchDAO() }
@@ -64,6 +73,16 @@ class HomeFragment : Fragment() {
     private val viewModel: ContinueWatchingViewModel by viewModels(
         factoryProducer = {
             viewModelFactory
+        }
+    )
+
+    private lateinit var playListRepository: PlayListRepository
+    private val playListdatabase by lazy { PlayListDatabase.getInstance(requireContext()) }
+    private val playListDao by lazy { playListdatabase.playListDao() }
+    private lateinit var playListViewModelFactory: PlaylistViewModelFactory
+    private val playListViewModel: PlayListViewModel by viewModels(
+        factoryProducer = {
+            playListViewModelFactory
         }
     )
 
@@ -80,6 +99,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        playListRepository = PlayListRepository(playListDao)
+        playListViewModelFactory = PlaylistViewModelFactory(playListRepository)
+
         val repository = MovieRepository()
         val movieViewModelFactory = MovieViewModelFactory(repository)
         movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
@@ -88,6 +110,7 @@ class HomeFragment : Fragment() {
 
         val bigPoster = view.findViewById<ShapeableImageView>(R.id.bigPoster)
         val playBtn = view.findViewById<MaterialButton>(R.id.playBtn)
+        val addToPlayList = view.findViewById<MaterialButton>(R.id.myListBtn)
 
         //View 1
         val recyclerView1: RecyclerView = view.findViewById(R.id.view1)
@@ -103,6 +126,32 @@ class HomeFragment : Fragment() {
 
                 val bigPosterMovie = it.get(0)
                 popularListAdapter.setMovies(lst)
+
+                val playListItem = PlayList(
+                    bigPosterMovie.title,
+                    bigPosterMovie.backdrop_path,
+                    bigPosterMovie.id,
+                    "movie"
+                )
+
+                playListViewModel.getPlayList(bigPosterMovie.id).observe(viewLifecycleOwner, Observer { playLists ->
+                    if (playLists != null) isAdded = true
+                    if (isAdded) {
+                        addToPlayList.icon = resources.getDrawable(R.drawable.ic_check)
+                    }
+                })
+
+                addToPlayList.setOnClickListener {
+                    playListViewModel.viewModelScope.launch {
+                        if (!isAdded) playListViewModel.insert(playListItem)
+                        else {
+                            playListViewModel.delete(playListItem)
+                            isAdded = false
+                            addToPlayList.icon = resources.getDrawable(R.drawable.add)
+                        }
+                    }
+                }
+
                 playBtn.setOnClickListener {
                     val intent = Intent(context, MoviePlayerActivity::class.java)
                     intent.putExtra("movie_id", bigPosterMovie.id)
@@ -250,10 +299,14 @@ class HomeFragment : Fragment() {
         recyclerViewCW.adapter = continueWatchingListAdapyer
 
         val viewStateObserver = Observer<List<ContinueWatching>> { watchFrom ->
+            val textCW = view.findViewById<TextView>(R.id.textViewCW)
             if (watchFrom.isNotEmpty()) {
-                val textCW = view.findViewById<TextView>(R.id.textViewCW)
                 recyclerViewCW.visibility = View.VISIBLE
                 textCW.visibility = View.VISIBLE
+            }
+            else {
+                textCW.visibility = View.GONE
+                recyclerViewCW.visibility = View.GONE
             }
             continueWatchingListAdapyer.setMovies(watchFrom)
         }

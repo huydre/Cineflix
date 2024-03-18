@@ -136,8 +136,6 @@ class SearchFragment : Fragment(){
                     results?.let {
                         val lst = it.filter { it.media_type != "person" }
                         searchMultiResultListAdapter.setMovies(lst)
-
-                        Log.d(TAG, "onCreateView: " + lst.map { it.media_type })
                     }
                 })
                 movieViewModel.getSearchMulti(query)

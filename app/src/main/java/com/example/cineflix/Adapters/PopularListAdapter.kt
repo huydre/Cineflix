@@ -9,7 +9,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cineflix.R
 import coil.load
-import com.example.cineflix.Model.Movie
+import com.example.cineflix.Model.network.Movie
 import com.example.cineflix.View.Activities.MovieDetailsActivity
 
 class PopularListAdapter(var lst:List<Movie>): RecyclerView.Adapter<PopularListAdapter.MovieViewHolder>() {

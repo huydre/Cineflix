@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:foreground="?selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_marginBottom="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/backdropPL"
+        android:scaleType="centerCrop"
+        android:background="@color/shimmerColor"
+        android:layout_width="130dp"
+        android:layout_height="80dp"
+        app:shapeAppearanceOverlay="@style/grid_item_corner"
+        style="@style/ShapeAppearanceOverlay.App.circleImageView"/>
+    <TextView
+        android:id="@+id/titlePL"
+        android:layout_marginHorizontal="10dp"
+        android:text="Thăng cấp một mình"
+        android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="13dp"/>
+    <ImageView
+        android:id="@+id/playPL"
+        android:src="@drawable/play_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"/>
+</LinearLayout>

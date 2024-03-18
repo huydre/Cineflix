@@ -208,17 +208,22 @@
                 >
 
                 <LinearLayout
+                    android:id="@+id/add_btn"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="40dp">
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:tint="@android:color/white"
+                    <ImageView
+                        android:id="@+id/add_btn_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/ic_add_big"
-                        android:backgroundTint="@android:color/transparent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:background="?selectableItemBackgroundBorderless"
+                        app:tint="@android:color/white" />
                     <TextView
                         android:layout_gravity="center_horizontal"
                         android:text="Danh Sách"
@@ -230,12 +235,14 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="40dp">
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:tint="@android:color/white"
+                    <ImageView
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/ic_like"
                         android:backgroundTint="@android:color/transparent"
@@ -243,7 +250,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="8dp"
-                        />
+                        app:tint="@android:color/white" />
                     <TextView
                         android:layout_gravity="center_horizontal"
                         android:text="Yêu Thích"
@@ -257,17 +264,19 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:tint="@android:color/white"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?selectableItemBackgroundBorderless">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/ic_send"
                         android:backgroundTint="@android:color/transparent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5.8dp"
-                        />
+                        app:tint="@android:color/white" />
                     <TextView
                         android:layout_gravity="center_horizontal"
                         android:text="Chia sẻ"

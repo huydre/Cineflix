@@ -6,18 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.compose.ui.layout.Layout
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.cineflix.Model.Movie
-import com.example.cineflix.Model.SearchMulti
+import com.example.cineflix.Model.network.SearchMulti
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
 import com.example.cineflix.View.Activities.TvDetailsActivity
-import com.example.cineflix.View.Fragments.SearchFragment
 
 class SearchMultiResultAdapter(var lst:List<SearchMulti>): RecyclerView.Adapter<SearchMultiResultAdapter.MovieViewHolder>() {
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

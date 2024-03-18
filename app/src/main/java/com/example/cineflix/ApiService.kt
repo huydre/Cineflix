@@ -1,24 +1,20 @@
 package com.example.cineflix
 
-import com.example.cineflix.Model.Credit
-import com.example.cineflix.Model.Ids
-import com.example.cineflix.Model.Movie
-import com.example.cineflix.Model.MovieDetails
-import com.example.cineflix.Model.MovieResponse
-import com.example.cineflix.Model.SearchMulti
-import com.example.cineflix.Model.SearchMultiResponse
-import com.example.cineflix.Model.SeasonDetails
-import com.example.cineflix.Model.TVResponse
-import com.example.cineflix.Model.TvDetails
-import com.example.cineflix.Model.Video
+import com.example.cineflix.Model.network.Credit
+import com.example.cineflix.Model.network.Ids
+import com.example.cineflix.Model.network.MovieDetails
+import com.example.cineflix.Model.network.MovieResponse
+import com.example.cineflix.Model.network.SearchMultiResponse
+import com.example.cineflix.Model.network.SeasonDetails
+import com.example.cineflix.Model.network.TVResponse
+import com.example.cineflix.Model.network.TvDetails
+import com.example.cineflix.Model.network.Video
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import javax.inject.Inject
 
 
 const val API_KEY = "8012e4149af0c58d8ecbd982582fcbf0"

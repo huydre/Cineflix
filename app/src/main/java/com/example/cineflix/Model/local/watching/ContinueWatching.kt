@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.Duration
 
 @Entity(tableName = "continue_watching")
 data class ContinueWatching (
@@ -16,7 +17,9 @@ data class ContinueWatching (
     val season: Int = 0,
     val media_type: String,
     val year: String? = null,
-    val lastUpdate: Long = System.currentTimeMillis()
+    val lastUpdate: Long = System.currentTimeMillis(),
+    val numberSeason: Int = 0,
+    val duration: Long = 0
     ) : Parcelable {
         constructor(parcel: Parcel) : this(
             parcel.readLong(),
@@ -27,6 +30,8 @@ data class ContinueWatching (
             parcel.readInt(),
             parcel.readString()?:"",
             parcel.readString()?:"",
+            parcel.readLong(),
+            parcel.readInt(),
             parcel.readLong()
         ) {}
 
@@ -40,6 +45,8 @@ data class ContinueWatching (
         parcel.writeString(media_type)
         parcel.writeString(year)
         parcel.writeLong(lastUpdate)
+        parcel.writeInt(numberSeason)
+        parcel.writeLong(duration)
     }
 
     override fun describeContents(): Int {
@@ -55,57 +62,4 @@ data class ContinueWatching (
             return arrayOfNulls(size)
         }
     }
-}
-
-data class VideoData(
-    val progress: Int,
-    val posterPath: String,
-    @PrimaryKey
-    val tmdbID: Int,
-    val imdbID: String?= null,
-    val title: String,
-    val episode: Int = 0,
-    val season : Int = 0,
-    val media_type: String,
-    val year: String? = null,
-): Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readInt(),
-        parcel.readString()?:"",
-        parcel.readInt(),
-        parcel.readString(),
-        parcel.readString()?:"",
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readString()?:"",
-        parcel.readString()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(progress)
-        parcel.writeString(posterPath)
-        parcel.writeInt(tmdbID)
-        parcel.writeString(imdbID)
-        parcel.writeString(title)
-        parcel.writeInt(episode)
-        parcel.writeInt(season)
-        parcel.writeString(media_type)
-        parcel.writeString(year)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<VideoData> {
-        override fun createFromParcel(parcel: Parcel): VideoData {
-            return VideoData(parcel)
-        }
-
-        override fun newArray(size: Int): Array<VideoData?> {
-            return arrayOfNulls(size)
-        }
-    }
-
 }

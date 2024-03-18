@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -32,7 +33,13 @@ import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import androidx.activity.viewModels
+import androidx.lifecycle.viewModelScope
+import com.example.cineflix.Model.local.playlist.PlayList
+import com.example.cineflix.Model.local.playlist.PlayListDatabase
+import com.example.cineflix.Model.local.playlist.PlayListRepository
 import com.example.cineflix.Model.local.watching.ContinueWatchingDAO
+import com.example.cineflix.ViewModel.PlayListViewModel
+import com.example.cineflix.ViewModel.PlaylistViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -52,6 +59,7 @@ class TvDetailsActivity : AppCompatActivity() {
     private var isWatching: Boolean = false
     private var season: Int = 1
     private var episode: Int = 1
+    private var isAdded: Boolean = false
 
     private lateinit var continueWatchingRepository: ContinueWatchingRepository
     private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
@@ -63,11 +71,23 @@ class TvDetailsActivity : AppCompatActivity() {
         }
     )
 
+    private lateinit var playListRepository: PlayListRepository
+    private val playListdatabase by lazy { PlayListDatabase.getInstance(this@TvDetailsActivity) }
+    private val playListDao by lazy { playListdatabase.playListDao() }
+    private lateinit var playListViewModelFactory: PlaylistViewModelFactory
+    private val playListViewModel: PlayListViewModel by viewModels(
+        factoryProducer = {
+            playListViewModelFactory
+        }
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val repository = MovieRepository()
         val movieViewModelFactory = MovieViewModelFactory(repository)
         movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
+
+        playListRepository = PlayListRepository(playListDao)
+        playListViewModelFactory = PlaylistViewModelFactory(playListRepository)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_details)
@@ -91,6 +111,8 @@ class TvDetailsActivity : AppCompatActivity() {
         val tvRate = findViewById<TextView>(R.id.tvRate)
         val starIcon = findViewById<ImageView>(R.id.star_icon)
         val backBtn = findViewById<MaterialButton>(R.id.backBtn)
+        val addBtn = findViewById<LinearLayout>(R.id.add_btn)
+        val addBtnIcon = findViewById<ImageView>(R.id.add_btn_icon)
 
         title.text = movieTitle
         year.text = movieYear.toString().substring(0,4)
@@ -101,6 +123,29 @@ class TvDetailsActivity : AppCompatActivity() {
             finish()
         }
 
+        playListViewModel.getPlayList(TVId).observe(this@TvDetailsActivity, Observer { playLists ->
+            if (playLists != null) isAdded = true
+            if (isAdded) {
+                addBtnIcon.setImageResource(R.drawable.ic_check)
+            }
+        })
+
+        addBtn.setOnClickListener {
+            val playListItem = PlayList(
+                movieTitle.toString(),
+                tvBackdropPath.toString(),
+                TVId,
+                "tv"
+            )
+            playListViewModel.viewModelScope.launch {
+                if (!isAdded) playListViewModel.insert(playListItem)
+                else {
+                    playListViewModel.delete(playListItem)
+                    isAdded = false
+                    addBtnIcon.setImageResource(R.drawable.add)
+                }
+            }
+        }
 
 
         //Get TV Details

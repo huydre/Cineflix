@@ -7,24 +7,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.cineflix.Model.Movie
+import com.example.cineflix.Model.network.Movie
 import com.example.cineflix.MovieRepository
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.cineflix.Model.Credit
-import com.example.cineflix.Model.Ids
-import com.example.cineflix.Model.MovieDetails
-import com.example.cineflix.Model.SearchMulti
-import com.example.cineflix.Model.SeasonDetails
-import com.example.cineflix.Model.TV
-import com.example.cineflix.Model.TVResponse
-import com.example.cineflix.Model.TvDetails
-import com.example.cineflix.Model.Video
-import com.example.cineflix.MyApplication
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.example.cineflix.Model.network.Credit
+import com.example.cineflix.Model.network.Ids
+import com.example.cineflix.Model.network.MovieDetails
+import com.example.cineflix.Model.network.SearchMulti
+import com.example.cineflix.Model.network.SeasonDetails
+import com.example.cineflix.Model.network.TV
+import com.example.cineflix.Model.network.TvDetails
+import com.example.cineflix.Model.network.Video
 import kotlinx.coroutines.launch
-import retrofit2.http.Query
-import javax.inject.Inject
 
 
 class MovieViewModelFactory(private val repository: MovieRepository) : ViewModelProvider.Factory {

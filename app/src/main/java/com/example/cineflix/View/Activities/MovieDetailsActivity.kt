@@ -9,18 +9,24 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cineflix.Adapters.SimilarListAdapter
+import com.example.cineflix.Model.local.playlist.PlayList
+import com.example.cineflix.Model.local.playlist.PlayListDatabase
+import com.example.cineflix.Model.local.playlist.PlayListRepository
 import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
 import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
@@ -32,6 +38,8 @@ import com.example.cineflix.ViewModel.MovieViewModel
 import com.example.cineflix.ViewModel.MovieViewModelFactory
 import com.example.cineflix.ViewModel.OPhimViewModel
 import com.example.cineflix.ViewModel.OPhimViewModelFactory
+import com.example.cineflix.ViewModel.PlayListViewModel
+import com.example.cineflix.ViewModel.PlaylistViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -51,6 +59,7 @@ class MovieDetailsActivity : AppCompatActivity() {
     private lateinit var posterPath: String
     private var playbackPosition: Long = 0
     private var isWatching: Boolean = false
+    private var isAdded: Boolean = false
 
     private lateinit var continueWatchingRepository: ContinueWatchingRepository
     private val database by lazy { ContinueWatchingDatabase.getInstance(this) }
@@ -62,6 +71,16 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     )
 
+    private lateinit var playListRepository: PlayListRepository
+    private val playListdatabase by lazy { PlayListDatabase.getInstance(this@MovieDetailsActivity) }
+    private val playListDao by lazy { playListdatabase.playListDao() }
+    private lateinit var playListViewModelFactory: PlaylistViewModelFactory
+    private val playListViewModel: PlayListViewModel by viewModels(
+        factoryProducer = {
+            playListViewModelFactory
+        }
+    )
+
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +88,9 @@ class MovieDetailsActivity : AppCompatActivity() {
         val repository = MovieRepository()
         val movieViewModelFactory = MovieViewModelFactory(repository)
         movieViewModel = ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
+
+        playListRepository = PlayListRepository(playListDao)
+        playListViewModelFactory = PlaylistViewModelFactory(playListRepository)
 
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -80,7 +102,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         val movieOverview = intent.getStringExtra("movie_overview")
         val movieBackdrop = intent.getStringExtra("movie_backdropPath")
         posterPath = intent.getStringExtra("poster_path").toString()
-//        val slug = ConvertNameToSlug(movieTitle.toString())
         val backBtn = findViewById<MaterialButton>(R.id.backBtn)
 
         val title = findViewById<TextView>(R.id.movieTitle)
@@ -88,9 +109,35 @@ class MovieDetailsActivity : AppCompatActivity() {
         val overview = findViewById<TextView>(R.id.movieOverview)
         val actor = findViewById<TextView>(R.id.movieActor)
         val backdrop = findViewById<ImageView>(R.id.MovieBackdrop)
+        val addBtn = findViewById<LinearLayout>(R.id.add_btn)
+        val addBtnIcon = findViewById<ImageView>(R.id.add_btn_icon)
 
         backBtn.setOnClickListener {
             finish()
+        }
+
+        playListViewModel.getPlayList(movieId).observe(this@MovieDetailsActivity, Observer { playLists ->
+            if (playLists != null) isAdded = true
+            if (isAdded) {
+                addBtnIcon.setImageResource(R.drawable.ic_check)
+            }
+        })
+
+        addBtn.setOnClickListener {
+            val playListItem = PlayList(
+                movieTitle.toString(),
+                movieBackdrop.toString(),
+                movieId,
+                "movie"
+            )
+            playListViewModel.viewModelScope.launch {
+                if (!isAdded) playListViewModel.insert(playListItem)
+                else {
+                    playListViewModel.delete(playListItem)
+                    isAdded = false
+                    addBtnIcon.setImageResource(R.drawable.add)
+                }
+            }
         }
 
         title.text = movieTitle

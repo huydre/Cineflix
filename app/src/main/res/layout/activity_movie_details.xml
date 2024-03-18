@@ -173,20 +173,25 @@
                 >
 
                 <LinearLayout
+                    android:id="@+id/add_btn"
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:background="?selectableItemBackgroundBorderless"
                     android:layout_marginEnd="40dp">
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:tint="@android:color/white"
+
+                    <ImageView
+                        android:id="@+id/add_btn_icon"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_add_big"
+                        android:layout_margin="5dp"
                         android:backgroundTint="@android:color/transparent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:src="@drawable/ic_add_big"
+                        app:tint="@android:color/white" />
+
                     <TextView
                         android:layout_gravity="center_horizontal"
                         android:text="Danh Sách"
@@ -205,8 +210,7 @@
                     android:focusable="true"
                     android:background="?android:selectableItemBackgroundBorderless"
                     android:layout_marginEnd="40dp">
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:tint="@android:color/white"
+                    <ImageView
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/ic_like"
                         android:backgroundTint="@android:color/transparent"
@@ -214,7 +218,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="8dp"
-                        />
+                        android:padding="5dp"
+                        app:tint="@android:color/white" />
                     <TextView
                         android:layout_gravity="center_horizontal"
                         android:text="Yêu Thích"
@@ -232,16 +237,17 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?android:selectableItemBackgroundBorderless">
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:tint="@android:color/white"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_send"
-                        android:backgroundTint="@android:color/transparent"
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5.8dp"
-                        />
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/ic_send"
+                        android:padding="5dp"
+                        app:tint="@android:color/white" />
                     <TextView
                         android:layout_gravity="center_horizontal"
                         android:text="Chia sẻ"

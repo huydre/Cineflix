@@ -70,7 +70,7 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="12dp"
-        android:maxLines="1"
+        android:maxLines="2"
         android:ellipsize="end"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/imagePoster"
@@ -88,9 +88,16 @@
         app:layout_constraintStart_toStartOf="@+id/imagePoster"
         app:layout_constraintTop_toTopOf="@+id/imagePoster" />
 
-
-
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/layoutButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:progressTint="@color/red"
+        android:translationY="2dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

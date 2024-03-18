@@ -1,24 +1,17 @@
 package com.example.cineflix.Adapters
 
-import android.content.ContentValues.TAG
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.cineflix.Model.Movie
-import com.example.cineflix.MovieRepository
+import com.example.cineflix.Model.network.Movie
 import com.example.cineflix.R
 import com.example.cineflix.View.Activities.MovieDetailsActivity
-import com.example.cineflix.ViewModel.MovieViewModel
-import com.example.cineflix.ViewModel.MovieViewModelFactory
 
 class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayingListAdapter.MovieViewHolder>() {
 

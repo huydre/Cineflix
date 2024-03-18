@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.cineflix.Model.OPhimRespone
+import com.example.cineflix.Model.network.OPhimRespone
 import com.example.cineflix.OPhimRepository
 import kotlinx.coroutines.launch
 

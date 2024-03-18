@@ -1,17 +1,13 @@
 package com.example.cineflix.ViewModel
 
-import android.content.ContentValues
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.example.cineflix.Model.MovieDetails
 import com.example.cineflix.Model.local.watching.ContinueWatching
 import com.example.cineflix.Model.local.watching.ContinueWatchingDAO
-import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -39,6 +35,12 @@ class ContinueWatchingViewModel(private val watchingDao: ContinueWatchingDAO) : 
     fun getProgressTest(id: Int): LiveData<ContinueWatching?> {
         return liveData(Dispatchers.IO) {
             emit(watchingDao.getProgressTest(id))
+        }
+    }
+
+    fun saveContinueWatching(continueWatching: ContinueWatching) {
+        viewModelScope.launch(Dispatchers.IO) {
+            watchingDao.insert(continueWatching)
         }
     }
 

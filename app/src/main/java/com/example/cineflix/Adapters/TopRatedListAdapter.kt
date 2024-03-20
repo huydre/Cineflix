@@ -17,10 +17,11 @@ class TopRatedListAdapter(var lst:List<Movie>): RecyclerView.Adapter<TopRatedLis
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imagePoster)
         val tileTextView : TextView = itemView.findViewById(R.id.textView10)
+        val ratingTextView : TextView = itemView.findViewById(R.id.top_number)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_container, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_container_top_number, parent, false)
         return MovieViewHolder(view)
     }
 
@@ -28,6 +29,10 @@ class TopRatedListAdapter(var lst:List<Movie>): RecyclerView.Adapter<TopRatedLis
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
+        holder.ratingTextView.text = (position+1).toString()
+        if (position == 0) {
+            holder.ratingTextView.translationX = 15f
+        }
 
         holder.imageView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)

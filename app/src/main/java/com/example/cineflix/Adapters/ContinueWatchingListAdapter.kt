@@ -80,6 +80,7 @@ class ContinueWatchingListAdapter(
                     holder.itemView.context.startActivity(intent)
                     Navigation.createNavigateOnClickListener(R.id.action_searchFragment_to_tvDetailsActivity)
                 }
+                bottomSheetDialog.dismiss()
             }
 
             val removeBtn = bottomSheetView.findViewById<LinearLayout>(R.id.remove_button)

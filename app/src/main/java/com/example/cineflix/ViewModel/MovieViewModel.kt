@@ -82,6 +82,9 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
     private val _imdbID = MutableLiveData<Ids>()
     val imdbID : LiveData<Ids> get() = _imdbID
 
+    private val _networkTV = MutableLiveData<List<TV>>()
+    val networkTV : LiveData<List<TV>> get() = _networkTV
+
     fun getPopularMovies(page: Int) {
         viewModelScope.launch {
             try {
@@ -327,6 +330,20 @@ class MovieViewModel(private val repository: MovieRepository): ViewModel() {
                     responseBody?.let {
                         _imdbID.value = it
                     }
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Error: " + e.message)
+            }
+        }
+    }
+
+    fun getNetworkTV(network: Int, page: Int) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getNetworkTV(network, page)
+                val tvResponse = response.body()
+                tvResponse?.let {
+                    _networkTV.value = it.results
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "Error: " + e.message)

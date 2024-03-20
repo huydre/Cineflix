@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -34,6 +36,7 @@ import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
 import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
+import com.example.cineflix.View.Activities.MovieActivity
 import com.example.cineflix.View.Activities.MoviePlayerActivity
 import com.example.cineflix.ViewModel.ContinueWatchingViewModel
 import com.example.cineflix.ViewModel.ContinueWatchingViewModelFactory
@@ -311,6 +314,15 @@ class HomeFragment : Fragment() {
         }
         viewModel.allWatchHistory.observe(viewLifecycleOwner,viewStateObserver)
 
+        //netflix
+        val netflixBtn : ImageView = view.findViewById(R.id.netflix)
+        netflixBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "Netflix")
+            intent.putExtra("network", 213)
+            startActivity(intent)
+        }
         // Inflate the layout for this fragment
         return view
     }

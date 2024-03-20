@@ -330,10 +330,13 @@
                                 android:orientation="vertical">
 
                                 <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/netflix"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
-                                    android:background="@android:color/white"
                                     android:src="@drawable/netflix_logo"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:clickable="true"
+                                    android:focusable="true"
                                     app:shapeAppearanceOverlay="@style/rounded_corner" />
 
                                 <TextView

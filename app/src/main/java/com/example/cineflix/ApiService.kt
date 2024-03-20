@@ -80,6 +80,14 @@ interface ApiService {
         @Query("language") language: String
     ): Response<MovieResponse>
 
+    @GET("discover/tv")
+    suspend fun getNetworkTV(
+        @Query("with_networks") network: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String,
+        @Query("page") page: Int,
+    ) : Response<TVResponse>
+
      @GET("search/multi")
     suspend fun getSearchMulti(
         @Query("query") query: String,
@@ -147,6 +155,7 @@ interface ApiService {
         @Path("movie_id") MovieId: String,
         @Query("api_key") apiKey: String,
     ): Response<Ids>
+
     @GET("tv/{series_id}/external_ids")
     suspend fun getTvImdbID(
         @Path("series_id") TvId: String,
@@ -208,6 +217,9 @@ class MovieRepository {
     }
     suspend fun getTvImdbId(TVId: String): Response<Ids> {
         return movieApiService.getTvImdbID(TVId, API_KEY)
+    }
+    suspend fun getNetworkTV(network: Int, page: Int): Response<TVResponse> {
+        return movieApiService.getNetworkTV(network, API_KEY, LANGUAGE, page)
     }
 }
 

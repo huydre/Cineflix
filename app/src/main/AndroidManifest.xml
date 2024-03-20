@@ -18,9 +18,12 @@
         android:theme="@style/Theme.Cineflix"
         tools:targetApi="31">
         <activity
+            android:name=".View.Activities.MovieActivity"
+            android:exported="false" />
+        <activity
             android:name=".View.Activities.SplashScreenActivity"
-            android:theme="@style/SplashScreenTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,8 +41,7 @@
             android:exported="false" />
         <activity
             android:name=".View.Activities.MainActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

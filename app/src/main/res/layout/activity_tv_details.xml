@@ -333,7 +333,7 @@
             android:id="@+id/backBtn"
             android:clickable="true"
             android:focusable="true"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="70dp"
             app:cornerRadius="10dp"
             android:layout_height="wrap_content"

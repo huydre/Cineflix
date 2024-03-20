@@ -87,7 +87,7 @@ interface ApiService {
         @Query("language") language: String
     ): Response<SearchMultiResponse>
 
-    @GET("tv/popular")
+    @GET("trending/tv/day")
     suspend fun getTVPopular(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int,

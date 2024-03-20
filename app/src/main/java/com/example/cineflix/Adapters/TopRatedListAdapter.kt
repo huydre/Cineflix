@@ -30,9 +30,6 @@ class TopRatedListAdapter(var lst:List<Movie>): RecyclerView.Adapter<TopRatedLis
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
         holder.ratingTextView.text = (position+1).toString()
-        if (position == 0) {
-            holder.ratingTextView.translationX = 15f
-        }
 
         holder.imageView.setOnClickListener{
             val intent = Intent(holder.itemView.context, MovieDetailsActivity::class.java)

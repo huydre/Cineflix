@@ -17,10 +17,11 @@ class PopularListTVAdapter(var lst:List<TV>): RecyclerView.Adapter<PopularListTV
     inner class MovieViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imagePoster)
         val tileTextView : TextView = itemView.findViewById(R.id.textView10)
+        val ratingTextView : TextView = itemView.findViewById(R.id.top_number)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_container, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_container_top_number, parent, false)
         return MovieViewHolder(view)
     }
 
@@ -28,6 +29,7 @@ class PopularListTVAdapter(var lst:List<TV>): RecyclerView.Adapter<PopularListTV
         val movieResult = lst[position]
         holder.imageView.load("https://media.themoviedb.org/t/p/w780/${movieResult.poster_path}")
         holder.tileTextView.text = ""
+        holder.ratingTextView.text = (position+1).toString()
 
         holder.imageView.setOnClickListener{
             val intent = Intent(holder.itemView.context, TvDetailsActivity::class.java)

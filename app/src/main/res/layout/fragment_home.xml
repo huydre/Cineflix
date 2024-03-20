@@ -506,7 +506,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:scrollHorizontally="true"
-                    android:text="Phim bộ"
+                    android:text="Top 10 chương trình hôm nay"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
                     android:textStyle="bold" />

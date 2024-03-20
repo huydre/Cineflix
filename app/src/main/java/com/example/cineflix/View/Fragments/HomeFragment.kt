@@ -245,7 +245,7 @@ class HomeFragment : Fragment() {
 
         movieViewModel.tvPopular.observe(viewLifecycleOwner, Observer { tvs ->
             tvs?.let {
-                val lst = it
+                val lst = it.subList(0,10)
                 popularListTVAdapter.setMovies(lst)
                 if(it.isNotEmpty()) {
                     val shimmer4 = view.findViewById<ShimmerFrameLayout>(R.id.shimmerFrameLayout4)

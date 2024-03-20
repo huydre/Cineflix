@@ -226,7 +226,6 @@ class HomeFragment : Fragment() {
 
         movieViewModel.nowPlayingMovies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
-
                 val lst = it.subList(0,10)
                 nowPlayingListAdapter.setMovies(lst)
                 if(it.isNotEmpty()) {

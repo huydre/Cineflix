@@ -20,7 +20,7 @@ class NowPlayingListAdapter(var lst:List<Movie>): RecyclerView.Adapter<NowPlayin
         val tileTextView : TextView = itemView.findViewById(R.id.textView10)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NowPlayingListAdapter.MovieViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_container, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.slide_item_container_big, parent, false)
         return MovieViewHolder(view)
     }
 

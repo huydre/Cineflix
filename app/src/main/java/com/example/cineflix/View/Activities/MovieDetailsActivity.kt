@@ -3,6 +3,7 @@ package com.example.cineflix.View.Activities
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -109,6 +110,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         val backdrop = findViewById<ImageView>(R.id.MovieBackdrop)
         val addBtn = findViewById<LinearLayout>(R.id.add_btn)
         val addBtnIcon = findViewById<ImageView>(R.id.add_btn_icon)
+        val movieRate = findViewById<TextView>(R.id.movieRate)
+        val starIcon = findViewById<ImageView>(R.id.star_icon)
 
         // Get movie details
         movieViewModel.getMovieDetails(movieId.toString())
@@ -122,6 +125,18 @@ class MovieDetailsActivity : AppCompatActivity() {
                 title.text = movieTitle
                 year.text = movieYear.substring(0,4)
                 overview.text = movieOverview
+
+                val rated = it.vote_average
+                movieRate.text = rated.toString().substring(0,3)
+                if (rated < 7 && rated >= 4) {
+                    starIcon.setColorFilter(Color.parseColor("#D2D531"))
+                    movieRate.setTextColor(Color.parseColor("#D2D531"))
+                }
+                else if (rated < 4 ) {
+                    starIcon.setColorFilter(Color.parseColor("#DB2360"))
+                    movieRate.setTextColor(Color.parseColor("#DB2360"))
+                }
+
                 backdrop.load("https://media.themoviedb.org/t/p/w780/${movieBackdrop}")
                 if (movieOverview.isNullOrBlank()) {
                     overview.visibility = View.GONE

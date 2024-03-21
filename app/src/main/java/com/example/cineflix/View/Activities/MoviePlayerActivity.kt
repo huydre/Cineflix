@@ -278,24 +278,8 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         }
 
         nextEPBtn.setOnClickListener {
-            val currentEpisodeUrl = videoUrl.value
-            if (episode < numberOfEpisode.value!!) {
-                episode += 1
-            } else if (season < seasonCount) {
-                // Nếu tập tiếp theo không có thì chuyển qua season mới
-                season += 1
-                episode = 1
-            } else {
-                // Nếu đã đến cuối series, hiển thị thông báo cho người dùng
-                Toast.makeText(this, "Đã đến cuối series", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
-            title.text = "${movieTitle} Phần ${season} Tập ${episode}"
-            playbackPosition = 0
+            nextEpisode()
         }
-
-
 
         gestureDetector = GestureDetector(this, this)
         findViewById<View>(android.R.id.content).setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
@@ -418,10 +402,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             }
         })
 
-
-
-
-
         playerView.setOnTouchListener { _, motionEvent ->
             gestureDetectorDouble.onTouchEvent(motionEvent)
             if (!isLocked) {
@@ -470,6 +450,9 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             if  (!url.isNullOrEmpty()) {
                 preparePlayer(url)
             }
+            else {
+                Toast.makeText(this, "Phim này hiện chưa cập nhật hoặc đang lỗi!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -483,6 +466,9 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 if (playbackState == ExoPlayer.STATE_READY) {
                     duration = simpleExoplayer.duration
+                }
+                if (playbackState == ExoPlayer.STATE_ENDED) {
+                    nextEpisode()
                 }
                 if (playbackState == Player.STATE_BUFFERING) {
                     videoLoading.visibility = View.VISIBLE
@@ -530,16 +516,6 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
 
     private fun releasePlayer() {
         playbackPosition = simpleExoplayer.currentPosition
-        Log.d(TAG, "releasePlayer: " + playbackPosition)
-        simpleExoplayer.release()
-    }
-
-    override fun onPlayerError(error: PlaybackException) {
-        // handle error
-        Log.e("VideoPlayerActivity", "error: $error")
-    }
-
-    override fun onDestroy() {
         val continueWatching = ContinueWatching(
             progress = playbackPosition.toLong(),
             posterPath = posterPath,
@@ -552,7 +528,18 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
             numberSeason = seasonCount, // Thêm giá trị này
             duration = duration
         )
-        viewModel.saveContinueWatching(continueWatching)
+        if (duration > 0 && playbackPosition > 0) {
+            viewModel.saveContinueWatching(continueWatching)
+        }
+        simpleExoplayer.release()
+    }
+
+    override fun onPlayerError(error: PlaybackException) {
+        // handle error
+        Log.e("VideoPlayerActivity", "error: $error")
+    }
+
+    override fun onDestroy() {
         super.onDestroy()
         releasePlayer()
     }
@@ -712,5 +699,20 @@ class MoviePlayerActivity : AppCompatActivity(), Player.Listener, GestureDetecto
         return str
     }
 
+    private fun nextEpisode() {
+        if (episode < numberOfEpisode.value!!) {
+            episode += 1
+        } else if (season < seasonCount) {
+            // Nếu tập tiếp theo không có thì chuyển qua season mới
+            season += 1
+            episode = 1
+        } else {
+            // Nếu đã đến cuối series, hiển thị thông báo cho người dùng
+            Toast.makeText(this, "Đã đến cuối series", Toast.LENGTH_SHORT).show()
+            return
+        }
+        getOphimVideoUrl(movieTitle, mediaType.toString(), season, episode)
+        title.text = "${movieTitle} Phần ${season} Tập ${episode}"
+        playbackPosition = 0
+    }
 }
-

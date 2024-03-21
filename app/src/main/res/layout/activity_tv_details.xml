@@ -59,7 +59,7 @@
                 android:text="TV Name"
                 android:textColor="@android:color/white"
                 android:textSize="20dp"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/backdropFL" />
 
@@ -110,7 +110,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:textSize="16dp"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_bold"
                     />
                 <TextView
                     android:id="@+id/tvSeasonCount"
@@ -136,7 +136,7 @@
                 android:text="Xem Ngay"
                 android:textColor="@android:color/black"
                 android:textSize="16dp"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_bold"
                 app:backgroundTint="@android:color/white"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/play"
@@ -157,7 +157,7 @@
 <!--                android:text="Danh Sách"-->
 <!--                android:textColor="@android:color/white"-->
 <!--                android:textSize="16dp"-->
-<!--                android:textStyle="bold"-->
+<!--                android:fontFamily="@font/inter_bold"-->
 <!--                app:backgroundTint="#2B2B2D"-->
 <!--                app:cornerRadius="10dp"-->
 <!--                app:icon="@drawable/add"-->

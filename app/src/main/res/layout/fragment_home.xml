@@ -54,7 +54,7 @@
                     android:text="Ready for binge watching?"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
@@ -94,7 +94,7 @@
                         android:text="Phát"
                         android:textColor="@android:color/black"
                         android:textSize="14dp"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/inter_bold"
                         app:backgroundTint="@android:color/white"
                         app:cornerRadius="10dp"
                         app:icon="@drawable/play"
@@ -114,7 +114,7 @@
                         android:text="Danh sách"
                         android:textColor="@android:color/white"
                         android:textSize="14dp"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/inter_bold"
                         app:cornerRadius="10dp"
                         app:icon="@drawable/add"
                         app:iconGravity="textStart"
@@ -133,7 +133,7 @@
                     android:text="Tiếp tục xem"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_bold"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -157,7 +157,7 @@
                     android:text="Phim chiếu rạp"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -218,7 +218,7 @@
                     android:text="Top 10 phim hôm nay"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -299,7 +299,7 @@
                             android:text="Popular"
                             android:textColor="#D0001C"
                             android:textSize="12dp"
-                            android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             app:layout_constraintStart_toEndOf="@+id/imageView"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -311,7 +311,7 @@
                             android:text="NETWORKS"
                             android:textColor="@android:color/white"
                             android:textSize="16dp"
-                            android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             app:layout_constraintStart_toStartOf="@+id/textView9"
                             app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -334,7 +334,7 @@
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
                                     android:src="@drawable/netflix_logo"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:background="?attr/selectableItemBackground"
                                     android:clickable="true"
                                     android:focusable="true"
                                     app:shapeAppearanceOverlay="@style/rounded_corner" />
@@ -356,9 +356,10 @@
                                 android:orientation="vertical">
 
                                 <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/appletv"
+                                    android:background="?attr/selectableItemBackground"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
-                                    android:background="@android:color/white"
                                     android:src="@drawable/apple_tv_logo"
                                     app:shapeAppearanceOverlay="@style/rounded_corner" />
 
@@ -379,9 +380,10 @@
                                 android:orientation="vertical">
 
                                 <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/prime"
+                                    android:background="?attr/selectableItemBackground"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
-                                    android:background="@android:color/white"
                                     android:src="@drawable/prime_logo"
                                     app:shapeAppearanceOverlay="@style/rounded_corner" />
 
@@ -450,7 +452,7 @@
                     android:text="Hôm nay xem gì"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -512,7 +514,7 @@
                     android:text="Top 10 chương trình hôm nay"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -573,7 +575,7 @@
                     android:text="Chương trình được đánh giá cao"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -634,7 +636,7 @@
                     android:text="Chương trình phát sóng hôm nay"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_bold" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

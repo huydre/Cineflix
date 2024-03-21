@@ -121,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Khoá"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_bold"
                 android:textSize="12dp"
                 android:textColor="@color/red"/>
         </LinearLayout>
@@ -154,7 +154,7 @@
                         android:text="Nguồn Phim"
                         android:textColor="@android:color/white"
                         android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/inter_bold" />
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/sourceRC"
                         android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                     <TextView
                         android:text="Phụ đề"
                         android:textColor="@android:color/white"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/inter_bold"
                         android:textSize="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -196,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@android:color/white"
                     android:textColor="@android:color/black"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_bold"
                     android:layout_marginRight="20dp"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/cancle_btn"
@@ -207,7 +207,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#141414"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"/>
+                    android:fontFamily="@font/inter_bold"/>
             </LinearLayout>
 
 

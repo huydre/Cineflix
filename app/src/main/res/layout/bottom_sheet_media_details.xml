@@ -20,7 +20,7 @@
             android:text="Batman v Superman: Dawn of Justice"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/inter_bold" />
         <ImageView
             android:id="@+id/close_icon"
             android:src="@drawable/ic_close"

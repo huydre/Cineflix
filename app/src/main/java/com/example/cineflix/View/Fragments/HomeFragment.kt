@@ -323,6 +323,27 @@ class HomeFragment : Fragment() {
             intent.putExtra("network", 213)
             startActivity(intent)
         }
+
+        //Apple TV+
+        val appleTVBtn : ImageView = view.findViewById(R.id.appletv)
+        appleTVBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "Apple TV+")
+            intent.putExtra("network", 2552)
+            startActivity(intent)
+        }
+
+        //Prime
+        val primeBtn : ImageView = view.findViewById(R.id.prime)
+        primeBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "Prime Video")
+            intent.putExtra("network", 1024)
+            startActivity(intent)
+        }
+
         // Inflate the layout for this fragment
         return view
     }

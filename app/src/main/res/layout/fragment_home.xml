@@ -404,9 +404,11 @@
                                 android:orientation="vertical">
 
                                 <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/hulu"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
-                                    android:background="@android:color/white"
+                                    android:src="@drawable/hulu"
+                                    android:foreground="?attr/selectableItemBackground"
                                     app:shapeAppearanceOverlay="@style/rounded_corner" />
 
                                 <TextView
@@ -414,7 +416,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginTop="5dp"
-                                    android:text="Netflix"
+                                    android:text="Hulu"
                                     android:textColor="@android:color/white" />
                             </LinearLayout>
 
@@ -426,9 +428,12 @@
                                 android:orientation="vertical">
 
                                 <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/disney"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
                                     android:background="@android:color/white"
+                                    android:src="@drawable/disney"
+                                    android:foreground="?attr/selectableItemBackground"
                                     app:shapeAppearanceOverlay="@style/rounded_corner" />
 
                                 <TextView
@@ -436,7 +441,82 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginTop="5dp"
-                                    android:text="Netflix"
+                                    android:text="Disney+"
+                                    android:textColor="@android:color/white" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/hbo"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:background="@android:color/white"
+                                    android:src="@drawable/hbo"
+                                    android:foreground="?attr/selectableItemBackground"
+                                    app:shapeAppearanceOverlay="@style/rounded_corner" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="5dp"
+                                    android:text="HBO"
+                                    android:textColor="@android:color/white" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/amc"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:background="@android:color/white"
+                                    android:src="@drawable/amc"
+                                    android:foreground="?attr/selectableItemBackground"
+                                    app:shapeAppearanceOverlay="@style/rounded_corner" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="5dp"
+                                    android:text="AMC"
+                                    android:textColor="@android:color/white" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:id="@+id/paramount"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:background="@android:color/white"
+                                    android:src="@drawable/paramount"
+                                    android:foreground="?attr/selectableItemBackground"
+                                    app:shapeAppearanceOverlay="@style/rounded_corner" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="5dp"
+                                    android:text="Paramount+"
                                     android:textColor="@android:color/white" />
                             </LinearLayout>
                         </LinearLayout>

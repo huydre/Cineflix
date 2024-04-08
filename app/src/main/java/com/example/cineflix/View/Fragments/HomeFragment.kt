@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +37,7 @@ import com.example.cineflix.Model.local.watching.ContinueWatchingDatabase
 import com.example.cineflix.Model.local.watching.ContinueWatchingRepository
 import com.example.cineflix.MovieRepository
 import com.example.cineflix.R
+import com.example.cineflix.Utils.SuperEmbed
 import com.example.cineflix.View.Activities.MovieActivity
 import com.example.cineflix.View.Activities.MoviePlayerActivity
 import com.example.cineflix.ViewModel.ContinueWatchingViewModel
@@ -47,6 +49,7 @@ import com.example.cineflix.ViewModel.PlaylistViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -344,6 +347,50 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        //Hulu
+        val huluBtn : ImageView = view.findViewById(R.id.hulu)
+        huluBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "Hulu")
+            intent.putExtra("network", 453)
+            startActivity(intent)
+        }
+        val disneyBtn : ImageView = view.findViewById(R.id.disney)
+        disneyBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "Disney+")
+            intent.putExtra("network", 2739)
+            startActivity(intent)
+        }
+
+        val hboBtn : ImageView = view.findViewById(R.id.hbo)
+        hboBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "HBO")
+            intent.putExtra("network", 49)
+            startActivity(intent)
+        }
+
+        val amcBtn : ImageView = view.findViewById(R.id.amc)
+        amcBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "AMC")
+            intent.putExtra("network", 174)
+            startActivity(intent)
+        }
+
+        val paramountBtn : ImageView = view.findViewById(R.id.paramount)
+        paramountBtn.setOnClickListener {
+            val intent = Intent(context, MovieActivity::class.java)
+            intent.putExtra("media_type", "tv")
+            intent.putExtra("title", "Paramount+")
+            intent.putExtra("network", 1025)
+            startActivity(intent)
+        }
         // Inflate the layout for this fragment
         return view
     }

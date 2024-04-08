@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.cineflix.R
+import com.example.cineflix.Utils.SuperEmbed
 import com.example.cineflix.View.Fragments.AccountFragment
 import com.example.cineflix.View.Fragments.BookmarkFragment
 import com.example.cineflix.View.Fragments.HomeFragment
 import com.example.cineflix.View.Fragments.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,6 +69,8 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+
     }
 
     private fun showFragment(fragment: Fragment) {
